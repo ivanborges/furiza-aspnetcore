@@ -1,0 +1,99 @@
+pool:
+  vmImage: 'VS2017-Win2016'
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - README.md
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  #JwtBearer
+  JwtBearerVersion: '1.0.0'
+  JwtBearerPushToNuget: False
+  #Identity
+  IdentityVersion: '1.0.0'
+  IdentityPushToNuget: False
+
+steps:
+# Install NuGet Tool
+- task: NuGetToolInstaller@0
+  displayName: Install NuGet Tool
+
+# Restore NuGet packages
+- task: NuGetCommand@2
+  displayName: Restore NuGet Packages
+  inputs:
+    restoreSolution: '$(solution)'
+
+# Build solution
+- task: VSBuild@1
+  displayName: Build Solution
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+# Run unit tests
+- task: VSTest@2
+  displayName: Run Unit Tests
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+# Prepare publish files
+- task: DotNetCoreCLI@2
+  displayName: Prepare Publish Files
+  inputs:
+    command: publish
+    publishWebProjects: False
+    projects: '**/**/Furiza.AspNetCore.*.csproj'
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: False
+
+# Publish the artifacts
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifacts
+
+# Publish Furiza.AspNetCore.Authentication.JwtBearer to NuGet.org
+- task: DotNetCoreCLI@2
+  displayName: Pack Furiza.AspNetCore.Authentication.JwtBearer
+  condition: eq(variables['JwtBearerPushToNuget'], 'True')
+  inputs:
+    command: pack
+    packagesToPack: '**/**/Furiza.AspNetCore.Authentication.JwtBearer.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: JwtBearerVersion
+- task: NuGetCommand@2
+  displayName: Push Furiza.AspNetCore.Authentication.JwtBearer to NuGet.org
+  condition: eq(variables['JwtBearerPushToNuget'], 'True')
+  continueOnError: True
+  inputs:
+    command: push
+    nuGetFeedType: external
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.Authentication.JwtBearer.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-authentication.jwtbearer'
+
+# Publish Furiza.AspNetCore.Identity.EntityFrameworkCore to NuGet.org
+- task: DotNetCoreCLI@2
+  displayName: Pack Furiza.AspNetCore.Identity.EntityFrameworkCore
+  condition: eq(variables['IdentityPushToNuget'], 'True')
+  inputs:
+    command: pack
+    packagesToPack: '**/**/Furiza.AspNetCore.Identity.EntityFrameworkCore.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: IdentityVersion
+- task: NuGetCommand@2
+  displayName: Push Furiza.AspNetCore.Identity.EntityFrameworkCore to NuGet.org
+  condition: eq(variables['IdentityPushToNuget'], 'True')
+  continueOnError: True
+  inputs:
+    command: push
+    nuGetFeedType: external
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.Identity.EntityFrameworkCore.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-identity.entityframeworkcore'
