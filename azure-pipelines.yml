@@ -15,10 +15,10 @@ variables:
   buildConfiguration: 'Release'
   #JwtBearer
   JwtBearerVersion: '1.0.0'
-  JwtBearerPushToNuget: True
+  JwtBearerPushToNuget: False
   #Identity
   IdentityVersion: '1.0.0'
-  IdentityPushToNuget: True
+  IdentityPushToNuget: False
 
 steps:
 # Install NuGet Tool
