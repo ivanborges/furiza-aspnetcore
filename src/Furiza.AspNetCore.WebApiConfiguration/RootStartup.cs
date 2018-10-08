@@ -2,7 +2,6 @@
 using Furiza.AspNetCore.ExceptionHandling;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
 using Furiza.Caching;
-using Furiza.Caching.Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -39,12 +38,12 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             services.AddFurizaLogging(Configuration, ApiProfile.Name);
             services.AddFurizaIdentity(Configuration.TryGet<IdentityConfiguration>());
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
+            services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ModelValidationAttribute));
                 AddCustomFilters(options);
             });
-            services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>()); // TODO: ajustar namespace!!!2
 
             AddSwaggerWithApiVersioning(services);
             AddCustomServices(services);

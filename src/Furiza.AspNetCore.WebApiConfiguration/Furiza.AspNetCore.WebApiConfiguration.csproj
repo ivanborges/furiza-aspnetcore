@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="furiza.caching" Version="1.0.1" />
+    <PackageReference Include="furiza.caching" Version="1.0.3" />
     <PackageReference Include="furiza.extensions.configuration" Version="1.0.1" />
     <PackageReference Include="furiza.logging" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />

@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Furiza.Base.Core.Exceptions" Version="1.0.1" />
-    <PackageReference Include="furiza.newtonsoft.json" Version="1.0.1" />
+    <PackageReference Include="furiza.newtonsoft.json" Version="1.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.3" />
   </ItemGroup>
 
