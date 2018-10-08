@@ -44,7 +44,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
                 options.Filters.Add(typeof(ModelValidationAttribute));
                 AddCustomFilters(options);
             });
-            services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>()); // TODO: ajustar namespace!!!
+            services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>()); // TODO: ajustar namespace!!!2
 
             AddSwaggerWithApiVersioning(services);
             AddCustomServices(services);
