@@ -1,4 +1,5 @@
-﻿using Furiza.Base.Core.Identity.Abstractions;
+﻿using Furiza.AspNetCore.Authentication.JwtBearer.Identity;
+using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -8,31 +9,35 @@ using System.Security.Claims;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
-    internal class UserContext<TUserData, TRoleData, TClaimData> : IUserContext<TUserData, TRoleData, TClaimData>
-        where TUserData : IUserData
-        where TRoleData : IRoleData
-        where TClaimData : IClaimData
+    internal class UserContextTypeless : IUserContext
     {
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public TUserData UserData
+        public IUserData UserData
         {
             get
             {
                 if (userData == null)
                 {
                     var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity ?? throw new UnauthorizedAccessException();
+                    if (!claimsIdentity.Claims.Any())
+                        return userData;
 
-                    userData = Activator.CreateInstance<TUserData>();
-
-                    var roles = new List<TRoleData>();
-                    var claims = new List<TClaimData>();
-
+                    userData = new GenericUserData()
+                    {
+                        Roles = new List<GenericRoleData>().Cast<IRoleData>().ToList(),
+                        Claims = new List<GenericClaimData>().Cast<IClaimData>().ToList()
+                    };
+                    
                     foreach (var claim in claimsIdentity.Claims)
                     {
-                        switch (claim.Type)
+                        var claimShortTypeName = claim.Properties.SingleOrDefault(p => p.Key.Contains("ShortTypeName")).Value;
+                        if (string.IsNullOrWhiteSpace(claimShortTypeName))
+                            claimShortTypeName = claim.Type;
+
+                        switch (claimShortTypeName)
                         {
-                            case (JwtRegisteredClaimNames.UniqueName):
+                            case (JwtRegisteredClaimNames.Sub):
                                 userData.UserName = claim.Value;
                                 break;
                             case (JwtRegisteredClaimNames.GivenName):
@@ -48,29 +53,28 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                                 userData.Department = claim.Value;
                                 break;
                             case (ClaimTypes.Role):
-                                var roleData = Activator.CreateInstance<TRoleData>();
-                                roleData.Name = claim.Value;
-                                roles.Add(roleData);
-                                break;
-                            default:
-                                var claimData = Activator.CreateInstance<TClaimData>();
-                                claimData.Type = claim.Type;
-                                claimData.Value = claim.Value;
-                                claims.Add(claimData);
+                            case "role":
+                                userData.Roles.Add(new GenericRoleData()
+                                {
+                                    Name = claim.Value
+                                });
                                 break;
                         }
-                    }
 
-                    UserData.Roles = roles.Cast<IRoleData>().ToList();
-                    UserData.Claims = claims.Cast<IClaimData>().ToList();
+                        userData.Claims.Add(new GenericClaimData()
+                        {
+                            Type = claim.Type,
+                            Value = claim.Value
+                        });
+                    }
                 }
 
                 return userData;
             }
         }
-        private TUserData userData;
+        private IUserData userData;
 
-        public UserContext(IHttpContextAccessor httpContextAccessor)
+        public UserContextTypeless(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }

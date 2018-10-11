@@ -1,6 +1,7 @@
 ﻿using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Security.Claims;
 
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 {
@@ -21,12 +22,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             this.roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
             this.identityConfiguration = identityConfiguration ?? throw new ArgumentNullException(nameof(identityConfiguration));
         }
-
+        
         public void Initialize()
         {
-            if (!dbContext.Database.EnsureCreated())
-                return;
-            
             foreach (var entry in Enum.GetValues(typeof(Role)))
                 if (!roleManager.RoleExistsAsync(entry.ToString()).Result)
                 {
@@ -41,36 +39,41 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 FullName = "Superuser",
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
-                Company = "Furiza",
-                Department = "PREZ"
-            }, "superuser", Role.Superuser);
+                Company = "furiza",
+                Department = "prez"
+            }, "superuser", ApplicationUserType.System, Role.Superuser);
             CreateUser(new ApplicationUser()
             {
                 UserName = "admin",
                 FullName = "Administrator",
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
-                Company = "Furiza",
-                Department = "PREZ"
-            }, "admin", Role.Administrator);
+                Company = "furiza",
+                Department = "prez"
+            }, "admin", ApplicationUserType.System, Role.Administrator);
             CreateUser(new ApplicationUser()
             {
                 UserName = "user",
                 FullName = "Common User",
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
-                Company = "Furiza",
-                Department = "PREZ"
-            }, "user", Role.User);
+                Company = "furiza",
+                Department = "prez"
+            }, "user", ApplicationUserType.System, Role.User);
         }
 
-        private void CreateUser(ApplicationUser user, string password, Role? initialRole = null)
+        private void CreateUser(ApplicationUser user, string password, ApplicationUserType applicationUserType, Role? initialRole = null)
         {
             if (userManager.FindByNameAsync(user.UserName).Result == null)
             {
                 var resultado = userManager.CreateAsync(user, password).Result;
-                if (resultado.Succeeded && initialRole != null)
-                    userManager.AddToRoleAsync(user, initialRole.Value.ToString()).Wait();
+                if (resultado.Succeeded)
+                {
+                    userManager.AddClaimAsync(user, new Claim(ClaimTypesCustom.UserType, applicationUserType.ToString())).Wait();
+
+                    if (initialRole != null)
+                        userManager.AddToRoleAsync(user, initialRole.Value.ToString()).Wait();
+                }
             }
         }
     }

@@ -1,9 +1,9 @@
 ﻿using Furiza.Base.Core.Exceptions;
+using Furiza.Base.Core.Exceptions.Serialization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -18,7 +18,7 @@ namespace Furiza.AspNetCore.ExceptionHandling
             ILoggerFactory loggerFactory)
         {
             this.next = next ?? throw new ArgumentNullException(nameof(next));
-            logger = loggerFactory?.CreateLogger<ExceptionFilter>() ?? throw new ArgumentNullException(nameof(loggerFactory));
+            logger = loggerFactory?.CreateLogger<ExceptionMiddleware>() ?? throw new ArgumentNullException(nameof(loggerFactory));
         }
 
         public async Task Invoke(HttpContext context)
@@ -29,49 +29,37 @@ namespace Furiza.AspNetCore.ExceptionHandling
             }
             catch (Exception ex)
             {
-                await ExceptionHandler.HandleExceptionAsync(context, ex, logger);
-                //await HandleExceptionAsync(context, ex);
+                var statusCode = null as HttpStatusCode?;
+                var result = null as object;
+
+                if (ex is CoreException)
+                {
+                    logger.LogInformation(ex, ex.Message);
+
+                    statusCode = ex is ModelValidationException
+                        ? HttpStatusCode.NotAcceptable
+                        : HttpStatusCode.BadRequest;
+                    result = new BadRequestError(ex as CoreException);
+                }
+                else
+                {
+                    var internalServerError = new InternalServerError(ex);
+
+                    if (ex is AggregateException)
+                        foreach (var inner in (ex as AggregateException).InnerExceptions)
+                            logger.LogError(inner, $"An aggregate internal error occurred [LogId:{internalServerError.LogId}].", internalServerError.LogId);
+                    else
+                        logger.LogError(ex, $"An internal error occurred [LogId:{internalServerError.LogId}].", internalServerError.LogId);
+
+                    statusCode = HttpStatusCode.InternalServerError;
+                    result = internalServerError;
+                }
+
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)statusCode;
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(result, new GeneralJsonSerializerSettings()));
             }
         }
-
-        //private Task HandleExceptionAsync(HttpContext context, Exception exception)
-        //{
-        //    var statusCode = null as HttpStatusCode?;
-        //    var result = null as object;
-        //    var jsonSettings = new CoreExceptionJsonSerializerSettings();
-
-        //    if (exception is CoreException)
-        //    {
-        //        logger.LogInformation(exception, exception.Message);
-
-        //        statusCode = exception is ModelValidationException
-        //            ? HttpStatusCode.NotAcceptable
-        //            : HttpStatusCode.BadRequest;
-        //        result = exception;
-        //    }
-        //    else
-        //    {
-        //        var internalServerError = null as InternalServerError;
-        //        if (exception is AggregateException)
-        //        {
-        //            var agEx = exception as AggregateException;
-        //            internalServerError = new InternalServerError(string.Join(" | ", agEx.InnerExceptions.Select(e => e.Message)));
-        //            foreach (var inner in agEx.InnerExceptions)
-        //                logger.LogError(inner, $"An aggregate internal error occurred [LogId:{internalServerError.LogId}].", internalServerError.LogId);
-        //        }
-        //        else
-        //        {
-        //            internalServerError = new InternalServerError(exception.Message);
-        //            logger.LogError(exception, $"An internal error occurred [LogId:{internalServerError.LogId}].", internalServerError.LogId);
-        //        }
-
-        //        statusCode = HttpStatusCode.InternalServerError;
-        //        result = internalServerError;
-        //    }
-
-        //    context.Response.ContentType = "application/json";
-        //    context.Response.StatusCode = (int)statusCode;
-        //    return context.Response.WriteAsync(JsonConvert.SerializeObject(result, jsonSettings));
-        //}
     }
 }

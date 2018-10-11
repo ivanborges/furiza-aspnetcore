@@ -19,9 +19,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Furiza.Base.Core.Identity.Abstractions" Version="1.0.0" />
+    <Compile Remove="Migrations\20181008175814_IdentitySchema.cs" />
+    <Compile Remove="Migrations\20181008180611_IdentitySchema.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Furiza.Base.Core.Identity.Abstractions" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
   </ItemGroup>
 

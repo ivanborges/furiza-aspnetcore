@@ -1,6 +1,6 @@
-﻿using Furiza.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Furiza.AspNetCore.Authentication.JwtBearer;
 using Furiza.AspNetCore.ExceptionHandling;
-using Furiza.AspNetCore.Identity.EntityFrameworkCore;
 using Furiza.Caching;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
@@ -36,19 +36,20 @@ namespace Furiza.AspNetCore.WebApiConfiguration
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddFurizaLogging(Configuration, ApiProfile.Name);
-            services.AddFurizaIdentity(Configuration.TryGet<IdentityConfiguration>());
+
+            AddCustomServicesAtTheBeginning(services);
+
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(ModelValidationAttribute));
-                AddCustomFilters(options);
-            });
-
+            services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.Configure<ApiBehaviorOptions>(AddApiBehaviorOptions);
             AddSwaggerWithApiVersioning(services);
-            AddCustomServices(services);
-        }
 
+            AddCustomServicesAtTheEnd(services);
+
+            services.AddAutoMapper();
+        }
+        
         public void Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
             app.UseFurizaExceptionHandling();
@@ -65,12 +66,30 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             });
 
             AddCustomMiddlewaresToTheEndOfThePipeline(app);
+
+            
         }
 
-        protected abstract void AddCustomFilters(MvcOptions options);
-        protected abstract void AddCustomServices(IServiceCollection services);
+        #region [+] Virtual
+        protected virtual void AddMvcOptions(MvcOptions options)
+        {
+            options.Filters.Add(typeof(ModelValidationAttribute));
+        }
+
+        protected virtual void AddApiBehaviorOptions(ApiBehaviorOptions options)
+        {
+            //options.SuppressConsumesConstraintForFormFileParameters = true;
+            //options.SuppressInferBindingSourcesForParameters = true;
+            options.SuppressModelStateInvalidFilter = true;
+        }
+        #endregion
+
+        #region [+] Abstract
+        protected abstract void AddCustomServicesAtTheBeginning(IServiceCollection services);
+        protected abstract void AddCustomServicesAtTheEnd(IServiceCollection services);
         protected abstract void AddCustomMiddlewaresToTheBeginningOfThePipeline(IApplicationBuilder app);
-        protected abstract void AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app);
+        protected abstract void AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app); 
+        #endregion
 
         #region [+] Privates
         private void AddSwaggerWithApiVersioning(IServiceCollection services)
@@ -91,7 +110,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
                 options.AddSecurityDefinition("Bearer", new ApiKeyScheme()
                 {
                     In = "header",
-                    Description = "Please insert JWT with Bearer into field",
+                    Description = "Please enter your JWT with the prefix Bearer into the field below.",
                     Name = "Authorization",
                     Type = "apiKey"
                 });

@@ -10,6 +10,9 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
         [Required]
         public string Audience { get; set; }
 
+        [Required]
+        public string Secret { get; set; }
+
         public int ExpirationInMinutes { get; set; } = 180;
     }
 }
