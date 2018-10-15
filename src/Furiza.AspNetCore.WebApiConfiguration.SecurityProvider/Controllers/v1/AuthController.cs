@@ -34,51 +34,55 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             this.cacheHandler = cacheHandler ?? throw new ArgumentNullException(nameof(cacheHandler));
         }
 
-        [HttpPost, AllowAnonymous]
-        [ProducesResponseType(typeof(PostResult), 200)]
+        [AllowAnonymous]
+        [HttpPost]
+        [ProducesResponseType(typeof(AuthPostResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> PostAsync([FromBody]Post authPost)
+        public async Task<IActionResult> PostAsync([FromBody]AuthPost model)
         {
             var result = Unauthorized() as IActionResult;
             var errors = new List<AuthExceptionItem>();
-            var userIdentity = null as ApplicationUser;
+            var user = null as ApplicationUser;
             var isAuthenticated = false;
 
-            switch (authPost.GrantType)
+            switch (model.GrantType)
             {
                 case GrantType.Password:
-                    if (string.IsNullOrWhiteSpace(authPost.User))
+                    if (string.IsNullOrWhiteSpace(model.User))
                         errors.Add(AuthExceptionItem.UserRequired);
 
-                    if (string.IsNullOrWhiteSpace(authPost.Password))
+                    if (string.IsNullOrWhiteSpace(model.Password))
                         errors.Add(AuthExceptionItem.PasswordRequired);
 
                     if (errors.Any())
                         throw new AuthException(errors);
 
-                    userIdentity = await GetUserAsync(authPost.User);
-                    if (userIdentity != null)
+                    user = await GetUserAsync(model.User);
+                    if (user != null)
                     {
-                        var checkPassword = await signInManager.CheckPasswordSignInAsync(userIdentity, authPost.Password);
+                        if (!await userManager.IsEmailConfirmedAsync(user))
+                            throw new EmailConfirmationRequiredException();
+
+                        var checkPassword = await signInManager.CheckPasswordSignInAsync(user, model.Password);
                         if (checkPassword)
                             isAuthenticated = true;
                     }
 
                     break;
                 case GrantType.RefreshToken:
-                    if (string.IsNullOrWhiteSpace(authPost.RefreshToken))
+                    if (string.IsNullOrWhiteSpace(model.RefreshToken))
                         errors.Add(AuthExceptionItem.RefreshTokenRequired);
 
                     if (errors.Any())
                         throw new AuthException(errors);
 
-                    if (cacheHandler.TryGetValue<RefreshTokenData>(authPost.RefreshToken, out var refreshTokenData))
+                    if (cacheHandler.TryGetValue<RefreshTokenData>(model.RefreshToken, out var refreshTokenData))
                     {
-                        await cacheHandler.RemoveAsync<RefreshTokenData>(authPost.RefreshToken);
-                        userIdentity = await GetUserAsync(refreshTokenData.UserName);
+                        await cacheHandler.RemoveAsync<RefreshTokenData>(model.RefreshToken);
+                        user = await GetUserAsync(refreshTokenData.UserName);
                         isAuthenticated = true;
                     }
 
@@ -87,11 +91,11 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             if (isAuthenticated)
             {
-                var authPostResult = new PostResult(userTokenizer.GenerateToken(userIdentity));
+                var authPostResult = new AuthPostResult(userTokenizer.GenerateToken(user));
                 await cacheHandler.SetAsync(authPostResult.RefreshToken, new RefreshTokenData()
                 {
                     Token = authPostResult.RefreshToken,
-                    UserName = userIdentity.UserName
+                    UserName = user.UserName
                 });
                 result = Ok(authPostResult);
             }
@@ -102,20 +106,20 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         private async Task<ApplicationUser> GetUserAsync(string username)
         {
             var normalizedUserName = username.ToUpper().Trim();
-            if (!cacheHandler.TryGetValue<ApplicationUser>(normalizedUserName, out var userIdentity))
+            if (!cacheHandler.TryGetValue<ApplicationUser>(normalizedUserName, out var user))
             {
-                userIdentity = await userManager.Users
+                user = await userManager.Users
                     .Include(u => u.IdentityUserRoles)
                         .ThenInclude(ur => ur.IdentityRole)
                     .Include(u => u.IdentityClaims)
                     .AsNoTracking()
                     .SingleOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
 
-                if (userIdentity != null)
-                    await cacheHandler.SetAsync(normalizedUserName, userIdentity);
+                if (user != null && user.EmailConfirmed && user.Roles.Any())
+                    await cacheHandler.SetAsync(normalizedUserName, user);
             }
 
-            return userIdentity;
+            return user;
         }
     }
 }

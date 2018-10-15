@@ -2,6 +2,7 @@
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
 using Furiza.AspNetCore.WebApiConfiguration;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider;
+using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
 using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,8 @@ namespace WebApplication1
             
 
             services.AddTransient<ISignInManager<ApplicationUser>, SignInTeste>();
+            services.AddTransient<IPasswordGenerator, PasswordGeneratorTeste>();
+            services.AddTransient<IUserNotifier, EmailSenderTeste>();
 
             //services.AddAutoMapper(typeof(SecurityRootStartup).Assembly);
         }

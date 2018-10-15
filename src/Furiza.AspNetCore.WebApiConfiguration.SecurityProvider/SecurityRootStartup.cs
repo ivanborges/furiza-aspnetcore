@@ -32,6 +32,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider
             options.Password.RequireLowercase = false;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequireUppercase = false;
+
+            options.SignIn.RequireConfirmedEmail = true;
         }
         #endregion
     }

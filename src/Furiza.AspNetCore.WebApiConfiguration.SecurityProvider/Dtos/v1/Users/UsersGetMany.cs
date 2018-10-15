@@ -2,7 +2,7 @@
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
 {
-    public class GetMany
+    public class UsersGetMany
     {
         public Role? Role { get; set; }
         public string Company { get; set; }

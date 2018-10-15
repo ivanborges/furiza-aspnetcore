@@ -8,8 +8,9 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider
     {
         public Mapping()
         {
-            CreateMap<ApplicationUser, GetResult>();
-            CreateMap<Post, ApplicationUser>();
+            CreateMap<ApplicationUser, UsersGetResult>();
+            CreateMap<UsersPost, ApplicationUser>()
+                .ForMember(d => d.UserName, opt => opt.MapFrom(s => s.UserName.Trim().ToLower()));
         }
     }
 }

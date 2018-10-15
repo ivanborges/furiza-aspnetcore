@@ -2,7 +2,7 @@
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
 {
-    public class Post
+    public class UsersPost
     {
         [Required]
         public string UserName { get; set; }
@@ -19,7 +19,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
         [Required]
         public string Department { get; set; }
 
-        [Required]
-        public bool? GeneratePassword { get; set; }
+        public string Password { get; set; }
+        public bool GeneratePassword { get; set; }
     }
 }

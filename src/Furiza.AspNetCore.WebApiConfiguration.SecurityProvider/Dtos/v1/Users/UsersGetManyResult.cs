@@ -2,8 +2,8 @@
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
 {
-    public class GetManyResult
+    public class UsersGetManyResult
     {
-        public IEnumerable<GetResult> Users { get; set; }        
+        public IEnumerable<UsersGetResult> Users { get; set; }        
     }    
 }

@@ -3,17 +3,17 @@ using System;
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Auth
 {
-    public class PostResult
+    public class AuthPostResult
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
         public DateTime? Expiration { get; set; }
 
-        public PostResult()
+        public AuthPostResult()
         {
         }
 
-        public PostResult(GenerateTokenResult generateTokenResult)
+        public AuthPostResult(GenerateTokenResult generateTokenResult)
         {
             AccessToken = generateTokenResult.AccessToken;
             RefreshToken = generateTokenResult.RefreshToken;

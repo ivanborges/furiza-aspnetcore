@@ -2,7 +2,7 @@
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Auth
 {
-    public class Post
+    public class AuthPost
     {
         [Required]
         public GrantType? GrantType { get; set; }
