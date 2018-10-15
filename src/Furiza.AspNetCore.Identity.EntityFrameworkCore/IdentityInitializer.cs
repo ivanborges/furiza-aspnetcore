@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 {
-    public class IdentityInitializer
+    internal class IdentityInitializer
     {
         private readonly ApplicationDbContext dbContext;
         private readonly UserManager<ApplicationUser> userManager;
@@ -66,8 +66,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
         {
             if (userManager.FindByNameAsync(user.UserName).Result == null)
             {
-                var resultado = userManager.CreateAsync(user, password).Result;
-                if (resultado.Succeeded)
+                var creationResult = userManager.CreateAsync(user, password).Result;
+                if (creationResult.Succeeded)
                 {
                     userManager.AddClaimAsync(user, new Claim(ClaimTypesCustom.UserType, applicationUserType.ToString())).Wait();
 

@@ -77,7 +77,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
                     if (cacheHandler.TryGetValue<RefreshTokenData>(authPost.RefreshToken, out var refreshTokenData))
                     {
-                        await cacheHandler.RemoveAsync<ApplicationUser>(authPost.RefreshToken);
+                        await cacheHandler.RemoveAsync<RefreshTokenData>(authPost.RefreshToken);
                         userIdentity = await GetUserAsync(refreshTokenData.UserName);
                         isAuthenticated = true;
                     }
@@ -88,7 +88,11 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             if (isAuthenticated)
             {
                 var authPostResult = new PostResult(userTokenizer.GenerateToken(userIdentity));
-                await cacheHandler.SetAsync(authPostResult.RefreshToken, userIdentity);
+                await cacheHandler.SetAsync(authPostResult.RefreshToken, new RefreshTokenData()
+                {
+                    Token = authPostResult.RefreshToken,
+                    UserName = userIdentity.UserName
+                });
                 result = Ok(authPostResult);
             }
 
@@ -98,7 +102,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         private async Task<ApplicationUser> GetUserAsync(string username)
         {
             var normalizedUserName = username.ToUpper().Trim();
-
             if (!cacheHandler.TryGetValue<ApplicationUser>(normalizedUserName, out var userIdentity))
             {
                 userIdentity = await userManager.Users

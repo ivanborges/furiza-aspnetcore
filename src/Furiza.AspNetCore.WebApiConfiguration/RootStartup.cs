@@ -65,9 +65,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"{ApiProfile.Name} {description.GroupName}{(!description.GroupName.Contains(".") ? ".0" : "")}");
             });
 
-            AddCustomMiddlewaresToTheEndOfThePipeline(app);
-
-            
+            AddCustomMiddlewaresToTheEndOfThePipeline(app);            
         }
 
         #region [+] Virtual

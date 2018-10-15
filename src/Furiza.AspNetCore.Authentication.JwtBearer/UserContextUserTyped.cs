@@ -59,13 +59,14 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                                     Name = claim.Value
                                 });
                                 break;
+                            default:
+                                claims.Add(new GenericClaimData()
+                                {
+                                    Type = claim.Type,
+                                    Value = claim.Value
+                                });
+                                break;
                         }
-
-                        claims.Add(new GenericClaimData()
-                        {
-                            Type = claim.Type,
-                            Value = claim.Value
-                        });
                     }
 
                     userData.Roles = roles.Cast<IRoleData>().ToList();

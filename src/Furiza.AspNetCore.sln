@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.Exception
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApiConfiguration", "Furiza.AspNetCore.WebApiConfiguration\Furiza.AspNetCore.WebApiConfiguration.csproj", "{DE69C852-81A9-476A-9214-A0C784BA7640}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider", "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.csproj", "{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider", "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.csproj", "{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{F4D6BE55-302F-44C3-AC55-2CAA90A77320}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4D6BE55-302F-44C3-AC55-2CAA90A77320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D6BE55-302F-44C3-AC55-2CAA90A77320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D6BE55-302F-44C3-AC55-2CAA90A77320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D6BE55-302F-44C3-AC55-2CAA90A77320}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -59,13 +59,14 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                                     Name = claim.Value
                                 });
                                 break;
+                            default:
+                                userData.Claims.Add(new GenericClaimData()
+                                {
+                                    Type = claim.Type,
+                                    Value = claim.Value
+                                });
+                                break;
                         }
-
-                        userData.Claims.Add(new GenericClaimData()
-                        {
-                            Type = claim.Type,
-                            Value = claim.Value
-                        });
                     }
                 }
 

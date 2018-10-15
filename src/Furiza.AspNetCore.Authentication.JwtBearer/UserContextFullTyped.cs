@@ -59,12 +59,13 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                                 roleData.Name = claim.Value;
                                 roles.Add(roleData);
                                 break;
+                            default:
+                                var claimData = Activator.CreateInstance<TClaimData>();
+                                claimData.Type = claim.Type;
+                                claimData.Value = claim.Value;
+                                claims.Add(claimData);
+                                break;
                         }
-
-                        var claimData = Activator.CreateInstance<TClaimData>();
-                        claimData.Type = claim.Type;
-                        claimData.Value = claim.Value;
-                        claims.Add(claimData);
                     }
 
                     userData.Roles = roles.Cast<IRoleData>().ToList();

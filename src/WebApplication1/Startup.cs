@@ -1,4 +1,5 @@
-﻿using Furiza.AspNetCore.Identity.EntityFrameworkCore;
+﻿using AutoMapper;
+using Furiza.AspNetCore.Identity.EntityFrameworkCore;
 using Furiza.AspNetCore.WebApiConfiguration;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider;
 using Furiza.Base.Core.Identity.Abstractions;
@@ -26,6 +27,8 @@ namespace WebApplication1
             
 
             services.AddTransient<ISignInManager<ApplicationUser>, SignInTeste>();
+
+            //services.AddAutoMapper(typeof(SecurityRootStartup).Assembly);
         }
 
         protected override void AddCustomMiddlewaresToTheBeginningOfThePipeline(IApplicationBuilder app)
