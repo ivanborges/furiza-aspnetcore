@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddFurizaIdentity(this IServiceCollection services, IdentityConfiguration identityConfiguration)
+        public static IServiceCollection AddFurizaIdentity(this IServiceCollection services, IdentityConfiguration identityConfiguration, Action<IdentityOptions> identityOptions)
         {
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
@@ -17,13 +17,11 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(identityConfiguration.ConnectionString));
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>(identityOptions)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders(); // TODO: checar se o erro "Cannot create a DbSet for 'IdentityUserRole<Guid>' because this type is not included in the model for the context" não ocorre... se sim, usar as linhas abaixo.
-                //.AddUserStore<UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, ApplicationUserClaim, ApplicationUserRole, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>()
-                //.AddRoleStore<RoleStore<ApplicationRole, ApplicationDbContext, Guid, ApplicationUserRole, IdentityRoleClaim<Guid>>>();
+                .AddDefaultTokenProviders();
 
-            services.AddSingleton<IdentityInitializer>();
+            services.AddScoped<IdentityInitializer>();
 
             return services;
         }

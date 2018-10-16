@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Furiza.Base.Core.Exceptions" Version="1.0.2" />
+    <PackageReference Include="Furiza.Base.Core.Exceptions.Serialization" Version="1.0.2" />
+    <PackageReference Include="furiza.newtonsoft.json" Version="1.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>

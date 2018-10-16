@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -16,13 +17,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton(jwtConfiguration ?? throw new ArgumentNullException(nameof(jwtConfiguration)));
 
-            var signingConfiguration = new SigningConfiguration();
-            services.AddSingleton(signingConfiguration);
-
-            services.AddScoped(typeof(IUserTokenizer<>), typeof(UserTokenizer<>));
-            services.AddScoped(typeof(IUserContext<,,>), typeof(UserContext<,,>));
-
-            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
+            services.AddScoped(typeof(IUserContext), typeof(UserContextTypeless));
+            services.AddScoped(typeof(IUserContext<>), typeof(UserContextUserTyped<>));
+            services.AddScoped(typeof(IUserContext<,,>), typeof(UserContextFullTyped<,,>));
 
             services.AddAuthentication(authOptions =>
             {
@@ -41,11 +38,23 @@ namespace Microsoft.Extensions.DependencyInjection
 
                     ValidIssuer = jwtConfiguration.Issuer,
                     ValidAudience = jwtConfiguration.Audience,
-                    IssuerSigningKey = signingConfiguration.Key,
+
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)),
 
                     ClockSkew = TimeSpan.Zero
                 };
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddFurizaJwtAuthenticationProvider(this IServiceCollection services)
+        {
+            if (services == null)
+                throw new ArgumentNullException(nameof(services));
+
+            services.AddScoped(typeof(IUserTokenizer<>), typeof(UserTokenizer<>));
+            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
 
             return services;
         }

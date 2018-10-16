@@ -11,7 +11,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             get => ClaimType;
             set => ClaimType = value;
         }
-
         public virtual string Value
         {
             get => ClaimValue;

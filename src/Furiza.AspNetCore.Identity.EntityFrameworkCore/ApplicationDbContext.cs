@@ -37,10 +37,13 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             });
             builder.Entity<ApplicationUserClaim>(userClaim =>
             {
+                userClaim.Ignore(uc => uc.Type);
+                userClaim.Ignore(uc => uc.Value);
+
                 userClaim.HasOne(uc => uc.IdentityUser)
-                .WithMany(u => u.IdentityClaims)
-                .HasForeignKey(uc => uc.UserId)
-                .IsRequired();
+                    .WithMany(u => u.IdentityClaims)
+                    .HasForeignKey(uc => uc.UserId)
+                    .IsRequired();
             });
         }
     }

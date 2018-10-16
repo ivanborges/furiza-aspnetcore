@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Furiza.AspNetCore.Identity.EntityFrameworkCore\Furiza.AspNetCore.Identity.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Furiza.AspNetCore.WebApiConfiguration\Furiza.AspNetCore.WebApiConfiguration.csproj" />
+  </ItemGroup>
+
+</Project>

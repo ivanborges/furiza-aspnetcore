@@ -13,12 +13,15 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+
+  #Pack1 -------------------
   #JwtBearer
-  JwtBearerVersion: '1.0.0'
-  JwtBearerPushToNuget: False
+  #ExceptionHandling
   #Identity
-  IdentityVersion: '1.0.0'
-  IdentityPushToNuget: False
+  #WebApiConfiguration
+  #WebApiConfiguration.SecurityProvider
+  Pack1Version: '1.0.0'
+  Pack1PushToNuget: False
 
 steps:
 # Install NuGet Tool
@@ -63,15 +66,15 @@ steps:
 # Publish Furiza.AspNetCore.Authentication.JwtBearer to NuGet.org
 - task: DotNetCoreCLI@2
   displayName: Pack Furiza.AspNetCore.Authentication.JwtBearer
-  condition: eq(variables['JwtBearerPushToNuget'], 'True')
+  condition: eq(variables['Pack1PushToNuget'], 'True')
   inputs:
     command: pack
     packagesToPack: '**/**/Furiza.AspNetCore.Authentication.JwtBearer.csproj'
     versioningScheme: byEnvVar
-    versionEnvVar: JwtBearerVersion
+    versionEnvVar: Pack1Version
 - task: NuGetCommand@2
   displayName: Push Furiza.AspNetCore.Authentication.JwtBearer to NuGet.org
-  condition: eq(variables['JwtBearerPushToNuget'], 'True')
+  condition: eq(variables['Pack1PushToNuget'], 'True')
   continueOnError: True
   inputs:
     command: push
@@ -79,21 +82,78 @@ steps:
     packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.Authentication.JwtBearer.*.nupkg'
     publishFeedCredentials: 'apikey-nuget-aspnetcore-authentication.jwtbearer'
 
+# Publish Furiza.AspNetCore.ExceptionHandling to NuGet.org
+- task: DotNetCoreCLI@2
+  displayName: Pack Furiza.AspNetCore.ExceptionHandling
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  inputs:
+    command: pack
+    packagesToPack: '**/**/Furiza.AspNetCore.ExceptionHandling.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: Pack1Version
+- task: NuGetCommand@2
+  displayName: Push Furiza.AspNetCore.ExceptionHandling to NuGet.org
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  continueOnError: True
+  inputs:
+    command: push
+    nuGetFeedType: external
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.ExceptionHandling.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-exceptionhandling'
+
 # Publish Furiza.AspNetCore.Identity.EntityFrameworkCore to NuGet.org
 - task: DotNetCoreCLI@2
   displayName: Pack Furiza.AspNetCore.Identity.EntityFrameworkCore
-  condition: eq(variables['IdentityPushToNuget'], 'True')
+  condition: eq(variables['Pack1PushToNuget'], 'True')
   inputs:
     command: pack
     packagesToPack: '**/**/Furiza.AspNetCore.Identity.EntityFrameworkCore.csproj'
     versioningScheme: byEnvVar
-    versionEnvVar: IdentityVersion
+    versionEnvVar: Pack1Version
 - task: NuGetCommand@2
   displayName: Push Furiza.AspNetCore.Identity.EntityFrameworkCore to NuGet.org
-  condition: eq(variables['IdentityPushToNuget'], 'True')
+  condition: eq(variables['Pack1PushToNuget'], 'True')
   continueOnError: True
   inputs:
     command: push
     nuGetFeedType: external
     packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.Identity.EntityFrameworkCore.*.nupkg'
     publishFeedCredentials: 'apikey-nuget-aspnetcore-identity.entityframeworkcore'
+
+# Publish Furiza.AspNetCore.WebApiConfiguration to NuGet.org
+- task: DotNetCoreCLI@2
+  displayName: Pack Furiza.AspNetCore.WebApiConfiguration
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  inputs:
+    command: pack
+    packagesToPack: '**/**/Furiza.AspNetCore.WebApiConfiguration.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: Pack1Version
+- task: NuGetCommand@2
+  displayName: Push Furiza.AspNetCore.WebApiConfiguration to NuGet.org
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  continueOnError: True
+  inputs:
+    command: push
+    nuGetFeedType: external
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApiConfiguration.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-webapiconfiguration'
+
+# Publish Furiza.AspNetCore.WebApiConfiguration.SecurityProvider to NuGet.org
+- task: DotNetCoreCLI@2
+  displayName: Pack Furiza.AspNetCore.WebApiConfiguration.SecurityProvider
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  inputs:
+    command: pack
+    packagesToPack: '**/**/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: Pack1Version
+- task: NuGetCommand@2
+  displayName: Push Furiza.AspNetCore.WebApiConfiguration.SecurityProvider to NuGet.org
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  continueOnError: True
+  inputs:
+    command: push
+    nuGetFeedType: external
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-webapiconfiguration.securityprovider'
