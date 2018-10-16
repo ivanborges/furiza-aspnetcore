@@ -18,7 +18,7 @@
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
-<ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Furiza.Base.Core.Exceptions" Version="1.0.2" />
     <PackageReference Include="Furiza.Base.Core.Exceptions.Serialization" Version="1.0.2" />
     <PackageReference Include="furiza.newtonsoft.json" Version="1.0.4" />
