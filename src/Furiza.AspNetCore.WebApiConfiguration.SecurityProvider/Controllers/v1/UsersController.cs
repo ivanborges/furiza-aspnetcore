@@ -21,19 +21,22 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
     {
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ICachedUserManager cachedUserManager;
         private readonly ICacheHandler cacheHandler;
         private readonly IPasswordGenerator passwordGenerator;
         private readonly IUserNotifier emailSender;
 
         public UsersController(IMapper mapper,
             UserManager<ApplicationUser> userManager,
+            ICachedUserManager cachedUserManager,
             ICacheHandler cacheHandler,
             IPasswordGenerator passwordGenerator,
             IUserNotifier emailSender)
         {
-            this.mapper = mapper ?? throw new System.ArgumentNullException(nameof(mapper));
-            this.userManager = userManager ?? throw new System.ArgumentNullException(nameof(userManager));
-            this.cacheHandler = cacheHandler ?? throw new System.ArgumentNullException(nameof(cacheHandler));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
+            this.cacheHandler = cacheHandler ?? throw new ArgumentNullException(nameof(cacheHandler));
             this.passwordGenerator = passwordGenerator ?? throw new ArgumentNullException(nameof(passwordGenerator));
             this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
@@ -82,7 +85,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> GetAsync(string username)
         {
-            var user = await GetUserAsync(username);
+            var user = await cachedUserManager.GetUserByUserNameAsync(username);
             if (user == null)
                 return NotFound();
 
@@ -101,7 +104,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> PostAsync(UsersPost model)
         {
-            if (await GetUserAsync(model.UserName) != null)
+            if (await cachedUserManager.GetUserByUserNameAsync(model.UserName) != null)
                 throw new UserAlreadyExistsException();
 
             var user = mapper.Map<UsersPost, ApplicationUser>(model);
@@ -164,24 +167,5 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         }
 
         // TODO: criar métodos de adicionar e remover roles e claims.
-
-        private async Task<ApplicationUser> GetUserAsync(string username)
-        {
-            var normalizedUserName = username.ToUpper().Trim();
-            if (!cacheHandler.TryGetValue<ApplicationUser>(normalizedUserName, out var user))
-            {
-                user = await userManager.Users
-                    .Include(u => u.IdentityUserRoles)
-                        .ThenInclude(ur => ur.IdentityRole)
-                    .Include(u => u.IdentityClaims)
-                    .AsNoTracking()
-                    .SingleOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
-
-                if (user != null && user.EmailConfirmed && user.Roles.Any())
-                    await cacheHandler.SetAsync(normalizedUserName, user);
-            }
-
-            return user;
-        }
     }
 }

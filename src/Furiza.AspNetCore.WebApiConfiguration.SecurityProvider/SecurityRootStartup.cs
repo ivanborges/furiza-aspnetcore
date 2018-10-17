@@ -1,4 +1,5 @@
 ﻿using Furiza.AspNetCore.Identity.EntityFrameworkCore;
+using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider
         {
             services.AddFurizaIdentity(Configuration.TryGet<IdentityConfiguration>(), AddIdentityOptions);
             services.AddFurizaJwtAuthenticationProvider();
+
+            services.AddScoped<ICachedUserManager, CachedUserManager>();
         }
 
         protected override void AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app)
