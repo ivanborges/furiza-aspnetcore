@@ -5,7 +5,7 @@
 # furiza-aspnetcore
 Base packages for WebAPI startup configuration (includes logging, caching, automapping, authentication, authorization, exception handling, api versioning and api documentation with Swagger).
 
-## Packages
+## Packages details
 ||Version & Downloads|
 |---------------------------|:---:|
 |**Furiza.AspNetCore.Authentication.JwtBearer**|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.Authentication.JwtBearer)](https://www.nuget.org/packages/Furiza.AspNetCore.Authentication.JwtBearer)|
