@@ -137,6 +137,10 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<Guid>("RoleId");
 
+                    b.Property<DateTime?>("CreationDate");
+
+                    b.Property<string>("CreationUser");
+
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");

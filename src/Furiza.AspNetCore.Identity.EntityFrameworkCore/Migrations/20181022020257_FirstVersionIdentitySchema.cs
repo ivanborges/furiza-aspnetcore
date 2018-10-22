@@ -123,7 +123,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                    RoleId = table.Column<Guid>(nullable: false)
+                    RoleId = table.Column<Guid>(nullable: false),
+                    CreationDate = table.Column<DateTime>(nullable: true),
+                    CreationUser = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
