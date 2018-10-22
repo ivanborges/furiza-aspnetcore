@@ -20,9 +20,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="furiza.caching" Version="1.0.5" />
-    <PackageReference Include="furiza.extensions.configuration" Version="1.0.4" />
-    <PackageReference Include="furiza.logging" Version="1.0.4" />
+    <PackageReference Include="furiza.caching" Version="1.0.7" />
+    <PackageReference Include="furiza.extensions.configuration" Version="1.0.6" />
+    <PackageReference Include="furiza.logging" Version="1.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="2.2.0" />

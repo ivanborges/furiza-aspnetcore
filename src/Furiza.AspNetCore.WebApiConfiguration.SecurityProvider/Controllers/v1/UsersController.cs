@@ -4,6 +4,7 @@ using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
 using Furiza.Base.Core.Exceptions.Serialization;
+using Furiza.Base.Core.Identity.Abstractions;
 using Furiza.Caching.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,6 +24,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICachedUserManager cachedUserManager;
         private readonly ICacheHandler cacheHandler;
+        private readonly IUserContext userContext;
         private readonly IPasswordGenerator passwordGenerator;
         private readonly IUserNotifier emailSender;
 
@@ -30,6 +32,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             UserManager<ApplicationUser> userManager,
             ICachedUserManager cachedUserManager,
             ICacheHandler cacheHandler,
+            IUserContext userContext,
             IPasswordGenerator passwordGenerator,
             IUserNotifier emailSender)
         {
@@ -37,6 +40,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
             this.cacheHandler = cacheHandler ?? throw new ArgumentNullException(nameof(cacheHandler));
+            this.userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             this.passwordGenerator = passwordGenerator ?? throw new ArgumentNullException(nameof(passwordGenerator));
             this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
@@ -108,6 +112,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 throw new UserAlreadyExistsException();
 
             var user = mapper.Map<UsersPost, ApplicationUser>(model);
+            user.CreationDate = DateTime.UtcNow;
+            user.CreationUser = userContext.UserData.UserName;
             user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);            
 
             var password = model.GeneratePassword
@@ -167,5 +173,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         }
 
         // TODO: criar métodos de adicionar e remover roles e claims.
+        // TODO: customizar o Identity para os métodos AddClaimAsync e AddToRoleAsync do UserManager gravarem o creationdate e creationuser.
     }
 }

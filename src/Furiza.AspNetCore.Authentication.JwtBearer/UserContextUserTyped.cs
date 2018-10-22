@@ -3,6 +3,7 @@ using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -51,6 +52,13 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                                 break;
                             case (JwtRegisteredClaimNamesCustom.Department):
                                 userData.Department = claim.Value;
+                                break;
+                            case (JwtRegisteredClaimNamesCustom.CreationDate):
+                                if (DateTime.TryParseExact(claim.Value, "yyyy/MM/dd-HH:mm:ss:fff", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out var creationDate))
+                                    userData.CreationDate = creationDate;
+                                break;
+                            case (JwtRegisteredClaimNamesCustom.CreationUser):
+                                userData.CreationUser = claim.Value;
                                 break;
                             case (ClaimTypes.Role):
                             case "role":

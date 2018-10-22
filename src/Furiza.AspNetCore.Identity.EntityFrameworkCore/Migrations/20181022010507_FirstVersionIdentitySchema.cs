@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 {
-    public partial class InitialIdentitySchema : Migration
+    public partial class FirstVersionIdentitySchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    CreationDate = table.Column<DateTime>(nullable: true),
+                    CreationUser = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,7 +45,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FullName = table.Column<string>(nullable: true),
                     Company = table.Column<string>(nullable: true),
-                    Department = table.Column<string>(nullable: true)
+                    Department = table.Column<string>(nullable: true),
+                    CreationDate = table.Column<DateTime>(nullable: true),
+                    CreationUser = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,7 +83,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    ClaimValue = table.Column<string>(nullable: true),
+                    CreationDate = table.Column<DateTime>(nullable: true),
+                    CreationUser = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

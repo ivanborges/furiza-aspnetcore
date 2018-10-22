@@ -1,5 +1,5 @@
 ﻿using Furiza.AspNetCore.Identity.EntityFrameworkCore;
-using Furiza.Base.Core.Identity.Abstractions;
+using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;

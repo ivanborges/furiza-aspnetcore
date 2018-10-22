@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181008181514_InitialIdentitySchema")]
-    partial class InitialIdentitySchema
+    [Migration("20181022010507_FirstVersionIdentitySchema")]
+    partial class FirstVersionIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,6 +28,10 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<DateTime?>("CreationDate");
+
+                    b.Property<string>("CreationUser");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
@@ -56,6 +60,10 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<DateTime?>("CreationDate");
+
+                    b.Property<string>("CreationUser");
 
                     b.Property<string>("Department");
 
@@ -111,6 +119,10 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<string>("ClaimType");
 
                     b.Property<string>("ClaimValue");
+
+                    b.Property<DateTime?>("CreationDate");
+
+                    b.Property<string>("CreationUser");
 
                     b.Property<Guid>("UserId");
 

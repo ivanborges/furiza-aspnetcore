@@ -27,6 +27,10 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<DateTime?>("CreationDate");
+
+                    b.Property<string>("CreationUser");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
@@ -54,6 +58,10 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<DateTime?>("CreationDate");
+
+                    b.Property<string>("CreationUser");
 
                     b.Property<string>("Department");
 
@@ -109,6 +117,10 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<string>("ClaimType");
 
                     b.Property<string>("ClaimValue");
+
+                    b.Property<DateTime?>("CreationDate");
+
+                    b.Property<string>("CreationUser");
 
                     b.Property<Guid>("UserId");
 

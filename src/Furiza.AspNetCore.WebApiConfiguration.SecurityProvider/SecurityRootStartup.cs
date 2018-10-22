@@ -9,7 +9,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider
 {
     public abstract class SecurityRootStartup : RootStartup
     {
-        public SecurityRootStartup(IConfiguration configuration) : base(configuration)
+        protected SecurityRootStartup(IConfiguration configuration) : base(configuration)
         {
         }
 

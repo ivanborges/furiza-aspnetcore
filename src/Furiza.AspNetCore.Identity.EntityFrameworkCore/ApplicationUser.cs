@@ -37,5 +37,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             }
         }
         public virtual ICollection<ApplicationUserClaim> IdentityClaims { get; set; }
+
+        public virtual DateTime? CreationDate { get; set; }
+        public virtual string CreationUser { get; set; }
     }
 }
