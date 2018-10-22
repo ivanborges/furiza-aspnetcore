@@ -1,10 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <Authors>Furīza</Authors>
     <Copyright>Furīza (C) 2018</Copyright>
     <PackageProjectUrl>https://github.com/ivanborges/furiza-aspnetcore</PackageProjectUrl>
+    <PackageTags>furiza;aspnet core;webapi startup configuration;security provider</PackageTags>
+    <PackageIconUrl>https://www.imagemhost.com.br/images/2018/10/17/furiza_logo_transp_6.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/ivanborges/furiza-aspnetcore</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <Description>This package implements base logic for web api startup configuration and basic controllers for authentication and user management.</Description>
   </PropertyGroup>
 
