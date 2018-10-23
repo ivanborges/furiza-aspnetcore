@@ -4,5 +4,7 @@
     {
         public const string Company = "company";
         public const string Department = "department";
+        public const string CreationDate = "creation_date";
+        public const string CreationUser = "creation_user";
     }
 }

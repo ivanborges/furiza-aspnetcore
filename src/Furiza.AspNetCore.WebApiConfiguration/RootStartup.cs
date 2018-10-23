@@ -30,7 +30,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
         protected abstract ApiProfile ApiProfile { get; }
         protected IConfiguration Configuration { get; }
 
-        public RootStartup(IConfiguration configuration) =>
+        protected RootStartup(IConfiguration configuration) =>
             Configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)
@@ -61,7 +61,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions.ToList().Where(a => !a.IsDeprecated).OrderBy(a => a.ApiVersion.MajorVersion).ThenBy(a => a.ApiVersion.MinorVersion))
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions.Where(a => !a.IsDeprecated).OrderBy(a => a.ApiVersion.MajorVersion).ThenBy(a => a.ApiVersion.MinorVersion))
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"{ApiProfile.Name} {description.GroupName}{(!description.GroupName.Contains(".") ? ".0" : "")}");
             });
 
@@ -118,7 +118,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
                 });
 
                 var apiVersionDescriptionProvider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
-                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions.ToList().Where(a => !a.IsDeprecated).OrderBy(a => a.ApiVersion.MajorVersion).ThenBy(a => a.ApiVersion.MinorVersion))
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions.Where(a => !a.IsDeprecated).OrderBy(a => a.ApiVersion.MajorVersion).ThenBy(a => a.ApiVersion.MinorVersion))
                     options.SwaggerDoc(description.GroupName, CreateSwaggerInfoForApiVersion(description));
 
                 options.DescribeAllEnumsAsStrings();

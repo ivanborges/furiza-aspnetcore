@@ -7,17 +7,14 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 {
     internal class IdentityInitializer
     {
-        private readonly ApplicationDbContext dbContext;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
         private readonly IdentityConfiguration identityConfiguration;
 
-        public IdentityInitializer(ApplicationDbContext dbContext,
-            UserManager<ApplicationUser> userManager,
+        public IdentityInitializer(UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IdentityConfiguration identityConfiguration)
         {
-            this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
             this.identityConfiguration = identityConfiguration ?? throw new ArgumentNullException(nameof(identityConfiguration));
@@ -28,9 +25,14 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             foreach (var entry in Enum.GetValues(typeof(Role)))
                 if (!roleManager.RoleExistsAsync(entry.ToString()).Result)
                 {
-                    var resultado = roleManager.CreateAsync(new ApplicationRole() { Name = entry.ToString() }).Result;
+                    var resultado = roleManager.CreateAsync(new ApplicationRole()
+                    {
+                        Name = entry.ToString(),
+                        CreationDate = DateTime.UtcNow,
+                        CreationUser = "superuser"
+                    }).Result;
                     if (!resultado.Succeeded)
-                        throw new Exception($"An error occurred while creating the role {entry.ToString()}.");
+                        throw new InvalidOperationException($"An error occurred while creating the role {entry.ToString()}.");
                 }
 
             CreateUser(new ApplicationUser()
@@ -40,7 +42,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
                 Company = "furiza",
-                Department = "prez"
+                Department = "prez",
+                CreationDate = DateTime.UtcNow,
+                CreationUser = "superuser"
             }, "superuser", ApplicationUserType.System, Role.Superuser);
             CreateUser(new ApplicationUser()
             {
@@ -49,7 +53,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
                 Company = "furiza",
-                Department = "prez"
+                Department = "prez",
+                CreationDate = DateTime.UtcNow,
+                CreationUser = "superuser"
             }, "admin", ApplicationUserType.System, Role.Administrator);
             CreateUser(new ApplicationUser()
             {
@@ -58,7 +64,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
                 Company = "furiza",
-                Department = "prez"
+                Department = "prez",
+                CreationDate = DateTime.UtcNow,
+                CreationUser = "superuser"
             }, "user", ApplicationUserType.System, Role.User);
         }
 

@@ -29,8 +29,8 @@ namespace Furiza.AspNetCore.ExceptionHandling
             }
             catch (Exception ex)
             {
-                var statusCode = null as HttpStatusCode?;
-                var result = null as object;
+                HttpStatusCode statusCode;
+                object result;
 
                 if (ex is CoreException)
                 {

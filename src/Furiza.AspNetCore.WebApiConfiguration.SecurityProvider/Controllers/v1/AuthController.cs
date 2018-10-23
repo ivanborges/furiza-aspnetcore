@@ -1,13 +1,13 @@
 ﻿using Furiza.AspNetCore.Identity.EntityFrameworkCore;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Auth;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions;
+using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
 using Furiza.Base.Core.Exceptions.Serialization;
 using Furiza.Base.Core.Identity.Abstractions;
 using Furiza.Caching.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,16 +19,19 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
     public class AuthController : RootController
     {
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly ICachedUserManager cachedUserManager;
         private readonly ISignInManager<ApplicationUser> signInManager;
         private readonly IUserTokenizer<ApplicationUser> userTokenizer;
         private readonly ICacheHandler cacheHandler;
 
         public AuthController(UserManager<ApplicationUser> userManager,
+            ICachedUserManager cachedUserManager,
             ISignInManager<ApplicationUser> signInManager,
             IUserTokenizer<ApplicationUser> userTokenizer,
             ICacheHandler cacheHandler)
         {
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
             this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
             this.userTokenizer = userTokenizer ?? throw new ArgumentNullException(nameof(userTokenizer));
             this.cacheHandler = cacheHandler ?? throw new ArgumentNullException(nameof(cacheHandler));
@@ -44,23 +47,16 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         public async Task<IActionResult> PostAsync([FromBody]AuthPost model)
         {
             var result = Unauthorized() as IActionResult;
-            var errors = new List<AuthExceptionItem>();
+            
             var user = null as ApplicationUser;
             var isAuthenticated = false;
 
             switch (model.GrantType)
             {
                 case GrantType.Password:
-                    if (string.IsNullOrWhiteSpace(model.User))
-                        errors.Add(AuthExceptionItem.UserRequired);
+                    ValidateModelForGrantTypePassword(model);
 
-                    if (string.IsNullOrWhiteSpace(model.Password))
-                        errors.Add(AuthExceptionItem.PasswordRequired);
-
-                    if (errors.Any())
-                        throw new AuthException(errors);
-
-                    user = await GetUserAsync(model.User);
+                    user = await cachedUserManager.GetUserByUserNameAsync(model.User);
                     if (user != null)
                     {
                         if (!await userManager.IsEmailConfirmedAsync(user))
@@ -73,16 +69,12 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
                     break;
                 case GrantType.RefreshToken:
-                    if (string.IsNullOrWhiteSpace(model.RefreshToken))
-                        errors.Add(AuthExceptionItem.RefreshTokenRequired);
-
-                    if (errors.Any())
-                        throw new AuthException(errors);
+                    ValidateModelForGrantTypeRefreshToken(model);
 
                     if (cacheHandler.TryGetValue<RefreshTokenData>(model.RefreshToken, out var refreshTokenData))
                     {
                         await cacheHandler.RemoveAsync<RefreshTokenData>(model.RefreshToken);
-                        user = await GetUserAsync(refreshTokenData.UserName);
+                        user = await cachedUserManager.GetUserByUserNameAsync(refreshTokenData.UserName);
                         isAuthenticated = true;
                     }
 
@@ -103,23 +95,31 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return result;
         }
 
-        private async Task<ApplicationUser> GetUserAsync(string username)
+        #region [+] Privates
+        private void ValidateModelForGrantTypeRefreshToken(AuthPost model)
         {
-            var normalizedUserName = username.ToUpper().Trim();
-            if (!cacheHandler.TryGetValue<ApplicationUser>(normalizedUserName, out var user))
-            {
-                user = await userManager.Users
-                    .Include(u => u.IdentityUserRoles)
-                        .ThenInclude(ur => ur.IdentityRole)
-                    .Include(u => u.IdentityClaims)
-                    .AsNoTracking()
-                    .SingleOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
+            var errors = new List<AuthExceptionItem>();
 
-                if (user != null && user.EmailConfirmed && user.Roles.Any())
-                    await cacheHandler.SetAsync(normalizedUserName, user);
-            }
+            if (string.IsNullOrWhiteSpace(model.RefreshToken))
+                errors.Add(AuthExceptionItem.RefreshTokenRequired);
 
-            return user;
+            if (errors.Any())
+                throw new AuthException(errors);
         }
+
+        private void ValidateModelForGrantTypePassword(AuthPost model)
+        {
+            var errors = new List<AuthExceptionItem>();
+
+            if (string.IsNullOrWhiteSpace(model.User))
+                errors.Add(AuthExceptionItem.UserRequired);
+
+            if (string.IsNullOrWhiteSpace(model.Password))
+                errors.Add(AuthExceptionItem.PasswordRequired);
+
+            if (errors.Any())
+                throw new AuthException(errors);
+        }
+        #endregion
     }
 }

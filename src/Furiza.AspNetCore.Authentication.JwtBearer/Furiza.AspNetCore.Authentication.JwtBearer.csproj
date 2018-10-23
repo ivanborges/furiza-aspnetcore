@@ -5,6 +5,10 @@
     <Authors>Furīza</Authors>
     <Copyright>Furīza (C) 2018</Copyright>
     <PackageProjectUrl>https://github.com/ivanborges/furiza-aspnetcore</PackageProjectUrl>
+    <PackageTags>furiza;aspnet core;jwt bearer</PackageTags>
+    <PackageIconUrl>https://www.imagemhost.com.br/images/2018/10/17/furiza_logo_transp_6.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/ivanborges/furiza-aspnetcore</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <Description>This package implements logic for jwt generation including a set of claims widely used for user management. It also handles user data deserialization through a set of claims obtained from HttpContext making data available through dependency injection.</Description>
   </PropertyGroup>
 
@@ -19,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Furiza.Base.Core.Identity.Abstractions" Version="1.0.1" />
+    <PackageReference Include="Furiza.Base.Core.Identity.Abstractions" Version="1.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />

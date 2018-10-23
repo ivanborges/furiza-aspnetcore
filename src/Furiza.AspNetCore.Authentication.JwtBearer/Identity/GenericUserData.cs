@@ -1,4 +1,5 @@
 ﻿using Furiza.Base.Core.Identity.Abstractions;
+using System;
 using System.Collections.Generic;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer.Identity
@@ -12,5 +13,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer.Identity
         public string Department { get; set; }
         public ICollection<IRoleData> Roles { get; set; }
         public ICollection<IClaimData> Claims { get; set; }
+        public virtual DateTime? CreationDate { get; set; }
+        public virtual string CreationUser { get; set; }
     }
 }

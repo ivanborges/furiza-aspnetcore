@@ -31,15 +31,17 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                     new Claim(JwtRegisteredClaimNames.GivenName, userData.FullName),
                     new Claim(JwtRegisteredClaimNames.Email, userData.Email),
                     new Claim(JwtRegisteredClaimNamesCustom.Company, userData.Company),
-                    new Claim(JwtRegisteredClaimNamesCustom.Department, userData.Department)
+                    new Claim(JwtRegisteredClaimNamesCustom.Department, userData.Department),
+                    new Claim(JwtRegisteredClaimNamesCustom.CreationDate, userData.CreationDate?.ToString("yyyy/MM/dd-HH:mm:ss:fff")),
+                    new Claim(JwtRegisteredClaimNamesCustom.CreationUser, userData.CreationUser)
                 }
             );
 
-            if (userData.Roles?.Any() ?? false)
+            if (userData.Roles != null && userData.Roles.Any())
                 foreach (var role in userData.Roles)
                     identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
 
-            if (userData.Claims?.Any() ?? false)
+            if (userData.Claims != null && userData.Claims.Any())
                 foreach (var claim in userData.Claims)
                     identity.AddClaim(new Claim(claim.Type, claim.Value));
 
