@@ -11,6 +11,10 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
     internal class UserContextHelper
     {
+        protected UserContextHelper()
+        {
+        }
+
         public static TUserData ValidateClaimsAndBuildUserData<TUserData, TRoleData, TClaimData>(IHttpContextAccessor httpContextAccessor)
             where TUserData : IUserData
             where TRoleData : IRoleData

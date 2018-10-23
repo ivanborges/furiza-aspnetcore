@@ -5,7 +5,6 @@ using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
 using Furiza.Base.Core.Exceptions.Serialization;
 using Furiza.Base.Core.Identity.Abstractions;
-using Furiza.Caching.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +22,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICachedUserManager cachedUserManager;
-        private readonly ICacheHandler cacheHandler;
         private readonly IUserContext userContext;
         private readonly IPasswordGenerator passwordGenerator;
         private readonly IUserNotifier emailSender;
@@ -31,7 +29,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         public UsersController(IMapper mapper,
             UserManager<ApplicationUser> userManager,
             ICachedUserManager cachedUserManager,
-            ICacheHandler cacheHandler,
             IUserContext userContext,
             IPasswordGenerator passwordGenerator,
             IUserNotifier emailSender)
@@ -39,7 +36,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
-            this.cacheHandler = cacheHandler ?? throw new ArgumentNullException(nameof(cacheHandler));
             this.userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             this.passwordGenerator = passwordGenerator ?? throw new ArgumentNullException(nameof(passwordGenerator));
             this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
