@@ -1,22 +1,41 @@
-﻿using Furiza.Base.Core.Identity.Abstractions;
+﻿using Furiza.AspNetCore.Authentication.JwtBearer.Identity;
+using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
-    internal class UserContextHelper
+    internal abstract class UserContextBase<TUserWallet, TScopedRoleAssignment> //: IUserContext<TUserWallet, TScopedRoleAssignment>
+        where TUserWallet : IUserWallet
+        where TScopedRoleAssignment : IScopedRoleAssignment
     {
-        protected UserContextHelper()
+        protected readonly IHttpContextAccessor httpContextAccessor;
+        protected readonly IScopedRoleAssignmentProvider scopedRoleAssignmentProvider;
+
+        public abstract TUserWallet UserWallet { get; }
+
+        public UserContextBase(IHttpContextAccessor httpContextAccessor,
+            IScopedRoleAssignmentProvider scopedRoleAssignmentProvider)
         {
+            this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            this.scopedRoleAssignmentProvider = scopedRoleAssignmentProvider ?? throw new ArgumentNullException(nameof(scopedRoleAssignmentProvider));
         }
 
-        public static TUserWallet ValidateClaimsAndBuildUserData<TUserWallet, TRoleAssignment>(IHttpContextAccessor httpContextAccessor)
-            where TUserWallet : IUserWallet
-            where TRoleAssignment : IRoleAssignment
+        public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync()
+        {
+            var clientId = UserWallet?.RoleAssignments?.FirstOrDefault()?.ClientId;
+            if (clientId.HasValue && clientId.Value != default(Guid))
+                return (await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync(UserWallet.UserName, clientId.Value)).Cast<TScopedRoleAssignment>();
+            else
+                return default(IEnumerable<TScopedRoleAssignment>);
+        }
+
+        protected TUserWallet ValidateClaimsAndBuildUserWallet()
         {
             var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity ?? throw new UnauthorizedAccessException();
             if (!claimsIdentity.Claims.Any())
@@ -24,7 +43,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
             var userWallet = Activator.CreateInstance<TUserWallet>();
             userWallet.Claims = new List<Claim>();
-            var roleAssignments = new List<TRoleAssignment>();
+            userWallet.RoleAssignments = new List<GenericRoleAssignment>();
 
             foreach (var claim in claimsIdentity.Claims)
             {
@@ -54,17 +73,13 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                         break;
                     case (ClaimTypes.Role):
                     case "role":
-                        var roleData = Activator.CreateInstance<TRoleAssignment>();
-                        roleData.Role = claim.Value;
-                        roleAssignments.Add(roleData);
+                        userWallet.RoleAssignments.Add(new GenericRoleAssignment() { Role = claim.Value });
                         break;
                     default:
                         userWallet.Claims.Add(new Claim(claim.Type, claim.Value));
                         break;
                 }
             }
-
-            userWallet.RoleAssignments = roleAssignments.Cast<IRoleAssignment>().ToList();
 
             return userWallet;
         }

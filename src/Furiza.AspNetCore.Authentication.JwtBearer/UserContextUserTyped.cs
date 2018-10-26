@@ -5,7 +5,7 @@ using System;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
-    internal class UserContextUserTyped<TUserData> : IUserContext<TUserData>
+    internal class UserContextUserTyped<TUserWallet, TScopedRoleAssignment> : UserContextBase<TUserData, IScopedRoleAssignment>, IUserContext<TUserData>
         where TUserData : IUserData
     {
         private readonly IHttpContextAccessor httpContextAccessor;

@@ -2,28 +2,39 @@
 using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
-    internal class UserContextTypeless : IUserContext
+    internal class UserContextTypeless : UserContextBase<IUserWallet, GenericScopedRoleAssignment>, IUserContext
     {
-        private readonly IHttpContextAccessor httpContextAccessor;
-
-        public IUserData UserData
+        public override IUserWallet UserWallet
         {
             get
             {
-                if (userData == null)
-                    userData = UserContextHelper.ValidateClaimsAndBuildUserData<GenericUserData, GenericRoleData, GenericClaimData>(httpContextAccessor);                
+                if (userWallet == null)
+                    userWallet = ValidateClaimsAndBuildUserWallet();
 
-                return userData;
+                return userWallet;
             }
         }
-        private IUserData userData;
+        private IUserWallet userWallet;
 
-        public UserContextTypeless(IHttpContextAccessor httpContextAccessor)
+        public UserContextTypeless(IHttpContextAccessor httpContextAccessor,
+            IScopedRoleAssignmentProvider scopedRoleAssignmentProvider)
+            : base(httpContextAccessor, scopedRoleAssignmentProvider)
         {
-            this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
+
+        //public async Task<IEnumerable<IScopedRoleAssignment>> GetScopedRoleAssignmentsAsync()
+        //{
+        //    var clientId = UserWallet?.RoleAssignments?.FirstOrDefault()?.ClientId;
+        //    if (clientId.HasValue && clientId.Value != default(Guid))
+        //        return await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync(UserWallet.UserName, clientId.Value);
+        //    else
+        //        return default(IEnumerable<IScopedRoleAssignment>);
+        //}
     }
 }
