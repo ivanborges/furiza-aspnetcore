@@ -17,9 +17,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton(jwtConfiguration ?? throw new ArgumentNullException(nameof(jwtConfiguration)));
 
-            services.AddScoped(typeof(IUserContext), typeof(UserContextTypeless));
-            services.AddScoped(typeof(IUserContext<>), typeof(UserContextUserTyped<>));
-            services.AddScoped(typeof(IUserContext<,,>), typeof(UserContextFullTyped<,,>));
+            services.AddScoped(typeof(IUserPrincipalBuilder), typeof(UserPrincipalBuilderTypeless));
+            services.AddScoped(typeof(IUserPrincipalBuilder<,>), typeof(UserPrincipalBuilderTyped<,>));
 
             services.AddAuthentication(authOptions =>
             {
@@ -53,7 +52,7 @@ namespace Microsoft.Extensions.DependencyInjection
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
-            services.AddScoped(typeof(IUserTokenizer<>), typeof(UserTokenizer<>));
+            services.AddScoped(typeof(IUserPrincipalTokenizer), typeof(UserPrincipalTokenizer));
             services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
 
             return services;

@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer.Identity
 {
-    internal class GenericUserWallet : IUserWallet
+    internal class GenericUserPrincipal : IUserPrincipal
     {
         public string UserName { get; set; }
         public string FullName { get; set; }

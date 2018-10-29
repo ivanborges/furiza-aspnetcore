@@ -9,41 +9,41 @@ using System.Text;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
-    internal class UserTokenizer<TUserData> : IUserTokenizer<TUserData> where TUserData : IUserData
+    internal class UserPrincipalTokenizer : IUserPrincipalTokenizer
     {
         private readonly SecurityTokenHandler tokenHandler;
         private readonly JwtConfiguration jwtConfiguration;
 
-        public UserTokenizer(SecurityTokenHandler tokenHandler,
+        public UserPrincipalTokenizer(SecurityTokenHandler tokenHandler,
             JwtConfiguration jwtConfiguration)
         {
             this.tokenHandler = tokenHandler ?? throw new ArgumentNullException(nameof(tokenHandler));
             this.jwtConfiguration = jwtConfiguration ?? throw new ArgumentNullException(nameof(jwtConfiguration));
         }
 
-        public GenerateTokenResult GenerateToken(TUserData userData)
+        public GenerateTokenResult GenerateToken<TUserPrincipal>(TUserPrincipal userPrincipal)
+            where TUserPrincipal : IUserPrincipal
         {
             var identity = new ClaimsIdentity(
                 new Claim[] 
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, userData.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                    new Claim(JwtRegisteredClaimNames.GivenName, userData.FullName),
-                    new Claim(JwtRegisteredClaimNames.Email, userData.Email),
-                    new Claim(JwtRegisteredClaimNamesCustom.Company, userData.Company),
-                    new Claim(JwtRegisteredClaimNamesCustom.Department, userData.Department),
-                    new Claim(JwtRegisteredClaimNamesCustom.CreationDate, userData.CreationDate?.ToString("yyyy/MM/dd-HH:mm:ss:fff")),
-                    new Claim(JwtRegisteredClaimNamesCustom.CreationUser, userData.CreationUser)
+                    new Claim(JwtRegisteredClaimNames.Sub, userPrincipal.UserName),
+                    new Claim(JwtRegisteredClaimNames.GivenName, userPrincipal.FullName),
+                    new Claim(JwtRegisteredClaimNames.Email, userPrincipal.Email),
+                    new Claim(FurizaClaimNames.HiringType, userPrincipal.HiringType),
+                    new Claim(FurizaClaimNames.Company, userPrincipal.Company),
+                    new Claim(FurizaClaimNames.Department, userPrincipal.Department)
                 }
             );
 
-            if (userData.Roles != null && userData.Roles.Any())
-                foreach (var role in userData.Roles)
-                    identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
-
-            if (userData.Claims != null && userData.Claims.Any())
-                foreach (var claim in userData.Claims)
+            if (userPrincipal.Claims != null && userPrincipal.Claims.Any())
+                foreach (var claim in userPrincipal.Claims)
                     identity.AddClaim(new Claim(claim.Type, claim.Value));
+
+            if (userPrincipal.RoleAssignments != null && userPrincipal.RoleAssignments.Any())
+                foreach (var ra in userPrincipal.RoleAssignments)
+                    identity.AddClaim(new Claim(ClaimTypes.Role, ra.Role));
 
             var securityToken = tokenHandler.CreateToken(new SecurityTokenDescriptor()
             {

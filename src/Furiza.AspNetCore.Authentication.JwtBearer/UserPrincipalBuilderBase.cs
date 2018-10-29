@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
-    internal abstract class UserContextBase<TUserWallet, TScopedRoleAssignment> //: IUserContext<TUserWallet, TScopedRoleAssignment>
-        where TUserWallet : IUserWallet
+    internal abstract class UserPrincipalBuilderBase<TUserPrincipal, TScopedRoleAssignment> : IUserPrincipalBuilder<TUserPrincipal, TScopedRoleAssignment>
+        where TUserPrincipal : IUserPrincipal
         where TScopedRoleAssignment : IScopedRoleAssignment
     {
         protected readonly IHttpContextAccessor httpContextAccessor;
         protected readonly IScopedRoleAssignmentProvider scopedRoleAssignmentProvider;
 
-        public abstract TUserWallet UserWallet { get; }
+        public abstract TUserPrincipal UserPrincipal { get; }
 
-        public UserContextBase(IHttpContextAccessor httpContextAccessor,
+        public UserPrincipalBuilderBase(IHttpContextAccessor httpContextAccessor,
             IScopedRoleAssignmentProvider scopedRoleAssignmentProvider)
         {
             this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
@@ -28,22 +28,22 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
         public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync()
         {
-            var clientId = UserWallet?.RoleAssignments?.FirstOrDefault()?.ClientId;
+            var clientId = UserPrincipal?.RoleAssignments?.FirstOrDefault()?.ClientId;
             if (clientId.HasValue && clientId.Value != default(Guid))
-                return (await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync(UserWallet.UserName, clientId.Value)).Cast<TScopedRoleAssignment>();
+                return (await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, clientId.Value));
             else
                 return default(IEnumerable<TScopedRoleAssignment>);
         }
 
-        protected TUserWallet ValidateClaimsAndBuildUserWallet()
+        protected TUserPrincipal ValidateClaimsAndBuildUserPrincipal()
         {
             var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity ?? throw new UnauthorizedAccessException();
             if (!claimsIdentity.Claims.Any())
-                return default(TUserWallet);
+                return default(TUserPrincipal);
 
-            var userWallet = Activator.CreateInstance<TUserWallet>();
-            userWallet.Claims = new List<Claim>();
-            userWallet.RoleAssignments = new List<GenericRoleAssignment>();
+            var userPrincipal = Activator.CreateInstance<TUserPrincipal>();
+            userPrincipal.Claims = new List<Claim>();
+            userPrincipal.RoleAssignments = new List<GenericRoleAssignment>().ToList<IRoleAssignment>();
 
             foreach (var claim in claimsIdentity.Claims)
             {
@@ -54,34 +54,34 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                 switch (claimShortTypeName)
                 {
                     case (JwtRegisteredClaimNames.Sub):
-                        userWallet.UserName = claim.Value;
+                        userPrincipal.UserName = claim.Value;
                         break;
                     case (JwtRegisteredClaimNames.GivenName):
-                        userWallet.FullName = claim.Value;
+                        userPrincipal.FullName = claim.Value;
                         break;
                     case (JwtRegisteredClaimNames.Email):
-                        userWallet.Email = claim.Value;
+                        userPrincipal.Email = claim.Value;
                         break;
                     case (FurizaClaimNames.HiringType):
-                        userWallet.HiringType = claim.Value;
+                        userPrincipal.HiringType = claim.Value;
                         break;
                     case (FurizaClaimNames.Company):
-                        userWallet.Company = claim.Value;
+                        userPrincipal.Company = claim.Value;
                         break;
                     case (FurizaClaimNames.Department):
-                        userWallet.Department = claim.Value;
+                        userPrincipal.Department = claim.Value;
                         break;
                     case (ClaimTypes.Role):
                     case "role":
-                        userWallet.RoleAssignments.Add(new GenericRoleAssignment() { Role = claim.Value });
+                        userPrincipal.RoleAssignments.Add(new GenericRoleAssignment() { Role = claim.Value });
                         break;
                     default:
-                        userWallet.Claims.Add(new Claim(claim.Type, claim.Value));
+                        userPrincipal.Claims.Add(new Claim(claim.Type, claim.Value));
                         break;
                 }
             }
 
-            return userWallet;
+            return userPrincipal;
         }
     }
 }
