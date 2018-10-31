@@ -1,6 +1,8 @@
 ﻿using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
@@ -22,17 +24,17 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
         
         public void Initialize()
         {
-            foreach (var entry in Enum.GetValues(typeof(Role)))
-                if (!roleManager.RoleExistsAsync(entry.ToString()).Result)
+            foreach (FieldInfo fieldInfo in typeof(FurizaMasterRoles).GetFields().Where(x => x.IsStatic && x.IsLiteral))
+                if (!roleManager.RoleExistsAsync(fieldInfo.Name).Result)
                 {
                     var resultado = roleManager.CreateAsync(new ApplicationRole()
                     {
-                        Name = entry.ToString(),
+                        Name = fieldInfo.Name,
                         CreationDate = DateTime.UtcNow,
                         CreationUser = "superuser"
                     }).Result;
                     if (!resultado.Succeeded)
-                        throw new InvalidOperationException($"An error occurred while creating the role {entry.ToString()}.");
+                        throw new InvalidOperationException($"An error occurred while creating the role {fieldInfo.Name}.");
                 }
 
             CreateUser(new ApplicationUser()
@@ -41,46 +43,75 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 FullName = "Superuser",
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
+                HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
                 Department = "prez",
                 CreationDate = DateTime.UtcNow,
                 CreationUser = "superuser"
-            }, "superuser", ApplicationUserType.System, Role.Superuser);
+            }, new string[] { FurizaMasterRoles.Superuser });
             CreateUser(new ApplicationUser()
             {
                 UserName = "admin",
                 FullName = "Administrator",
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
+                HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
                 Department = "prez",
                 CreationDate = DateTime.UtcNow,
                 CreationUser = "superuser"
-            }, "admin", ApplicationUserType.System, Role.Administrator);
+            }, new string[] { FurizaMasterRoles.Administrator });
+            CreateUser(new ApplicationUser()
+            {
+                UserName = "editor",
+                FullName = "Editor",
+                Email = identityConfiguration.DefaultEmailAddress,
+                EmailConfirmed = true,
+                HiringType = FurizaHiringTypes.InHouse,
+                Company = "furiza",
+                Department = "prez",
+                CreationDate = DateTime.UtcNow,
+                CreationUser = "superuser"
+            }, new string[] { FurizaMasterRoles.Editor });
+            CreateUser(new ApplicationUser()
+            {
+                UserName = "approver",
+                FullName = "Approver",
+                Email = identityConfiguration.DefaultEmailAddress,
+                EmailConfirmed = true,
+                HiringType = FurizaHiringTypes.InHouse,
+                Company = "furiza",
+                Department = "prez",
+                CreationDate = DateTime.UtcNow,
+                CreationUser = "superuser"
+            }, new string[] { FurizaMasterRoles.Approver });
             CreateUser(new ApplicationUser()
             {
                 UserName = "user",
-                FullName = "Common User",
+                FullName = "Basic User",
                 Email = identityConfiguration.DefaultEmailAddress,
                 EmailConfirmed = true,
+                HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
                 Department = "prez",
                 CreationDate = DateTime.UtcNow,
                 CreationUser = "superuser"
-            }, "user", ApplicationUserType.System, Role.User);
+            });
         }
 
-        private void CreateUser(ApplicationUser user, string password, ApplicationUserType applicationUserType, Role? initialRole = null)
+        private void CreateUser(ApplicationUser user, string[] additionalRoles = null)
         {
             if (userManager.FindByNameAsync(user.UserName).Result == null)
             {
-                var creationResult = userManager.CreateAsync(user, password).Result;
+                var creationResult = userManager.CreateAsync(user, user.UserName.ToLower()).Result;
                 if (creationResult.Succeeded)
                 {
-                    userManager.AddClaimAsync(user, new Claim(ClaimTypesCustom.UserType, applicationUserType.ToString())).Wait();
+                    userManager.AddClaimAsync(user, new Claim(FurizaClaimNames.SystemUser, "")).Wait();
+                    userManager.AddToRoleAsync(user, FurizaMasterRoles.Viewer).Wait();
 
-                    if (initialRole != null)
-                        userManager.AddToRoleAsync(user, initialRole.Value.ToString()).Wait();
+                    if (additionalRoles != null)
+                        foreach (var role in additionalRoles)
+                            userManager.AddToRoleAsync(user, role).Wait();
                 }
             }
         }

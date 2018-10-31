@@ -18,8 +18,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 
             builder.Entity<ApplicationUser>(user =>
             {
-                user.Ignore(u => u.Roles);
                 user.Ignore(u => u.Claims);
+                user.Ignore(u => u.RoleAssignments);
             });
             builder.Entity<ApplicationUserRole>(userRole =>
             {
@@ -37,9 +37,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             });
             builder.Entity<ApplicationUserClaim>(userClaim =>
             {
-                userClaim.Ignore(uc => uc.Type);
-                userClaim.Ignore(uc => uc.Value);
-
                 userClaim.HasOne(uc => uc.IdentityUser)
                     .WithMany(u => u.IdentityClaims)
                     .HasForeignKey(uc => uc.UserId)

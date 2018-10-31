@@ -22,7 +22,11 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             }
             set
             {
-                IdentityClaims = value.Select(c => new ApplicationUserClaim() { ClaimType = c.Type, ClaimValue = c.Value }).ToList();
+                IdentityClaims = value.Select(c => new ApplicationUserClaim()
+                {
+                    ClaimType = c.Type,
+                    ClaimValue = c.Value
+                }).ToList();
             }
         }
         public virtual ICollection<ApplicationUserClaim> IdentityClaims { get; set; }
@@ -31,11 +35,16 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
         {
             get
             {
-                return IdentityUserRoles?.Select(ur => ur.IdentityRole as IRoleData).ToList();
+                return IdentityUserRoles?.ToList<IRoleAssignment>();
             }
             set
             {
-                IdentityUserRoles = value.Select(r => new ApplicationUserRole() { IdentityRole = new ApplicationRole() { Name = r.Name } }).ToList();
+                IdentityUserRoles = value.Select(ra => new ApplicationUserRole()
+                {
+                    ClientId = ra.ClientId,
+                    UserName = ra.UserName,
+                    Role = ra.Role
+                }).ToList();
             }
         }
         public virtual ICollection<ApplicationUserRole> IdentityUserRoles { get; set; }

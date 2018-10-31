@@ -8,7 +8,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
     {
         public virtual Guid ClientId { get; set; }
 
-        public virtual string UserName {
+        public virtual string UserName
+        {
             get
             {
                 return IdentityUser?.UserName;
