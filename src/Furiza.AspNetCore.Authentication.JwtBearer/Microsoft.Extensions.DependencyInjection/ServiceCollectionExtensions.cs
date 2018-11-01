@@ -31,7 +31,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 bearerOptions.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = true,
+                    ValidateAudience = jwtConfiguration.Issuer != jwtConfiguration.Audience, // TODO: validar na api de seguranca se o token gerado para um client X serviu para, por exemplo, criar um usuario ! ... para testar, podemos colocar aqui como True fixo... dessa forma, eh proivavrl q receba um unauthorized ao tentar criar user...
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
 

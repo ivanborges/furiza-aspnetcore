@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
     internal abstract class UserPrincipalBuilderBase<TUserPrincipal, TScopedRoleAssignment> : IUserPrincipalBuilder<TUserPrincipal, TScopedRoleAssignment>
-        where TUserPrincipal : IUserPrincipal
+        where TUserPrincipal : IUserPrincipal, new()
         where TScopedRoleAssignment : IScopedRoleAssignment
     {
         protected readonly IHttpContextAccessor httpContextAccessor;
@@ -28,9 +28,9 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
         public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync()
         {
-            var clientId = UserPrincipal?.RoleAssignments?.FirstOrDefault()?.ClientId;
-            if (clientId.HasValue && clientId.Value != default(Guid))
-                return (await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, clientId.Value));
+            var clientId = UserPrincipal?.Claims?.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId)?.Value;
+            if (!string.IsNullOrWhiteSpace(clientId) && clientId != default(Guid).ToString())
+                return (await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, new Guid(clientId)));
             else
                 return default(IEnumerable<TScopedRoleAssignment>);
         }
@@ -41,9 +41,11 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             if (!claimsIdentity.Claims.Any())
                 return default(TUserPrincipal);
 
-            var userPrincipal = Activator.CreateInstance<TUserPrincipal>();
-            userPrincipal.Claims = new List<Claim>();
-            userPrincipal.RoleAssignments = new List<GenericRoleAssignment>().ToList<IRoleAssignment>();
+            var userPrincipal = new TUserPrincipal()
+            {
+                Claims = new List<Claim>(),
+                RoleAssignments = new List<GenericRoleAssignment>().ToList<IRoleAssignment>()
+            };
 
             foreach (var claim in claimsIdentity.Claims)
             {
@@ -55,6 +57,9 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                 {
                     case (JwtRegisteredClaimNames.Sub):
                         userPrincipal.UserName = claim.Value;
+                        break;
+                    case (JwtRegisteredClaimNames.Aud):
+                        userPrincipal.Claims.Add(new Claim(FurizaClaimNames.ClientId, claim.Value));
                         break;
                     case (JwtRegisteredClaimNames.GivenName):
                         userPrincipal.FullName = claim.Value;

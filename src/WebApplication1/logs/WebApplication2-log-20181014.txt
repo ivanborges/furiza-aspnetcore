@@ -1,0 +1,205 @@
+2018-10-14 16:54:50.578 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 16:54:52.713 -03:00 [Information] Migrations applied.
+2018-10-14 16:54:52.714 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 16:54:53.021 -03:00 [Information] Database filled.
+2018-10-14 16:55:33.414 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 16:55:33.894 -03:00 [Information] Migrations applied.
+2018-10-14 16:55:33.895 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 16:55:34.160 -03:00 [Information] Database filled.
+2018-10-14 17:01:42.011 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 17:01:42.451 -03:00 [Information] Migrations applied.
+2018-10-14 17:01:42.452 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 17:01:42.703 -03:00 [Information] Database filled.
+2018-10-14 17:04:41.061 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 17:04:41.539 -03:00 [Information] Migrations applied.
+2018-10-14 17:04:41.540 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 17:04:41.812 -03:00 [Information] Database filled.
+2018-10-14 17:06:29.441 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 17:06:29.909 -03:00 [Information] Migrations applied.
+2018-10-14 17:06:29.910 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 17:06:30.178 -03:00 [Information] Database filled.
+2018-10-14 17:09:09.081 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 17:09:09.596 -03:00 [Information] Migrations applied.
+2018-10-14 17:09:09.597 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 17:09:09.866 -03:00 [Information] Database filled.
+2018-10-14 17:13:39.282 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 17:13:39.865 -03:00 [Information] Migrations applied.
+2018-10-14 17:13:39.866 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 17:13:40.179 -03:00 [Information] Database filled.
+2018-10-14 17:56:33.527 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 17:56:35.068 -03:00 [Information] Migrations applied.
+2018-10-14 17:56:35.069 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 17:56:35.386 -03:00 [Information] Database filled.
+2018-10-14 18:17:43.552 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 18:17:44.841 -03:00 [Information] Migrations applied.
+2018-10-14 18:17:44.842 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 18:17:45.115 -03:00 [Information] Database filled.
+2018-10-14 18:24:04.550 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 18:24:05.040 -03:00 [Information] Migrations applied.
+2018-10-14 18:24:05.041 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 18:24:05.305 -03:00 [Information] Database filled.
+2018-10-14 18:29:47.567 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 18:29:47.989 -03:00 [Information] Migrations applied.
+2018-10-14 18:29:47.990 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 18:29:48.234 -03:00 [Information] Database filled.
+2018-10-14 18:37:51.919 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 18:37:52.379 -03:00 [Information] Migrations applied.
+2018-10-14 18:37:52.380 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 18:37:52.640 -03:00 [Information] Database filled.
+2018-10-14 19:02:46.935 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 19:02:48.431 -03:00 [Information] Migrations applied.
+2018-10-14 19:02:48.431 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 19:02:48.700 -03:00 [Information] Database filled.
+2018-10-14 19:10:02.196 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 19:10:02.703 -03:00 [Information] Migrations applied.
+2018-10-14 19:10:02.704 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 19:10:03.015 -03:00 [Information] Database filled.
+2018-10-14 19:10:32.491 -03:00 [Error] An internal error occurred [LogId:7a8a240e-3ae7-4a7e-8cc2-5130998e08e6].
+System.ArgumentNullException: Value cannot be null.
+Parameter name: predicate
+   at System.Linq.Enumerable.Where[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1.UsersController.GetAsync(GetMany filters) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Controllers\v1\UsersController.cs:line 49
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Furiza.AspNetCore.ExceptionHandling.ExceptionMiddleware.Invoke(HttpContext context) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.ExceptionHandling\ExceptionMiddleware.cs:line 28
+2018-10-14 19:12:41.959 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 19:12:42.445 -03:00 [Information] Migrations applied.
+2018-10-14 19:12:42.446 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 19:12:42.729 -03:00 [Information] Database filled.
+2018-10-14 19:13:38.086 -03:00 [Error] An internal error occurred [LogId:b31c00b4-3df1-42aa-8ba2-04154af0da4d].
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Any[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1.UsersController.<>c__DisplayClass4_0.<GetAsync>b__0(ApplicationUser u) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Controllers\v1\UsersController.cs:line 41
+   at System.Linq.Enumerable.WhereEnumerableIterator`1.ToArray()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.OrderedEnumerable`1.ToList()
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1.UsersController.GetAsync(GetMany filters) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Controllers\v1\UsersController.cs:line 52
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Furiza.AspNetCore.ExceptionHandling.ExceptionMiddleware.Invoke(HttpContext context) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.ExceptionHandling\ExceptionMiddleware.cs:line 28
+2018-10-14 19:13:42.998 -03:00 [Error] An internal error occurred [LogId:c058b7ea-be92-4b71-a817-8d9313b2f874].
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Any[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1.UsersController.<>c__DisplayClass4_0.<GetAsync>b__0(ApplicationUser u) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Controllers\v1\UsersController.cs:line 41
+   at System.Linq.Enumerable.WhereEnumerableIterator`1.ToArray()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.OrderedEnumerable`1.ToList()
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1.UsersController.GetAsync(GetMany filters) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Controllers\v1\UsersController.cs:line 52
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Furiza.AspNetCore.ExceptionHandling.ExceptionMiddleware.Invoke(HttpContext context) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.ExceptionHandling\ExceptionMiddleware.cs:line 28
+2018-10-14 19:15:09.372 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 19:15:09.865 -03:00 [Information] Migrations applied.
+2018-10-14 19:15:09.866 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 19:15:10.180 -03:00 [Information] Database filled.
+2018-10-14 19:15:29.917 -03:00 [Error] An internal error occurred [LogId:cb6cb9bc-d8ff-4322-9532-6293ab32ed78].
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.Any[TSource](IEnumerable`1 source, Func`2 predicate)
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1.UsersController.<>c__DisplayClass4_0.<GetAsync>b__0(ApplicationUser u) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Controllers\v1\UsersController.cs:line 41
+   at System.Linq.Enumerable.WhereEnumerableIterator`1.ToArray()
+   at System.Linq.Buffer`1..ctor(IEnumerable`1 source)
+   at System.Linq.OrderedEnumerable`1.ToList()
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1.UsersController.GetAsync(GetMany filters) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Controllers\v1\UsersController.cs:line 52
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at System.Threading.Tasks.ValueTask`1.get_Result()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeNextActionFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.InvokeInnerFilterAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeNextResourceFilter()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeFilterPipelineAsync()
+   at Microsoft.AspNetCore.Mvc.Internal.ResourceInvoker.InvokeAsync()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Furiza.AspNetCore.ExceptionHandling.ExceptionMiddleware.Invoke(HttpContext context) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.ExceptionHandling\ExceptionMiddleware.cs:line 28
+2018-10-14 19:17:23.085 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 19:17:23.553 -03:00 [Information] Migrations applied.
+2018-10-14 19:17:23.554 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 19:17:23.847 -03:00 [Information] Database filled.
+2018-10-14 20:20:40.684 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 20:20:42.123 -03:00 [Information] Migrations applied.
+2018-10-14 20:20:42.123 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 20:20:42.391 -03:00 [Information] Database filled.
+2018-10-14 23:07:18.048 -03:00 [Information] Applying migrations for Identity...
+2018-10-14 23:07:19.306 -03:00 [Information] Migrations applied.
+2018-10-14 23:07:19.307 -03:00 [Information] Filling database with system users and roles...
+2018-10-14 23:07:19.585 -03:00 [Information] Database filled.
+2018-10-14 23:07:25.542 -03:00 [Error] An internal error occurred [LogId:006f62f9-ccbf-460e-a581-18fa2f661183].
+System.InvalidOperationException: Conflicting schemaIds: Identical schemaIds detected for types Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users.Post and Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Auth.Post. See config settings - "CustomSchemaIds" for a workaround
+   at Swashbuckle.AspNetCore.SwaggerGen.SchemaIdManager.IdFor(Type type)
+   at Swashbuckle.AspNetCore.SwaggerGen.SchemaRegistry.CreateReferenceSchema(Type type, Queue`1 referencedTypes)
+   at Swashbuckle.AspNetCore.SwaggerGen.SchemaRegistry.GetOrRegister(Type type)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreateParameter(ApiDescription apiDescription, ApiParameterDescription apiParameterDescription, ISchemaRegistry schemaRegistry)
+   at System.Linq.Enumerable.WhereSelectListIterator`2.ToList()
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreateOperation(ApiDescription apiDescription, ISchemaRegistry schemaRegistry)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreatePathItem(IEnumerable`1 apiDescriptions, ISchemaRegistry schemaRegistry)
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreatePathItems(IEnumerable`1 apiDescriptions, ISchemaRegistry schemaRegistry)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwagger(String documentName, String host, String basePath, String[] schemes)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Furiza.AspNetCore.ExceptionHandling.ExceptionMiddleware.Invoke(HttpContext context) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.ExceptionHandling\ExceptionMiddleware.cs:line 28
+2018-10-14 23:07:32.403 -03:00 [Error] An internal error occurred [LogId:0b7e3972-ce2e-42d6-978e-8b5ab3b11edc].
+System.InvalidOperationException: Conflicting schemaIds: Identical schemaIds detected for types Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users.Post and Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Auth.Post. See config settings - "CustomSchemaIds" for a workaround
+   at Swashbuckle.AspNetCore.SwaggerGen.SchemaIdManager.IdFor(Type type)
+   at Swashbuckle.AspNetCore.SwaggerGen.SchemaRegistry.CreateReferenceSchema(Type type, Queue`1 referencedTypes)
+   at Swashbuckle.AspNetCore.SwaggerGen.SchemaRegistry.GetOrRegister(Type type)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreateParameter(ApiDescription apiDescription, ApiParameterDescription apiParameterDescription, ISchemaRegistry schemaRegistry)
+   at System.Linq.Enumerable.WhereSelectListIterator`2.ToList()
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreateOperation(ApiDescription apiDescription, ISchemaRegistry schemaRegistry)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreatePathItem(IEnumerable`1 apiDescriptions, ISchemaRegistry schemaRegistry)
+   at System.Linq.Enumerable.ToDictionary[TSource,TKey,TElement](IEnumerable`1 source, Func`2 keySelector, Func`2 elementSelector, IEqualityComparer`1 comparer)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.CreatePathItems(IEnumerable`1 apiDescriptions, ISchemaRegistry schemaRegistry)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwagger(String documentName, String host, String basePath, String[] schemes)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Furiza.AspNetCore.ExceptionHandling.ExceptionMiddleware.Invoke(HttpContext context) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.ExceptionHandling\ExceptionMiddleware.cs:line 28

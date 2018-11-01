@@ -24,6 +24,9 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
         public GenerateTokenResult GenerateToken<TUserPrincipal>(TUserPrincipal userPrincipal)
             where TUserPrincipal : IUserPrincipal
         {
+            var claimAud = userPrincipal.Claims?.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId)
+                ?? throw new InvalidOperationException("User principal does not contain a valid ClientId claim.");
+
             var identity = new ClaimsIdentity(
                 new Claim[] 
                 {
@@ -38,7 +41,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             );
 
             if (userPrincipal.Claims != null && userPrincipal.Claims.Any())
-                foreach (var claim in userPrincipal.Claims)
+                foreach (var claim in userPrincipal.Claims.Where(c => c.Type != FurizaClaimNames.ClientId))
                     identity.AddClaim(new Claim(claim.Type, claim.Value));
 
             if (userPrincipal.RoleAssignments != null && userPrincipal.RoleAssignments.Any())
@@ -48,7 +51,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             var securityToken = tokenHandler.CreateToken(new SecurityTokenDescriptor()
             {
                 Issuer = jwtConfiguration.Issuer,
-                Audience = jwtConfiguration.Audience,
+                Audience = claimAud.Value,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)), SecurityAlgorithms.HmacSha256),
                 Subject = identity,
                 NotBefore = DateTime.UtcNow,

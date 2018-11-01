@@ -20,20 +20,20 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICachedUserManager cachedUserManager;
-        private readonly ISignInManager<ApplicationUser> signInManager;
-        private readonly IUserTokenizer<ApplicationUser> userTokenizer;
+        private readonly ISignInManager signInManager;
+        private readonly IUserPrincipalTokenizer userPrincipalTokenizer;
         private readonly ICacheHandler cacheHandler;
 
         public AuthController(UserManager<ApplicationUser> userManager,
             ICachedUserManager cachedUserManager,
-            ISignInManager<ApplicationUser> signInManager,
-            IUserTokenizer<ApplicationUser> userTokenizer,
+            ISignInManager signInManager,
+            IUserPrincipalTokenizer userPrincipalTokenizer,
             ICacheHandler cacheHandler)
         {
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
             this.signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
-            this.userTokenizer = userTokenizer ?? throw new ArgumentNullException(nameof(userTokenizer));
+            this.userPrincipalTokenizer = userPrincipalTokenizer ?? throw new ArgumentNullException(nameof(userPrincipalTokenizer));
             this.cacheHandler = cacheHandler ?? throw new ArgumentNullException(nameof(cacheHandler));
         }
 
@@ -56,7 +56,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 case GrantType.Password:
                     ValidateModelForGrantTypePassword(model);
 
-                    user = await cachedUserManager.GetUserByUserNameAsync(model.User);
+                    user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.User, model.ClientId.Value);
                     if (user != null)
                     {
                         if (!await userManager.IsEmailConfirmedAsync(user))
@@ -74,7 +74,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                     if (cacheHandler.TryGetValue<RefreshTokenData>(model.RefreshToken, out var refreshTokenData))
                     {
                         await cacheHandler.RemoveAsync<RefreshTokenData>(model.RefreshToken);
-                        user = await cachedUserManager.GetUserByUserNameAsync(refreshTokenData.UserName);
+                        user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(refreshTokenData.UserName, model.ClientId.Value);
                         isAuthenticated = true;
                     }
 
@@ -83,7 +83,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             if (isAuthenticated)
             {
-                var authPostResult = new AuthPostResult(userTokenizer.GenerateToken(user));
+                var authPostResult = new AuthPostResult(userPrincipalTokenizer.GenerateToken(user));
                 await cacheHandler.SetAsync(authPostResult.RefreshToken, new RefreshTokenData()
                 {
                     Token = authPostResult.RefreshToken,

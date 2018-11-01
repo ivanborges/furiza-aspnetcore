@@ -22,21 +22,18 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICachedUserManager cachedUserManager;
-        private readonly IUserContext userContext;
         private readonly IPasswordGenerator passwordGenerator;
         private readonly IUserNotifier emailSender;
 
         public UsersController(IMapper mapper,
             UserManager<ApplicationUser> userManager,
             ICachedUserManager cachedUserManager,
-            IUserContext userContext,
             IPasswordGenerator passwordGenerator,
             IUserNotifier emailSender)
         {
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
-            this.userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             this.passwordGenerator = passwordGenerator ?? throw new ArgumentNullException(nameof(passwordGenerator));
             this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
@@ -48,16 +45,16 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         public IActionResult Get([FromQuery]UsersGetMany filters)
         {
             Func<ApplicationUser, bool> p1 = u => true;
-            if (filters.Role != null)
-                p1 = u => u.IdentityUserRoles.Any(ur => ur.IdentityRole.Name == filters.Role.ToString());
+            if (!string.IsNullOrWhiteSpace(filters.Role))
+                p1 = u => u.IdentityUserRoles.Any(ur => ur.IdentityRole.Name.Trim().ToLower() == filters.Role.Trim().ToLower());
 
             Func<ApplicationUser, bool> p2 = u => true;
             if (!string.IsNullOrWhiteSpace(filters.Company))
-                p2 = u => u.Company == filters.Company;
+                p2 = u => u.Company.Trim().ToLower() == filters.Company.Trim().ToLower();
 
             Func<ApplicationUser, bool> p3 = u => true;
             if (!string.IsNullOrWhiteSpace(filters.Department))
-                p3 = u => u.Department == filters.Department;
+                p3 = u => u.Department.Trim().ToLower() == filters.Department.Trim().ToLower();
 
             var allUsers = userManager.Users
                 .Include(u => u.IdentityUserRoles)
@@ -85,7 +82,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> GetAsync(string username)
         {
-            var user = await cachedUserManager.GetUserByUserNameAsync(username);
+            var user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(username);
             if (user == null)
                 return NotFound();
 
@@ -94,7 +91,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(result);
         }
 
-        [Authorize(Roles = "Superuser,Administrator")]
+        [Authorize(Roles = FurizaMasterRoles.Superuser + "," + FurizaMasterRoles.Administrator)] // TODO: criar policy...
         [HttpPost]
         [ProducesResponseType(typeof(UsersPostResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
@@ -104,12 +101,10 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> PostAsync(UsersPost model)
         {
-            if (await cachedUserManager.GetUserByUserNameAsync(model.UserName) != null)
+            if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName) != null)
                 throw new UserAlreadyExistsException();
 
             var user = mapper.Map<UsersPost, ApplicationUser>(model);
-            user.CreationDate = DateTime.UtcNow;
-            user.CreationUser = userContext.UserData.UserName;
             user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);            
 
             var password = model.GeneratePassword

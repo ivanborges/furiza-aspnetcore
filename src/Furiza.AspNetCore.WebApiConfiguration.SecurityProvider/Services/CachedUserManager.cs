@@ -1,7 +1,9 @@
 ﻿using Furiza.AspNetCore.Identity.EntityFrameworkCore;
+using Furiza.Base.Core.Identity.Abstractions;
 using Furiza.Caching.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,7 +21,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
             this.cacheHandler = cacheHandler ?? throw new System.ArgumentNullException(nameof(cacheHandler));
         }
 
-        public async Task<ApplicationUser> GetUserByUserNameAsync(string username)
+        public async Task<ApplicationUser> GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(string username, Guid? clientId = null)
         {
             var normalizedUserName = username.ToUpper().Trim();
             if (!cacheHandler.TryGetValue<ApplicationUser>(normalizedUserName, out var user))
@@ -31,8 +33,18 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
                     .AsNoTracking()
                     .SingleOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
 
-                if (user != null && user.EmailConfirmed && user.Roles.Any())
+                if (user != null && user.EmailConfirmed && user.RoleAssignments.Any())
                     await cacheHandler.SetAsync(normalizedUserName, user);
+            }
+
+            if (clientId.HasValue && clientId.Value != default(Guid))
+            {
+                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == clientId.Value).ToList();
+                user.IdentityClaims.Add(new ApplicationUserClaim()
+                {
+                    ClaimType = FurizaClaimNames.ClientId,
+                    ClaimValue = clientId.Value.ToString()
+                });
             }
 
             return user;

@@ -39,6 +39,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration
 
             AddCustomServicesAtTheBeginning(services);
 
+            // TODO: testar se numa api sem o Identity, o UserPrincipalBuilder vai funcionar porque ele exige um HttpContextACessor,
+            // que aparentemente não tem teve registro aqui (o registro hj esta no .AddIdentity()...).
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
             services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
