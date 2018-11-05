@@ -37,8 +37,8 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
         protected TUserPrincipal ValidateClaimsAndBuildUserPrincipal()
         {
-            var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity ?? throw new UnauthorizedAccessException();
-            if (!claimsIdentity.Claims.Any())
+            var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
+            if (claimsIdentity == null || !claimsIdentity.Claims.Any())
                 return default(TUserPrincipal);
 
             var userPrincipal = new TUserPrincipal()

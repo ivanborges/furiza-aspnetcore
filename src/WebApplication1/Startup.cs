@@ -25,8 +25,9 @@ namespace WebApplication1
         
         protected override void AddCustomServicesAtTheEnd(IServiceCollection services)
         {
-            
 
+            
+            services.AddTransient<IScopedRoleAssignmentProvider, ScopedRoleAssignmentProviderTeste>();
             services.AddTransient<ISignInManager, SignInTeste>();
             services.AddTransient<IPasswordGenerator, PasswordGeneratorTeste>();
             services.AddTransient<IUserNotifier, EmailSenderTeste>();

@@ -19,6 +19,24 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             this.userPrincipalBuilder = userPrincipalBuilder ?? throw new ArgumentNullException(nameof(userPrincipalBuilder));
         }
 
+        public async override Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            user.CreationDate = DateTime.UtcNow;
+            user.CreationUser = userPrincipalBuilder.UserPrincipal.UserName;
+
+            Context.Set<ApplicationUser>().Add(user);
+
+            await SaveChanges(cancellationToken);
+
+            return IdentityResult.Success;
+        }
+
         public async override Task AddToRoleAsync(ApplicationUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -47,6 +65,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
                 CreationDate = DateTime.UtcNow,
                 CreationUser = userPrincipalBuilder.UserPrincipal.UserName
             });
+
+            // TODO: por qu nao tem o SaveChanges aqui ?
         }
     }
 }

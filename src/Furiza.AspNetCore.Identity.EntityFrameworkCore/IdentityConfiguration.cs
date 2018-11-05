@@ -9,5 +9,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 
         [Required]
         public string DefaultEmailAddress { get; set; }
+
+        public bool EnableMigrations { get; set; } = false;
     }
 }

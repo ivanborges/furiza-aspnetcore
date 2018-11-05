@@ -45,9 +45,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 EmailConfirmed = true,
                 HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
-                Department = "prez",
-                CreationDate = DateTime.UtcNow,
-                CreationUser = "superuser"
+                Department = "prez"
             }, new string[] { FurizaMasterRoles.Superuser });
             CreateUser(new ApplicationUser()
             {
@@ -57,9 +55,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 EmailConfirmed = true,
                 HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
-                Department = "prez",
-                CreationDate = DateTime.UtcNow,
-                CreationUser = "superuser"
+                Department = "prez"
             }, new string[] { FurizaMasterRoles.Administrator });
             CreateUser(new ApplicationUser()
             {
@@ -69,9 +65,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 EmailConfirmed = true,
                 HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
-                Department = "prez",
-                CreationDate = DateTime.UtcNow,
-                CreationUser = "superuser"
+                Department = "prez"
             }, new string[] { FurizaMasterRoles.Editor });
             CreateUser(new ApplicationUser()
             {
@@ -81,9 +75,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 EmailConfirmed = true,
                 HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
-                Department = "prez",
-                CreationDate = DateTime.UtcNow,
-                CreationUser = "superuser"
+                Department = "prez"
             }, new string[] { FurizaMasterRoles.Approver });
             CreateUser(new ApplicationUser()
             {
@@ -93,9 +85,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 EmailConfirmed = true,
                 HiringType = FurizaHiringTypes.InHouse,
                 Company = "furiza",
-                Department = "prez",
-                CreationDate = DateTime.UtcNow,
-                CreationUser = "superuser"
+                Department = "prez"
             });
         }
 

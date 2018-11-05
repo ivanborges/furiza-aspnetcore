@@ -1,0 +1,388 @@
+2018-11-02 16:18:25.312 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:18:28.418 -03:00 [INF] Migrations applied.
+2018-11-02 16:18:28.421 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:19:07.653 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:19:09.398 -03:00 [INF] Migrations applied.
+2018-11-02 16:19:09.400 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:19:09.485 -03:00 [FTL] Application startup exception
+System.InvalidOperationException: Unable to resolve service for type 'Furiza.Base.Core.Identity.Abstractions.IScopedRoleAssignmentProvider' while attempting to activate 'Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless'.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.CreateServiceAccessor(Type serviceType)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilderExtensions.UseFurizaIdentityInitializer(IApplicationBuilder applicationBuilder) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Microsoft.AspNetCore.Builder\ApplicationBuilderExtensions.cs:line 42
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.SecurityRootStartup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\SecurityRootStartup.cs:line 27
+   at WebApplication1.Startup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\WebApplication1\Startup.cs:line 44
+   at Furiza.AspNetCore.WebApiConfiguration.RootStartup.Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration\RootStartup.cs:line 70
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.InjectApiVersionRoutePolicy.<>c__DisplayClass2_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISSetupFilter.<>c__DisplayClass4_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+2018-11-02 16:24:54.579 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:25:05.961 -03:00 [INF] Migrations applied.
+2018-11-02 16:25:05.962 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:26:12.205 -03:00 [ERR] Failed executing DbCommand (20ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AccessFailedCount], [u].[Company], [u].[ConcurrencyStamp], [u].[CreationDate], [u].[CreationUser], [u].[Department], [u].[Email], [u].[EmailConfirmed], [u].[FullName], [u].[HiringType], [u].[LockoutEnabled], [u].[LockoutEnd], [u].[NormalizedEmail], [u].[NormalizedUserName], [u].[PasswordHash], [u].[PhoneNumber], [u].[PhoneNumberConfirmed], [u].[SecurityStamp], [u].[TwoFactorEnabled], [u].[UserName]
+FROM [AspNetUsers] AS [u]
+WHERE [u].[NormalizedUserName] = @__normalizedUserName_0
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+ClientConnectionId:fa73f101-4506-4f9b-87c1-1a1f9e10bb0a
+Error Number:207,State:1,Class:16
+2018-11-02 16:26:12.346 -03:00 [ERR] An exception occurred in the database while iterating the results of a query for context type 'Furiza.AspNetCore.Identity.EntityFrameworkCore.ApplicationDbContext'.
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+ClientConnectionId:fa73f101-4506-4f9b-87c1-1a1f9e10bb0a
+Error Number:207,State:1,Class:16
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteSingletonAsyncQuery[TResult](QueryContext queryContext, Func`2 compiledQuery, IDiagnosticsLogger`1 logger, Type contextType)
+ClientConnectionId:fa73f101-4506-4f9b-87c1-1a1f9e10bb0a
+Error Number:207,State:1,Class:16
+2018-11-02 16:27:51.141 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:27:51.565 -03:00 [INF] Migrations applied.
+2018-11-02 16:27:51.566 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:27:51.831 -03:00 [ERR] Failed executing DbCommand (2ms) [Parameters=[@__normalizedUserName_0='?' (Size = 256)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [u].[Id], [u].[AccessFailedCount], [u].[Company], [u].[ConcurrencyStamp], [u].[CreationDate], [u].[CreationUser], [u].[Department], [u].[Email], [u].[EmailConfirmed], [u].[FullName], [u].[HiringType], [u].[LockoutEnabled], [u].[LockoutEnd], [u].[NormalizedEmail], [u].[NormalizedUserName], [u].[PasswordHash], [u].[PhoneNumber], [u].[PhoneNumberConfirmed], [u].[SecurityStamp], [u].[TwoFactorEnabled], [u].[UserName]
+FROM [AspNetUsers] AS [u]
+WHERE [u].[NormalizedUserName] = @__normalizedUserName_0
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+ClientConnectionId:fd3ebcf6-c0d5-46c9-b186-7aae876f2a86
+Error Number:207,State:1,Class:16
+2018-11-02 16:27:51.899 -03:00 [ERR] An exception occurred in the database while iterating the results of a query for context type 'Furiza.AspNetCore.Identity.EntityFrameworkCore.ApplicationDbContext'.
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+ClientConnectionId:fd3ebcf6-c0d5-46c9-b186-7aae876f2a86
+Error Number:207,State:1,Class:16
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteSingletonAsyncQuery[TResult](QueryContext queryContext, Func`2 compiledQuery, IDiagnosticsLogger`1 logger, Type contextType)
+ClientConnectionId:fd3ebcf6-c0d5-46c9-b186-7aae876f2a86
+Error Number:207,State:1,Class:16
+2018-11-02 16:27:51.907 -03:00 [ERR] An exception occurred in the database while iterating the results of a query for context type 'Furiza.AspNetCore.Identity.EntityFrameworkCore.ApplicationDbContext'.
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteSingletonAsyncQuery[TResult](QueryContext queryContext, Func`2 compiledQuery, IDiagnosticsLogger`1 logger, Type contextType)
+ClientConnectionId:fd3ebcf6-c0d5-46c9-b186-7aae876f2a86
+Error Number:207,State:1,Class:16
+System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteSingletonAsyncQuery[TResult](QueryContext queryContext, Func`2 compiledQuery, IDiagnosticsLogger`1 logger, Type contextType)
+   at Microsoft.AspNetCore.Identity.UserManager`1.FindByNameAsync(String userName)
+ClientConnectionId:fd3ebcf6-c0d5-46c9-b186-7aae876f2a86
+Error Number:207,State:1,Class:16
+2018-11-02 16:27:51.937 -03:00 [FTL] Application startup exception
+System.AggregateException: One or more errors occurred. (Invalid column name 'HiringType'.) ---> System.Data.SqlClient.SqlException: Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteSingletonAsyncQuery[TResult](QueryContext queryContext, Func`2 compiledQuery, IDiagnosticsLogger`1 logger, Type contextType)
+   at Microsoft.AspNetCore.Identity.UserManager`1.FindByNameAsync(String userName)
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.IdentityInitializer.CreateUser(ApplicationUser user, String[] additionalRoles) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\IdentityInitializer.cs:line 104
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.IdentityInitializer.Initialize() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\IdentityInitializer.cs:line 40
+   at Microsoft.AspNetCore.Builder.ApplicationBuilderExtensions.UseFurizaIdentityInitializer(IApplicationBuilder applicationBuilder) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Microsoft.AspNetCore.Builder\ApplicationBuilderExtensions.cs:line 42
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.SecurityRootStartup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\SecurityRootStartup.cs:line 27
+   at WebApplication1.Startup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\WebApplication1\Startup.cs:line 45
+   at Furiza.AspNetCore.WebApiConfiguration.RootStartup.Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration\RootStartup.cs:line 70
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.InjectApiVersionRoutePolicy.<>c__DisplayClass2_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISSetupFilter.<>c__DisplayClass4_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+---> (Inner Exception #0) System.Data.SqlClient.SqlException (0x80131904): Invalid column name 'HiringType'.
+   at System.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__122_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot)
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.EntityFrameworkCore.Storage.Internal.RelationalCommand.ExecuteAsync(IRelationalConnection connection, DbCommandMethod executeMethod, IReadOnlyDictionary`2 parameterValues, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.BufferlessMoveNext(DbContext _, Boolean buffer, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncQueryingEnumerable`1.AsyncEnumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.FirstOrDefault_[TSource](IAsyncEnumerable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.TaskResultAsyncEnumerable`1.Enumerator.MoveNext(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.SelectEnumerableAsyncIterator`2.MoveNextCore(CancellationToken cancellationToken)
+   at System.Linq.AsyncEnumerable.AsyncIterator`1.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.AsyncLinqOperatorProvider.ExceptionInterceptor`1.EnumeratorExceptionInterceptor.MoveNext(CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.ExecuteSingletonAsyncQuery[TResult](QueryContext queryContext, Func`2 compiledQuery, IDiagnosticsLogger`1 logger, Type contextType)
+   at Microsoft.AspNetCore.Identity.UserManager`1.FindByNameAsync(String userName)
+ClientConnectionId:fd3ebcf6-c0d5-46c9-b186-7aae876f2a86
+Error Number:207,State:1,Class:16<---
+
+2018-11-02 16:32:47.420 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:32:58.973 -03:00 [INF] Migrations applied.
+2018-11-02 16:32:58.975 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:35:56.278 -03:00 [FTL] Application startup exception
+System.AggregateException: One or more errors occurred. (Attempted to perform an unauthorized operation.) ---> System.UnauthorizedAccessException: Attempted to perform an unauthorized operation.
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderBase`2.ValidateClaimsAndBuildUserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderBase.cs:line 40
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 16
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.Furiza.Base.Core.Identity.Abstractions.IUserPrincipalBuilder<Furiza.Base.Core.Identity.Abstractions.IUserPrincipal,Furiza.Base.Core.Identity.Abstractions.IScopedRoleAssignment>.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 29
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores.FurizaUserStore.AddToRoleAsync(ApplicationUser user, String normalizedRoleName, CancellationToken cancellationToken) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Stores\FurizaUserStore.cs:line 34
+   at Microsoft.AspNetCore.Identity.UserManager`1.AddToRoleAsync(TUser user, String role)
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.Wait()
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.IdentityInitializer.CreateUser(ApplicationUser user, String[] additionalRoles) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\IdentityInitializer.cs:line 110
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.IdentityInitializer.Initialize() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\IdentityInitializer.cs:line 40
+   at Microsoft.AspNetCore.Builder.ApplicationBuilderExtensions.UseFurizaIdentityInitializer(IApplicationBuilder applicationBuilder) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Microsoft.AspNetCore.Builder\ApplicationBuilderExtensions.cs:line 42
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.SecurityRootStartup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\SecurityRootStartup.cs:line 27
+   at WebApplication1.Startup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\WebApplication1\Startup.cs:line 45
+   at Furiza.AspNetCore.WebApiConfiguration.RootStartup.Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration\RootStartup.cs:line 70
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.InjectApiVersionRoutePolicy.<>c__DisplayClass2_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISSetupFilter.<>c__DisplayClass4_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+---> (Inner Exception #0) System.UnauthorizedAccessException: Attempted to perform an unauthorized operation.
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderBase`2.ValidateClaimsAndBuildUserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderBase.cs:line 40
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 16
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.Furiza.Base.Core.Identity.Abstractions.IUserPrincipalBuilder<Furiza.Base.Core.Identity.Abstractions.IUserPrincipal,Furiza.Base.Core.Identity.Abstractions.IScopedRoleAssignment>.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 29
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores.FurizaUserStore.AddToRoleAsync(ApplicationUser user, String normalizedRoleName, CancellationToken cancellationToken) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Stores\FurizaUserStore.cs:line 34
+   at Microsoft.AspNetCore.Identity.UserManager`1.AddToRoleAsync(TUser user, String role)<---
+
+2018-11-02 16:35:56.816 -03:00 [ERR] Connection id "0HLI0V9KFM8OJ", Request id "0HLI0V9KFM8OJ:00000001": An unhandled exception was thrown by the application.
+System.InvalidOperationException: Writing to the response body is invalid for responses with status code 500.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ThrowWritingToResponseBodyNotSupported()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.WriteAsync(ReadOnlyMemory`1 data, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseStream.WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at System.IO.StreamWriter.Flush(Boolean flushStream, Boolean flushEncoder)
+   at System.IO.StreamWriter.Write(String value)
+   at Microsoft.Extensions.RazorViews.BaseView.Write(String value)
+   at Microsoft.AspNetCore.Hosting.Views.ErrorPage.ExecuteAsync()
+   at Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2018-11-02 16:35:56.842 -03:00 [ERR] Connection id "0HLI0V9KFM8OI", Request id "0HLI0V9KFM8OI:00000001": An unhandled exception was thrown by the application.
+System.ObjectDisposedException: Cannot write to the response body, the response has completed.
+Object name: 'HttpResponseStream'.
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseStream.ValidateState(CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseStream.WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpResponseStream.Write(Byte[] buffer, Int32 offset, Int32 count)
+   at System.IO.StreamWriter.Flush(Boolean flushStream, Boolean flushEncoder)
+   at System.IO.StreamWriter.Write(String value)
+   at Microsoft.AspNetCore.Hosting.Views.ErrorPage.ExecuteAsync()
+   at Microsoft.Extensions.RazorViews.BaseView.ExecuteAsync(HttpContext context)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.ProcessRequests[TContext](IHttpApplication`1 application)
+2018-11-02 16:37:46.459 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:37:47.351 -03:00 [INF] Migrations applied.
+2018-11-02 16:37:47.353 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:37:59.458 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:37:59.977 -03:00 [INF] Migrations applied.
+2018-11-02 16:37:59.978 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:38:00.024 -03:00 [FTL] Application startup exception
+System.InvalidOperationException: Unable to resolve service for type 'Microsoft.AspNetCore.Identity.IRoleStore`1[Furiza.AspNetCore.Identity.EntityFrameworkCore.ApplicationRole]' while attempting to activate 'Microsoft.AspNetCore.Identity.AspNetRoleManager`1[Furiza.AspNetCore.Identity.EntityFrameworkCore.ApplicationRole]'.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateArgumentCallSites(Type serviceType, Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, Boolean throwIfCallSiteNotFound)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateConstructorCallSite(Type serviceType, Type implementationType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(ServiceDescriptor descriptor, Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.TryCreateExact(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteFactory.CreateCallSite(Type serviceType, CallSiteChain callSiteChain)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.CreateServiceAccessor(Type serviceType)
+   at System.Collections.Concurrent.ConcurrentDictionary`2.GetOrAdd(TKey key, Func`2 valueFactory)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngine.GetService(Type serviceType, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetService[T](IServiceProvider provider)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilderExtensions.UseFurizaIdentityInitializer(IApplicationBuilder applicationBuilder) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Microsoft.AspNetCore.Builder\ApplicationBuilderExtensions.cs:line 42
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.SecurityRootStartup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\SecurityRootStartup.cs:line 27
+   at WebApplication1.Startup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\WebApplication1\Startup.cs:line 45
+   at Furiza.AspNetCore.WebApiConfiguration.RootStartup.Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration\RootStartup.cs:line 70
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.InjectApiVersionRoutePolicy.<>c__DisplayClass2_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISSetupFilter.<>c__DisplayClass4_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+2018-11-02 16:38:41.238 -03:00 [INF] Applying migrations for Identity...
+2018-11-02 16:38:41.795 -03:00 [INF] Migrations applied.
+2018-11-02 16:38:41.796 -03:00 [INF] Filling database with system users and roles...
+2018-11-02 16:38:42.443 -03:00 [FTL] Application startup exception
+System.AggregateException: One or more errors occurred. (Attempted to perform an unauthorized operation.) ---> System.UnauthorizedAccessException: Attempted to perform an unauthorized operation.
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderBase`2.ValidateClaimsAndBuildUserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderBase.cs:line 40
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 16
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.Furiza.Base.Core.Identity.Abstractions.IUserPrincipalBuilder<Furiza.Base.Core.Identity.Abstractions.IUserPrincipal,Furiza.Base.Core.Identity.Abstractions.IScopedRoleAssignment>.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 29
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores.FurizaUserStore.AddToRoleAsync(ApplicationUser user, String normalizedRoleName, CancellationToken cancellationToken) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Stores\FurizaUserStore.cs:line 34
+   at Microsoft.AspNetCore.Identity.UserManager`1.AddToRoleAsync(TUser user, String role)
+   --- End of inner exception stack trace ---
+   at System.Threading.Tasks.Task.Wait(Int32 millisecondsTimeout, CancellationToken cancellationToken)
+   at System.Threading.Tasks.Task.Wait()
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.IdentityInitializer.CreateUser(ApplicationUser user, String[] additionalRoles) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\IdentityInitializer.cs:line 110
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.IdentityInitializer.Initialize() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\IdentityInitializer.cs:line 52
+   at Microsoft.AspNetCore.Builder.ApplicationBuilderExtensions.UseFurizaIdentityInitializer(IApplicationBuilder applicationBuilder) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Microsoft.AspNetCore.Builder\ApplicationBuilderExtensions.cs:line 42
+   at Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.SecurityRootStartup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\SecurityRootStartup.cs:line 27
+   at WebApplication1.Startup.AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app) in E:\Development\Furiza\furiza-aspnetcore\src\WebApplication1\Startup.cs:line 45
+   at Furiza.AspNetCore.WebApiConfiguration.RootStartup.Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.WebApiConfiguration\RootStartup.cs:line 70
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.Extensions.DependencyInjection.IServiceCollectionExtensions.InjectApiVersionRoutePolicy.<>c__DisplayClass2_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISSetupFilter.<>c__DisplayClass4_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+---> (Inner Exception #0) System.UnauthorizedAccessException: Attempted to perform an unauthorized operation.
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderBase`2.ValidateClaimsAndBuildUserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderBase.cs:line 40
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 16
+   at Furiza.AspNetCore.Authentication.JwtBearer.UserPrincipalBuilderTypeless.Furiza.Base.Core.Identity.Abstractions.IUserPrincipalBuilder<Furiza.Base.Core.Identity.Abstractions.IUserPrincipal,Furiza.Base.Core.Identity.Abstractions.IScopedRoleAssignment>.get_UserPrincipal() in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Authentication.JwtBearer\UserPrincipalBuilderTypeless.cs:line 29
+   at Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores.FurizaUserStore.AddToRoleAsync(ApplicationUser user, String normalizedRoleName, CancellationToken cancellationToken) in E:\Development\Furiza\furiza-aspnetcore\src\Furiza.AspNetCore.Identity.EntityFrameworkCore\Stores\FurizaUserStore.cs:line 34
+   at Microsoft.AspNetCore.Identity.UserManager`1.AddToRoleAsync(TUser user, String role)<---
+

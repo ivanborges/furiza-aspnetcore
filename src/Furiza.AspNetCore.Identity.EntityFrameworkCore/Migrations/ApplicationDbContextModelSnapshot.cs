@@ -72,6 +72,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("FullName");
 
+                    b.Property<string>("HiringType");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -137,9 +139,15 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<Guid>("RoleId");
 
+                    b.Property<Guid>("ClientId");
+
                     b.Property<DateTime?>("CreationDate");
 
                     b.Property<string>("CreationUser");
+
+                    b.Property<string>("Role");
+
+                    b.Property<string>("UserName");
 
                     b.HasKey("UserId", "RoleId");
 

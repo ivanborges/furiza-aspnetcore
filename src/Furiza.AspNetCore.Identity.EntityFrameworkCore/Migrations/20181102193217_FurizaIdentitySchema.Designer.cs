@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181022020257_FirstVersionIdentitySchema")]
-    partial class FirstVersionIdentitySchema
+    [Migration("20181102193217_FurizaIdentitySchema")]
+    partial class FurizaIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -73,6 +73,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FullName");
+
+                    b.Property<string>("HiringType");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -139,9 +141,15 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<Guid>("RoleId");
 
+                    b.Property<Guid>("ClientId");
+
                     b.Property<DateTime?>("CreationDate");
 
                     b.Property<string>("CreationUser");
+
+                    b.Property<string>("Role");
+
+                    b.Property<string>("UserName");
 
                     b.HasKey("UserId", "RoleId");
 

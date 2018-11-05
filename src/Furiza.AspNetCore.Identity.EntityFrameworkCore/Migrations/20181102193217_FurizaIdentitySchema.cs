@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 {
-    public partial class FirstVersionIdentitySchema : Migration
+    public partial class FurizaIdentitySchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,6 +44,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FullName = table.Column<string>(nullable: true),
+                    HiringType = table.Column<string>(nullable: true),
                     Company = table.Column<string>(nullable: true),
                     Department = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: true),
@@ -124,6 +125,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                 {
                     UserId = table.Column<Guid>(nullable: false),
                     RoleId = table.Column<Guid>(nullable: false),
+                    ClientId = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(nullable: true),
+                    Role = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: true),
                     CreationUser = table.Column<string>(nullable: true)
                 },

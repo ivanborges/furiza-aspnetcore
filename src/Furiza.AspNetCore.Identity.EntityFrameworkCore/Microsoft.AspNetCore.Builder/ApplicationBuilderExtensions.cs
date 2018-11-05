@@ -17,12 +17,18 @@ namespace Microsoft.AspNetCore.Builder
             {
                 var logger = serviceScope.ServiceProvider.GetService<ILoggerFactory>().CreateLogger<ApplicationDbContext>();
 
-                logger.LogInformation("Applying migrations for Identity...");
+                var identityConfiguration = serviceScope.ServiceProvider.GetService<IdentityConfiguration>();
+                if (identityConfiguration.EnableMigrations)
+                {
+                    logger.LogInformation("Applying migrations for Identity...");
 
-                using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
-                    context.Database.Migrate();
+                    using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
+                        context.Database.Migrate();
 
-                logger.LogInformation("Migrations applied.");
+                    logger.LogInformation("Migrations applied.");
+                }
+                else
+                    logger.LogInformation("Migrations disabled.");
             }
 
             return applicationBuilder;

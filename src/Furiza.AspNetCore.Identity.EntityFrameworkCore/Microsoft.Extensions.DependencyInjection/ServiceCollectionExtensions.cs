@@ -19,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer(identityConfiguration.ConnectionString));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(identityOptions)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<ApplicationDbContext>() // TODO: remover após feita a FurizaRoleStore
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IUserStore<ApplicationUser>, FurizaUserStore>();
