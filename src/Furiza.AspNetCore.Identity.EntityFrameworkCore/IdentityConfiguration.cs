@@ -11,5 +11,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
         public string DefaultEmailAddress { get; set; }
 
         public bool EnableMigrations { get; set; } = false;
+        public bool EnableInitializer { get; set; } = false;
     }
 }

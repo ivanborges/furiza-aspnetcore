@@ -35,7 +35,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddFurizaLogging(Configuration, ApiProfile.Name);
+            services.AddFurizaLogging(Configuration);
 
             AddCustomServicesAtTheBeginning(services);
 
@@ -43,6 +43,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             // que aparentemente não tem teve registro aqui (o registro hj esta no .AddIdentity()...).
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
+            services.AddFurizaAudit(Configuration);
             services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<ApiBehaviorOptions>(AddApiBehaviorOptions);
             AddSwaggerWithApiVersioning(services);
@@ -67,7 +68,9 @@ namespace Furiza.AspNetCore.WebApiConfiguration
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"{ApiProfile.Name} {description.GroupName}{(!description.GroupName.Contains(".") ? ".0" : "")}");
             });
 
-            AddCustomMiddlewaresToTheEndOfThePipeline(app);            
+            app.RunFurizaAuditInitializer();
+
+            AddCustomMiddlewaresToTheEndOfThePipeline(app);
         }
 
         #region [+] Virtual

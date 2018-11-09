@@ -23,8 +23,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider
 
         protected override void AddCustomMiddlewaresToTheEndOfThePipeline(IApplicationBuilder app)
         {
-            app.UseFurizaIdentityMigration();
-            app.UseFurizaIdentityInitializer();
+            app.RunFurizaIdentityMigrations();
+            app.RunFurizaIdentityInitializer();
         }
 
         #region [+] Virtual
