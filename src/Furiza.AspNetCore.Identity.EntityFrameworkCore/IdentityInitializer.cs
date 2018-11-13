@@ -43,9 +43,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                     {
                         var resultado = roleManager.CreateAsync(new ApplicationRole()
                         {
-                            Name = fieldInfo.Name,
-                            CreationDate = DateTime.UtcNow,
-                            CreationUser = "superuser"
+                            Name = fieldInfo.Name
                         }).Result;
 
                         if (resultado.Succeeded)

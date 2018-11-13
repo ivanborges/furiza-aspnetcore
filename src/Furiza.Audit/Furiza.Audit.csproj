@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="furiza.extensions.configuration" Version="1.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>

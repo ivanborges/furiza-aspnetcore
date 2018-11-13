@@ -43,7 +43,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             // que aparentemente não tem teve registro aqui (o registro hj esta no .AddIdentity()...).
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
-            services.AddFurizaAudit(Configuration);
+            services.AddFurizaAudit(Configuration, ApiProfile.Name);
             services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<ApiBehaviorOptions>(AddApiBehaviorOptions);
             AddSwaggerWithApiVersioning(services);
@@ -56,6 +56,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
         public void Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
             app.UseFurizaExceptionHandling();
+            app.UseFurizaAuditIpAddressRetriever();
 
             AddCustomMiddlewaresToTheBeginningOfThePipeline(app);
 

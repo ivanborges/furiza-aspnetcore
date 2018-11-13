@@ -17,7 +17,9 @@ namespace Furiza.Audit.Abstractions
 
         public AuditConfiguration AddApplicationId(string applicationId)
         {
-            ApplicationId = applicationId;
+            if (!string.IsNullOrWhiteSpace(applicationId))
+                ApplicationId = applicationId.Replace(" ", "_");
+
             return this;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Furiza.Audit.Abstractions;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,18 @@ namespace Furiza.Audit.SqlServer.Dapper
     {
         private readonly AuditConfiguration auditConfigurationSqlServer;
         private readonly AuditContext auditContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public AuditTrailProvider(AuditConfiguration auditConfigurationSqlServer,
-            AuditContext auditContext)
+            AuditContext auditContext,
+            IHttpContextAccessor httpContextAccessor)
         {
             this.auditConfigurationSqlServer = auditConfigurationSqlServer ?? throw new ArgumentNullException(nameof(auditConfigurationSqlServer));
             this.auditContext = auditContext ?? throw new ArgumentNullException(nameof(auditContext));
+            this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
-        public async Task AddTrailsAsync<T>(AuditOperation auditOperation, string user, string origin, AuditableObjects<T> auditableObjects) where T : class
+        public async Task AddTrailsAsync<T>(AuditOperation auditOperation, string user, AuditableObjects<T> auditableObjects) where T : class
         {
             if (!auditConfigurationSqlServer.Enable.Value)
                 return;
@@ -28,8 +32,8 @@ namespace Furiza.Audit.SqlServer.Dapper
                 auditableObjects.Timestamp, 
                 auditConfigurationSqlServer.ApplicationId, 
                 auditOperation, 
-                user, 
-                origin, 
+                user,
+                httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
                 o.Key, 
                 o.Value));
 

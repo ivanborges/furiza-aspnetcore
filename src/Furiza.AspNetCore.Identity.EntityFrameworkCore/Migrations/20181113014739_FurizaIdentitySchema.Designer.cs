@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181102193217_FurizaIdentitySchema")]
+    [Migration("20181113014739_FurizaIdentitySchema")]
     partial class FurizaIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,10 +28,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<DateTime?>("CreationDate");
-
-                    b.Property<string>("CreationUser");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
@@ -60,10 +56,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<DateTime?>("CreationDate");
-
-                    b.Property<string>("CreationUser");
 
                     b.Property<string>("Department");
 
@@ -122,10 +114,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<DateTime?>("CreationDate");
-
-                    b.Property<string>("CreationUser");
-
                     b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
@@ -142,10 +130,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<Guid>("RoleId");
 
                     b.Property<Guid>("ClientId");
-
-                    b.Property<DateTime?>("CreationDate");
-
-                    b.Property<string>("CreationUser");
 
                     b.Property<string>("Role");
 

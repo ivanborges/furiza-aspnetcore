@@ -6,8 +6,5 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
     public class ApplicationUserClaim : IdentityUserClaim<Guid>
     {
         public virtual ApplicationUser IdentityUser { get; set; }
-
-        public virtual DateTime? CreationDate { get; set; }
-        public virtual string CreationUser { get; set; }
     }
 }

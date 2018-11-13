@@ -15,6 +15,6 @@ namespace Microsoft.AspNetCore.Builder
                 serviceScope.ServiceProvider.GetService<AuditSqlServerDapperInitializer>().Initialize();                       
 
             return applicationBuilder;
-        }
+        }        
     }
 }
