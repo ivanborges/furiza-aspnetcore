@@ -24,21 +24,31 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
         public GenerateTokenResult GenerateToken<TUserPrincipal>(TUserPrincipal userPrincipal)
             where TUserPrincipal : IUserPrincipal
         {
-            var claimAud = userPrincipal.Claims?.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId)
-                ?? throw new InvalidOperationException("User principal does not contain a valid ClientId claim.");
+            var clientIdClaim = userPrincipal.Claims?.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId) ?? 
+                throw new InvalidOperationException("User principal does not contain a valid claim for ClientId.");
 
             var identity = new ClaimsIdentity(
                 new Claim[] 
                 {
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                    new Claim(JwtRegisteredClaimNames.Sub, userPrincipal.UserName),
-                    new Claim(JwtRegisteredClaimNames.GivenName, userPrincipal.FullName),
-                    new Claim(JwtRegisteredClaimNames.Email, userPrincipal.Email),
-                    new Claim(FurizaClaimNames.HiringType, userPrincipal.HiringType),
-                    new Claim(FurizaClaimNames.Company, userPrincipal.Company),
-                    new Claim(FurizaClaimNames.Department, userPrincipal.Department)
+                    new Claim(JwtRegisteredClaimNames.Sub, userPrincipal.UserName)
                 }
             );
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.FullName))
+                identity.AddClaim(new Claim(JwtRegisteredClaimNames.GivenName, userPrincipal.FullName));
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.Email))
+                identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email, userPrincipal.Email));
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.HiringType))
+                identity.AddClaim(new Claim(FurizaClaimNames.HiringType, userPrincipal.HiringType));
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.Company))
+                identity.AddClaim(new Claim(FurizaClaimNames.Company, userPrincipal.Company));
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.Department))
+                identity.AddClaim(new Claim(FurizaClaimNames.Department, userPrincipal.Department));
 
             if (userPrincipal.Claims != null && userPrincipal.Claims.Any())
                 foreach (var claim in userPrincipal.Claims.Where(c => c.Type != FurizaClaimNames.ClientId))
@@ -51,7 +61,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             var securityToken = tokenHandler.CreateToken(new SecurityTokenDescriptor()
             {
                 Issuer = jwtConfiguration.Issuer,
-                Audience = claimAud.Value,
+                Audience = clientIdClaim.Value,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)), SecurityAlgorithms.HmacSha256),
                 Subject = identity,
                 NotBefore = DateTime.UtcNow,

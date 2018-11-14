@@ -28,11 +28,8 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
         public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync()
         {
-            var clientId = UserPrincipal?.Claims?.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId)?.Value;
-            if (!string.IsNullOrWhiteSpace(clientId) && clientId != default(Guid).ToString())
-                return (await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, new Guid(clientId)));
-            else
-                return default(IEnumerable<TScopedRoleAssignment>);
+            var clientId = new Guid(UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
+            return await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, clientId);
         }
 
         protected TUserPrincipal ValidateClaimsAndBuildUserPrincipal()
@@ -40,6 +37,9 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
             if (claimsIdentity == null || !claimsIdentity.Claims.Any())
                 return default(TUserPrincipal);
+
+            if (claimsIdentity.Claims.SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Aud) == null)
+                throw new InvalidOperationException("ClaimsIdentity does not contain a valid claim for Audience which represents the ClientId.");
 
             var userPrincipal = new TUserPrincipal()
             {

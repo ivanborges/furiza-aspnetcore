@@ -7,9 +7,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
         [Required]
         public string ConnectionString { get; set; }
 
-        [Required]
-        public string DefaultEmailAddress { get; set; }
-
         public bool EnableMigrations { get; set; } = false;
         public bool EnableInitializer { get; set; } = false;
     }

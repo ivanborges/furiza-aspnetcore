@@ -42,8 +42,4 @@
     <ProjectReference Include="..\Furiza.Audit.Abstractions\Furiza.Audit.Abstractions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>

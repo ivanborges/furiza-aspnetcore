@@ -56,51 +56,31 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 {
                     UserName = "superuser",
                     FullName = "Superuser",
-                    Email = identityConfiguration.DefaultEmailAddress,
-                    EmailConfirmed = true,
-                    HiringType = FurizaHiringTypes.InHouse,
-                    Company = "furiza",
-                    Department = "prez"
+                    EmailConfirmed = true
                 }, new string[] { FurizaMasterRoles.Superuser });
                 CreateUser(new ApplicationUser()
                 {
                     UserName = "admin",
                     FullName = "Administrator",
-                    Email = identityConfiguration.DefaultEmailAddress,
-                    EmailConfirmed = true,
-                    HiringType = FurizaHiringTypes.InHouse,
-                    Company = "furiza",
-                    Department = "prez"
+                    EmailConfirmed = true
                 }, new string[] { FurizaMasterRoles.Administrator });
                 CreateUser(new ApplicationUser()
                 {
                     UserName = "editor",
                     FullName = "Editor",
-                    Email = identityConfiguration.DefaultEmailAddress,
-                    EmailConfirmed = true,
-                    HiringType = FurizaHiringTypes.InHouse,
-                    Company = "furiza",
-                    Department = "prez"
+                    EmailConfirmed = true
                 }, new string[] { FurizaMasterRoles.Editor });
                 CreateUser(new ApplicationUser()
                 {
                     UserName = "approver",
                     FullName = "Approver",
-                    Email = identityConfiguration.DefaultEmailAddress,
-                    EmailConfirmed = true,
-                    HiringType = FurizaHiringTypes.InHouse,
-                    Company = "furiza",
-                    Department = "prez"
+                    EmailConfirmed = true
                 }, new string[] { FurizaMasterRoles.Approver });
                 CreateUser(new ApplicationUser()
                 {
                     UserName = "user",
                     FullName = "Basic User",
-                    Email = identityConfiguration.DefaultEmailAddress,
-                    EmailConfirmed = true,
-                    HiringType = FurizaHiringTypes.InHouse,
-                    Company = "furiza",
-                    Department = "prez"
+                    EmailConfirmed = true
                 });
 
                 logger.LogInformation("Database filled.");

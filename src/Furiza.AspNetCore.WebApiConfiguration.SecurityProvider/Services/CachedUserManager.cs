@@ -21,7 +21,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
             this.cacheHandler = cacheHandler ?? throw new System.ArgumentNullException(nameof(cacheHandler));
         }
 
-        public async Task<ApplicationUser> GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(string username, Guid? clientId = null)
+        public async Task<ApplicationUser> GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(string username, Guid clientId)
         {
             var normalizedUserName = username.ToUpper().Trim();
             if (!cacheHandler.TryGetValue<ApplicationUser>(normalizedUserName, out var user))
@@ -37,13 +37,13 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
                     await cacheHandler.SetAsync(normalizedUserName, user);
             }
 
-            if (clientId.HasValue && clientId.Value != default(Guid))
+            if (user != null)
             {
-                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == clientId.Value).ToList();
+                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == clientId).ToList();
                 user.IdentityClaims.Add(new ApplicationUserClaim()
                 {
                     ClaimType = FurizaClaimNames.ClientId,
-                    ClaimValue = clientId.Value.ToString()
+                    ClaimValue = clientId.ToString()
                 });
             }
 

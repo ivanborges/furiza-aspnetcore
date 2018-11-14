@@ -19,18 +19,21 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
     [ApiVersion("1.0")]
     public class UsersController : RootController
     {
+        private readonly IUserPrincipalBuilder userPrincipalBuilder;
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICachedUserManager cachedUserManager;
         private readonly IPasswordGenerator passwordGenerator;
         private readonly IUserNotifier emailSender;
 
-        public UsersController(IMapper mapper,
+        public UsersController(IUserPrincipalBuilder userPrincipalBuilder,
+            IMapper mapper,
             UserManager<ApplicationUser> userManager,
             ICachedUserManager cachedUserManager,
             IPasswordGenerator passwordGenerator,
             IUserNotifier emailSender)
         {
+            this.userPrincipalBuilder = userPrincipalBuilder ?? throw new ArgumentNullException(nameof(userPrincipalBuilder));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
@@ -82,7 +85,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> GetAsync(string username)
         {
-            var user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(username);
+            var clientId = new Guid(userPrincipalBuilder.UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
+            var user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(username, clientId);
             if (user == null)
                 return NotFound();
 
@@ -101,7 +105,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> PostAsync(UsersPost model)
         {
-            if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName) != null)
+            var clientId = new Guid(userPrincipalBuilder.UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
+            if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName, clientId) != null)
                 throw new UserAlreadyExistsException();
 
             var user = mapper.Map<UsersPost, ApplicationUser>(model);

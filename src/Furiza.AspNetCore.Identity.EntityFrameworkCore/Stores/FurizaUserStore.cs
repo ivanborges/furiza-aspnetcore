@@ -31,17 +31,12 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            // melhorar esquema abaixo... ideal é simplesmente pegar do userprincipalbuilder...
-            var creationUser = userPrincipalBuilder?.UserPrincipal?.UserName
-                ?? (user.Company == "furiza"
-                ? "superuser"
-                : throw new UnauthorizedAccessException());
-
             Context.Set<ApplicationUser>().Add(user);
 
             await SaveChanges(cancellationToken);
 
-            await auditTrailProvider.AddTrailsAsync(AuditOperation.Create, creationUser, new AuditableObjects<ApplicationUser>(user.Id.ToString(), user));
+            if (!user.IsSystemUser)
+                await auditTrailProvider.AddTrailsAsync(AuditOperation.Create, userPrincipalBuilder.UserPrincipal.UserName, new AuditableObjects<ApplicationUser>(user.Id.ToString(), user));
 
             return IdentityResult.Success;
         }
@@ -57,23 +52,27 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             if (string.IsNullOrWhiteSpace(normalizedRoleName))
                 throw new ArgumentNullException(nameof(normalizedRoleName));
 
-            // testar se vai conseguir obter na inicialização da primeira api ne...
-            var clientId = userPrincipalBuilder?.UserPrincipal?.Claims?.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId)?.Value;
-            if (string.IsNullOrWhiteSpace(clientId) || clientId == default(Guid).ToString())
-                throw new UnauthorizedAccessException();
+            var clientId = !user.IsSystemUser
+                ? userPrincipalBuilder.UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value
+                : default(Guid).ToString();
 
-            var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken);
-            if (roleEntity == null)
+            if (string.IsNullOrWhiteSpace(clientId))
+                throw new ArgumentNullException(nameof(clientId));
+
+            var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken) ?? 
                 throw new InvalidOperationException($"Invalid role name [{normalizedRoleName}] to assign to user.");
 
-            Context.Set<ApplicationUserRole>().Add(new ApplicationUserRole()
+            var roleAssigment = new ApplicationUserRole()
             {
                 UserId = user.Id,
                 RoleId = roleEntity.Id,
                 ClientId = new Guid(clientId)
-            });
+            };
 
-            // TODO: por qu nao tem o SaveChanges aqui ?
+            Context.Set<ApplicationUserRole>().Add(roleAssigment);
+
+            if (!user.IsSystemUser)
+                await auditTrailProvider.AddTrailsAsync(AuditOperation.Create, userPrincipalBuilder.UserPrincipal.UserName, new AuditableObjects<ApplicationUserRole>($"{roleAssigment.UserId}.{roleAssigment.RoleId}", roleAssigment));
         }
     }
 }

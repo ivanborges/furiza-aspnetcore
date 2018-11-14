@@ -48,5 +48,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             }
         }
         public virtual ICollection<ApplicationUserRole> IdentityUserRoles { get; set; }
+
+        public virtual bool IsSystemUser => string.IsNullOrWhiteSpace(Email) && string.IsNullOrWhiteSpace(Company) && string.IsNullOrWhiteSpace(Department);
     }
 }

@@ -20,9 +20,13 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             {
                 user.Ignore(u => u.Claims);
                 user.Ignore(u => u.RoleAssignments);
+                user.Ignore(u => u.IsSystemUser);
             });
             builder.Entity<ApplicationUserRole>(userRole =>
             {
+                userRole.Ignore(ur => ur.UserName);
+                userRole.Ignore(ur => ur.Role);
+
                 userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
 
                 userRole.HasOne(ur => ur.IdentityRole)

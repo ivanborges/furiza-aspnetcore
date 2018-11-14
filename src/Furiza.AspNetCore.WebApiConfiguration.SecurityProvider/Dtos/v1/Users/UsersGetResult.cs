@@ -9,7 +9,5 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
         public string Email { get; set; }
         public string Company { get; set; }
         public string Department { get; set; }
-        public DateTime? CreationDate { get; set; }
-        public string CreationUser { get; set; }
     }
 }
