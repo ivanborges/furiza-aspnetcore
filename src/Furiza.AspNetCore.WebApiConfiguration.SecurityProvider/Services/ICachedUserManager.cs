@@ -7,5 +7,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
     public interface ICachedUserManager
     {
         Task<ApplicationUser> GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(string username, Guid clientId);
+        Task RemoveUserByUserNameAsync(string username);
     }
 }

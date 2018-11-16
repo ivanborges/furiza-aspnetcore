@@ -34,12 +34,12 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
                     .SingleOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName);
 
                 if (user != null && user.EmailConfirmed && user.RoleAssignments.Any())
-                    await cacheHandler.SetAsync(normalizedUserName, user);
+                    await cacheHandler.SetAsync(normalizedUserName, user, new string[] { nameof(ApplicationUser.Claims), nameof(ApplicationUser.RoleAssignments), nameof(ApplicationUser.IsSystemUser) });
             }
 
             if (user != null)
             {
-                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == clientId).ToList();
+                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == null || ur.ClientId == clientId).ToList();
                 user.IdentityClaims.Add(new ApplicationUserClaim()
                 {
                     ClaimType = FurizaClaimNames.ClientId,
@@ -49,5 +49,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
 
             return user;
         }
+
+        public async Task RemoveUserByUserNameAsync(string username) => await cacheHandler.RemoveAsync<ApplicationUser>(username.ToUpper().Trim());
     }
 }

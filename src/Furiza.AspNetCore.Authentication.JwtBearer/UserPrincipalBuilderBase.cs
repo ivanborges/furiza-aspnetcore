@@ -26,11 +26,9 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             this.scopedRoleAssignmentProvider = scopedRoleAssignmentProvider ?? throw new ArgumentNullException(nameof(scopedRoleAssignmentProvider));
         }
 
-        public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync()
-        {
-            var clientId = new Guid(UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
-            return await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, clientId);
-        }
+        public virtual Guid GetCurrentClientId() => new Guid(UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
+
+        public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync() => await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, GetCurrentClientId());
 
         protected TUserPrincipal ValidateClaimsAndBuildUserPrincipal()
         {

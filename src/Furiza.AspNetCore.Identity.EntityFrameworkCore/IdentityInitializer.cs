@@ -39,11 +39,11 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 logger.LogInformation("Filling database with system users and roles...");
 
                 foreach (FieldInfo fieldInfo in typeof(FurizaMasterRoles).GetFields().Where(x => x.IsStatic && x.IsLiteral))
-                    if (!roleManager.RoleExistsAsync(fieldInfo.Name).Result)
+                    if (!roleManager.RoleExistsAsync(fieldInfo.GetValue(typeof(FurizaMasterRoles)).ToString()).Result)
                     {
                         var resultado = roleManager.CreateAsync(new ApplicationRole()
                         {
-                            Name = fieldInfo.Name
+                            Name = fieldInfo.GetValue(typeof(FurizaMasterRoles)).ToString()
                         }).Result;
 
                         if (resultado.Succeeded)
@@ -101,7 +101,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                     logger.LogInformation($"User '{user}' created.");
 
                     userManager.AddClaimAsync(user, new Claim(FurizaClaimNames.SystemUser, "")).Wait();
-                    userManager.AddToRoleAsync(user, FurizaMasterRoles.Viewer).Wait();
 
                     if (additionalRoles != null)
                         foreach (var role in additionalRoles)

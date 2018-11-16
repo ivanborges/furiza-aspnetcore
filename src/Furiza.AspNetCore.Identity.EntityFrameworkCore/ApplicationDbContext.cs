@@ -16,6 +16,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
         {
             base.OnModelCreating(builder);
 
+            // TODO: renomear tabelas aspnet => furiza ? 
+            // por que nao criar a entidade ScopedRoleAssign aqui e usar este proprio DbContext ??? 
+
             builder.Entity<ApplicationUser>(user =>
             {
                 user.Ignore(u => u.Claims);

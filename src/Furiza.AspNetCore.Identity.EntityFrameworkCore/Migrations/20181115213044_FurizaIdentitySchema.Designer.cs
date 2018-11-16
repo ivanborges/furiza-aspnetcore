@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181114175640_FurizaIdentitySchema")]
+    [Migration("20181115213044_FurizaIdentitySchema")]
     partial class FurizaIdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -129,7 +129,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<Guid>("RoleId");
 
-                    b.Property<Guid>("ClientId");
+                    b.Property<Guid?>("ClientId");
 
                     b.HasKey("UserId", "RoleId");
 

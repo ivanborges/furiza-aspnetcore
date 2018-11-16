@@ -127,7 +127,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<Guid>("RoleId");
 
-                    b.Property<Guid>("ClientId");
+                    b.Property<Guid?>("ClientId");
 
                     b.HasKey("UserId", "RoleId");
 

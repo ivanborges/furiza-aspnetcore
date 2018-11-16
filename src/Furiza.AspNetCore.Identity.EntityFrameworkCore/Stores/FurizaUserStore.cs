@@ -3,7 +3,6 @@ using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,11 +52,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
                 throw new ArgumentNullException(nameof(normalizedRoleName));
 
             var clientId = !user.IsSystemUser
-                ? userPrincipalBuilder.UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value
-                : default(Guid).ToString();
-
-            if (string.IsNullOrWhiteSpace(clientId))
-                throw new ArgumentNullException(nameof(clientId));
+                ? userPrincipalBuilder.GetCurrentClientId()
+                : default(Guid?);
 
             var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken) ?? 
                 throw new InvalidOperationException($"Invalid role name [{normalizedRoleName}] to assign to user.");
@@ -66,13 +62,18 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             {
                 UserId = user.Id,
                 RoleId = roleEntity.Id,
-                ClientId = new Guid(clientId)
+                ClientId = clientId
             };
 
             Context.Set<ApplicationUserRole>().Add(roleAssigment);
 
             if (!user.IsSystemUser)
                 await auditTrailProvider.AddTrailsAsync(AuditOperation.Create, userPrincipalBuilder.UserPrincipal.UserName, new AuditableObjects<ApplicationUserRole>($"{roleAssigment.UserId}.{roleAssigment.RoleId}", roleAssigment));
+        }
+
+        public async override Task RemoveFromRoleAsync(ApplicationUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // TODO: implemenbtar
         }
     }
 }

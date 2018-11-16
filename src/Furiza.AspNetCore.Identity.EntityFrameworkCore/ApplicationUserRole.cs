@@ -6,7 +6,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 {
     public class ApplicationUserRole : IdentityUserRole<Guid>, IRoleAssignment
     {
-        public virtual Guid ClientId { get; set; }
+        public virtual Guid? ClientId { get; set; }
 
         public virtual string UserName
         {

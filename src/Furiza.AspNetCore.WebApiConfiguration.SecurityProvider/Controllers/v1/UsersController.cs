@@ -19,6 +19,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
     [ApiVersion("1.0")]
     public class UsersController : RootController
     {
+        private readonly string[] hiringTypes = new string[] { FurizaHiringTypes.InHouse, FurizaHiringTypes.Outsourced };
+
         private readonly IUserPrincipalBuilder userPrincipalBuilder;
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
@@ -52,12 +54,16 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 p1 = u => u.IdentityUserRoles.Any(ur => ur.IdentityRole.Name.Trim().ToLower() == filters.Role.Trim().ToLower());
 
             Func<ApplicationUser, bool> p2 = u => true;
-            if (!string.IsNullOrWhiteSpace(filters.Company))
-                p2 = u => u.Company.Trim().ToLower() == filters.Company.Trim().ToLower();
+            if (!string.IsNullOrWhiteSpace(filters.HiringType))
+                p2 = u => u.HiringType?.Trim().ToLower() == filters.HiringType.Trim().ToLower();
 
             Func<ApplicationUser, bool> p3 = u => true;
+            if (!string.IsNullOrWhiteSpace(filters.Company))
+                p3 = u => u.Company?.Trim().ToLower() == filters.Company.Trim().ToLower();
+
+            Func<ApplicationUser, bool> p4 = u => true;
             if (!string.IsNullOrWhiteSpace(filters.Department))
-                p3 = u => u.Department.Trim().ToLower() == filters.Department.Trim().ToLower();
+                p4 = u => u.Department?.Trim().ToLower() == filters.Department.Trim().ToLower();
 
             var allUsers = userManager.Users
                 .Include(u => u.IdentityUserRoles)
@@ -66,6 +72,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 .Where(p1)
                 .Where(p2)
                 .Where(p3)
+                .Where(p4)
                 .OrderBy(u => u.UserName)
                 .ToList();
 
@@ -85,8 +92,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> GetAsync(string username)
         {
-            var clientId = new Guid(userPrincipalBuilder.UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
-            var user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(username, clientId);
+            var user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(username, userPrincipalBuilder.GetCurrentClientId());
             if (user == null)
                 return NotFound();
 
@@ -105,9 +111,11 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> PostAsync(UsersPost model)
         {
-            var clientId = new Guid(userPrincipalBuilder.UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
-            if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName, clientId) != null)
+            if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName, userPrincipalBuilder.GetCurrentClientId()) != null)
                 throw new UserAlreadyExistsException();
+
+            if (!hiringTypes.Contains(model.HiringType))
+                throw new InvalidHiringTypeException();
 
             var user = mapper.Map<UsersPost, ApplicationUser>(model);
             user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);            
@@ -132,10 +140,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             }
             else
             {
-                var errors = new List<IdentityOperationExceptionItem>();
-                foreach (var error in creationResult.Errors)
-                    errors.Add(new IdentityOperationExceptionItem(error.Code, error.Description));
-
+                var errors = creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description));
                 throw new IdentityOperationException(errors);
             }
 
@@ -168,7 +173,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(new ConfirmEmailGetResult() { Succeeded = true });
         }
 
-        // TODO: criar métodos de adicionar e remover roles e claims.
-        // TODO: customizar o Identity para os métodos AddClaimAsync e AddToRoleAsync do UserManager gravarem o creationdate e creationuser.
+        // TODO: criar métodos de adicionar e remover claims.
     }
 }
