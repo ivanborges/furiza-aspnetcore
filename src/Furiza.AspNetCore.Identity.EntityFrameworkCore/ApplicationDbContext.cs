@@ -30,7 +30,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                 userRole.Ignore(ur => ur.UserName);
                 userRole.Ignore(ur => ur.Role);
 
-                userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+                userRole.HasKey(ur => new { ur.UserId, ur.RoleId, ur.ClientId });
 
                 userRole.HasOne(ur => ur.IdentityRole)
                     .WithMany(r => r.IdentityUserRoles)

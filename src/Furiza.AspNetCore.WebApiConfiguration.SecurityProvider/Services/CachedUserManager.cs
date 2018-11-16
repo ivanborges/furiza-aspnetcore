@@ -17,8 +17,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
         public CachedUserManager(UserManager<ApplicationUser> userManager,
             ICacheHandler cacheHandler)
         {
-            this.userManager = userManager ?? throw new System.ArgumentNullException(nameof(userManager));
-            this.cacheHandler = cacheHandler ?? throw new System.ArgumentNullException(nameof(cacheHandler));
+            this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+            this.cacheHandler = cacheHandler ?? throw new ArgumentNullException(nameof(cacheHandler));
         }
 
         public async Task<ApplicationUser> GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(string username, Guid clientId)
@@ -39,7 +39,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
 
             if (user != null)
             {
-                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == null || ur.ClientId == clientId).ToList();
+                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == clientId).ToList();
                 user.IdentityClaims.Add(new ApplicationUserClaim()
                 {
                     ClaimType = FurizaClaimNames.ClientId,

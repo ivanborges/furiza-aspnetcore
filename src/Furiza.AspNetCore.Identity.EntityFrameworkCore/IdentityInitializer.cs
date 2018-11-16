@@ -5,10 +5,11 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 {
-    internal class IdentityInitializer
+    public class IdentityInitializer
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
@@ -26,7 +27,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             logger = loggerFactory?.CreateLogger<IdentityInitializer>() ?? throw new ArgumentNullException(nameof(loggerFactory));
         }
         
-        public void Initialize()
+        public void InitializeRoles()
         {
             if (!identityConfiguration.EnableInitializer)
             {
@@ -36,7 +37,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 
             try
             {
-                logger.LogInformation("Filling database with system users and roles...");
+                logger.LogInformation("Filling database with roles...");
 
                 foreach (FieldInfo fieldInfo in typeof(FurizaMasterRoles).GetFields().Where(x => x.IsStatic && x.IsLiteral))
                     if (!roleManager.RoleExistsAsync(fieldInfo.GetValue(typeof(FurizaMasterRoles)).ToString()).Result)
@@ -52,65 +53,86 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                             logger.LogWarning($"An error occurred while creating the role '{fieldInfo.Name}'.");
                     }
 
-                CreateUser(new ApplicationUser()
-                {
-                    UserName = "superuser",
-                    FullName = "Superuser",
-                    EmailConfirmed = true
-                }, new string[] { FurizaMasterRoles.Superuser });
-                CreateUser(new ApplicationUser()
-                {
-                    UserName = "admin",
-                    FullName = "Administrator",
-                    EmailConfirmed = true
-                }, new string[] { FurizaMasterRoles.Administrator });
-                CreateUser(new ApplicationUser()
-                {
-                    UserName = "editor",
-                    FullName = "Editor",
-                    EmailConfirmed = true
-                }, new string[] { FurizaMasterRoles.Editor });
-                CreateUser(new ApplicationUser()
-                {
-                    UserName = "approver",
-                    FullName = "Approver",
-                    EmailConfirmed = true
-                }, new string[] { FurizaMasterRoles.Approver });
-                CreateUser(new ApplicationUser()
-                {
-                    UserName = "user",
-                    FullName = "Basic User",
-                    EmailConfirmed = true
-                });
-
                 logger.LogInformation("Database filled.");
             }
             catch (Exception e)
             {
-                logger.LogError(e, "An internal error occurred while trying to load system users and roles.");
+                logger.LogError(e, "An internal error occurred while trying to load roles.");
             }
         }
 
-        private void CreateUser(ApplicationUser user, string[] additionalRoles = null)
+        public async Task InitializeUsersAsync()
         {
-            if (userManager.FindByNameAsync(user.UserName).Result == null)
+            if (!identityConfiguration.EnableInitializer)
             {
-                var creationResult = userManager.CreateAsync(user, user.UserName.ToLower()).Result;
+                logger.LogInformation("Identity initializer disabled.");
+                return;
+            }
+
+            logger.LogInformation("Filling database with system users...");
+
+            await CreateUserAsync(new ApplicationUser()
+            {
+                UserName = "superuser",
+                FullName = "Superuser",
+                EmailConfirmed = true
+            }, new string[] { FurizaMasterRoles.Superuser });
+            await CreateUserAsync(new ApplicationUser()
+            {
+                UserName = "admin",
+                FullName = "Administrator",
+                EmailConfirmed = true
+            }, new string[] { FurizaMasterRoles.Administrator });
+            await CreateUserAsync(new ApplicationUser()
+            {
+                UserName = "editor",
+                FullName = "Editor",
+                EmailConfirmed = true
+            }, new string[] { FurizaMasterRoles.Editor });
+            await CreateUserAsync(new ApplicationUser()
+            {
+                UserName = "approver",
+                FullName = "Approver",
+                EmailConfirmed = true
+            }, new string[] { FurizaMasterRoles.Approver });
+            await CreateUserAsync(new ApplicationUser()
+            {
+                UserName = "user",
+                FullName = "Basic User",
+                EmailConfirmed = true
+            });
+
+            logger.LogInformation("Database filled.");
+        }
+
+        private async Task CreateUserAsync(ApplicationUser user, string[] additionalRoles = null)
+        {
+            var userEntity = await userManager.FindByNameAsync(user.UserName);
+            if (userEntity == null)
+            {
+                var creationResult = await userManager.CreateAsync(user, user.UserName.ToLower());
                 if (creationResult.Succeeded)
                 {
+                    await userManager.AddClaimAsync(user, new Claim(FurizaClaimNames.SystemUser, ""));
+
                     logger.LogInformation($"User '{user}' created.");
 
-                    userManager.AddClaimAsync(user, new Claim(FurizaClaimNames.SystemUser, "")).Wait();
-
-                    if (additionalRoles != null)
-                        foreach (var role in additionalRoles)
-                            userManager.AddToRoleAsync(user, role).Wait();
-
-                    logger.LogInformation("Default roles and claims set to user.");
+                    userEntity = await userManager.FindByNameAsync(user.UserName);
                 }
                 else
+                {
                     logger.LogWarning($"An error occurred while creating the user '{user}'.");
+                    return;
+                }
             }
+
+            if (additionalRoles != null && additionalRoles.Any())
+                foreach (var role in additionalRoles)
+                    await userManager.AddToRoleAsync(userEntity, role);
+            else
+                await userManager.AddToRoleAsync(userEntity, FurizaMasterRoles.Viewer);
+
+            logger.LogInformation($"Default roles and claims set to user '{user}'.");
         }
     }
 }

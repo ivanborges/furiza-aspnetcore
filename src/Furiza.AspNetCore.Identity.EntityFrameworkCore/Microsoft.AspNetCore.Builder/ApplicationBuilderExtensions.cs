@@ -40,7 +40,7 @@ namespace Microsoft.AspNetCore.Builder
                 throw new ArgumentNullException(nameof(applicationBuilder));
 
             using (var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                serviceScope.ServiceProvider.GetService<IdentityInitializer>().Initialize();
+                serviceScope.ServiceProvider.GetService<IdentityInitializer>().InitializeRoles();
 
             return applicationBuilder;
         }

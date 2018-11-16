@@ -101,7 +101,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(result);
         }
 
-        [Authorize(Roles = FurizaMasterRoles.Superuser + "," + FurizaMasterRoles.Administrator)] // TODO: criar policy...
+        [Authorize(Roles = FurizaMasterRoles.Superuser + "," + FurizaMasterRoles.Administrator)] // TODO: criar policy... (não precisa mais pois se o cara passou pelo 401, é pq ele tem token, se tem token, é pq tem algum role assingment => criar tb a policy "usuario" .. basta ter uma claim do tipo role... qq role ja eh valida (menor nivel = viewer, isso ja faz com o q o usuario seja um usuario do client)
         [HttpPost]
         [ProducesResponseType(typeof(UsersPostResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

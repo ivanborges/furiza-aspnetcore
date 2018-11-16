@@ -32,18 +32,18 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
         protected TUserPrincipal ValidateClaimsAndBuildUserPrincipal()
         {
-            var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
-            if (claimsIdentity == null || !claimsIdentity.Claims.Any())
-                return default(TUserPrincipal);
-
-            if (claimsIdentity.Claims.SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Aud) == null)
-                throw new InvalidOperationException("ClaimsIdentity does not contain a valid claim for Audience which represents the ClientId.");
-
             var userPrincipal = new TUserPrincipal()
             {
                 Claims = new List<Claim>(),
                 RoleAssignments = new List<GenericRoleAssignment>().ToList<IRoleAssignment>()
             };
+
+            var claimsIdentity = httpContextAccessor.HttpContext?.User?.Identity as ClaimsIdentity;
+            if (claimsIdentity == null || !claimsIdentity.Claims.Any())
+                return userPrincipal;
+
+            if (claimsIdentity.Claims.SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Aud) == null)
+                throw new InvalidOperationException("ClaimsIdentity does not contain a valid claim for Audience which represents the ClientId.");
 
             foreach (var claim in claimsIdentity.Claims)
             {

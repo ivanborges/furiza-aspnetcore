@@ -59,8 +59,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                     user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.User, model.ClientId.Value);
                     if (user != null)
                     {
-                        if (!await userManager.IsEmailConfirmedAsync(user))
-                            throw new EmailConfirmationRequiredException();
+                        await ValidateUserStateAsync(user);
 
                         var checkPassword = await signInManager.CheckPasswordSignInAsync(user, model.Password);
                         if (checkPassword)
@@ -116,6 +115,20 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             if (string.IsNullOrWhiteSpace(model.Password))
                 errors.Add(AuthExceptionItem.PasswordRequired);
+
+            if (errors.Any())
+                throw new AuthException(errors);
+        }
+
+        private async Task ValidateUserStateAsync(ApplicationUser user)
+        {
+            var errors = new List<AuthExceptionItem>();
+
+            if (!await userManager.IsEmailConfirmedAsync(user))
+                errors.Add(AuthExceptionItem.EmailConfirmationRequired);
+
+            if (!user.RoleAssignments.Any())
+                errors.Add(AuthExceptionItem.RoleAssignmentRequired);
 
             if (errors.Any())
                 throw new AuthException(errors);

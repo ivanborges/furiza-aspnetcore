@@ -119,11 +119,16 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                 {
                     UserId = table.Column<Guid>(nullable: false),
                     RoleId = table.Column<Guid>(nullable: false),
-                    ClientId = table.Column<Guid>(nullable: true)
+                    ClientId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId, x.ClientId });
+
+                    //############################################################################################
+                    //table.UniqueConstraint("AK_AspNetUserRoles_UserId_RoleId", x => new { x.UserId, x.RoleId });
+                    //############################################################################################
+
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,

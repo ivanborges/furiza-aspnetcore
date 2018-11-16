@@ -71,7 +71,7 @@ namespace Furiza.Audit.SqlServer.Dapper
                         [{nameof(AuditTrail.User)}] varchar(50) NOT NULL,
                         [{nameof(AuditTrail.Origin)}] varchar(500) NULL,
                         [{nameof(AuditTrail.ObjectAssembly)}] varchar(500) NOT NULL,
-                        [{nameof(AuditTrail.ObjectId)}] varchar(100) NOT NULL,
+                        [{nameof(AuditTrail.ObjectId)}] varchar(200) NOT NULL,
                         [{nameof(AuditTrail.ObjectSerial)}] text NULL,
 	                    CONSTRAINT [PK_{auditConfigurationSqlServer.SqlServer.TableName}] PRIMARY KEY ([{nameof(AuditTrail.Id)}])
                     );

@@ -63,5 +63,33 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             return Ok(new RoleAssignmentsPostResult() { Succeeded = true });
         }
+
+        [Authorize(Roles = FurizaMasterRoles.Superuser + "," + FurizaMasterRoles.Administrator)] // TODO: criar policy...
+        [HttpDelete]
+        [ProducesResponseType(typeof(RoleAssignmentsDeleteResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> DeleteAsync(RoleAssignmentsDelete model)
+        {
+            var user = await userManager.FindByNameAsync(model.UserName) ??
+                throw new UserDoesNotExistException();
+
+            if (!(await roleManager.RoleExistsAsync(model.Role)))
+                throw new RoleDoesNotExistException();
+
+            var creationResult = await userManager.RemoveFromRoleAsync(user, model.Role);
+            if (creationResult.Succeeded)
+                await cachedUserManager.RemoveUserByUserNameAsync(model.UserName);
+            else
+            {
+                var errors = creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description));
+                throw new IdentityOperationException(errors);
+            }
+
+            return Ok(new RoleAssignmentsDeleteResult() { Succeeded = true });
+        }
     }
 }
