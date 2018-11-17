@@ -36,7 +36,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
         }
 
-        [Authorize(Roles = FurizaMasterRoles.Superuser + "," + FurizaMasterRoles.Administrator)] // TODO: criar policy...
+        [Authorize(Policy = "RequireAdministratorRole")]
         [HttpPost]
         [ProducesResponseType(typeof(RoleAssignmentsPostResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]

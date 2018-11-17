@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Furiza.Base.Core.Identity.Abstractions;
 
 namespace Furiza.AspNetCore.WebApiConfiguration
 {
@@ -47,6 +48,11 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<ApiBehaviorOptions>(AddApiBehaviorOptions);
             AddSwaggerWithApiVersioning(services);
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator));
+            });
 
             AddCustomServicesAtTheEnd(services);
 
