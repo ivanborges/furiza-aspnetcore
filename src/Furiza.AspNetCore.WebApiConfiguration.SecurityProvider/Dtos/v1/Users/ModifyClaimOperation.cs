@@ -1,7 +1,8 @@
 ﻿namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
 {
-    public class ConfirmEmailGetResult
+    public enum ModifyClaimOperation
     {
-        public bool Succeeded { get; set; }
+        Remove = 0,
+        Add = 1
     }
 }

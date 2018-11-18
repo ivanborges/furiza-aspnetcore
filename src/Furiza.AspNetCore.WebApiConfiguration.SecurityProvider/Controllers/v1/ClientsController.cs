@@ -1,5 +1,5 @@
 ﻿using Furiza.AspNetCore.Identity.EntityFrameworkCore;
-using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Clients;
+using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1;
 using Furiza.Base.Core.Exceptions.Serialization;
 using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Authorization;
@@ -25,17 +25,17 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         }
 
         [AllowAnonymous]
-        [HttpPut("{clientId}/Initialize")]
-        [ProducesResponseType(typeof(InitializePutResult), 200)]
+        [HttpPatch("{clientId}/Initialize")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> InitializePutAsync(Guid clientId)
+        public async Task<IActionResult> InitializePatchAsync(Guid clientId)
         {
             if (userPrincipalBuilder.UserPrincipal.Claims.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId) == null)
                 userPrincipalBuilder.UserPrincipal.Claims.Add(new Claim(FurizaClaimNames.ClientId, clientId.ToString()));
 
             await identityInitializer.InitializeUsersAsync();
 
-            return Ok(new InitializePutResult() { Succeeded = true });
+            return Ok(new IdentityOperationResult() { Succeeded = true });
         }
     }
 }

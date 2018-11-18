@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Furiza.Base.Core.Identity.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Furiza.AspNetCore.WebApiConfiguration
 {
@@ -46,13 +47,9 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
             services.AddFurizaAudit(Configuration, ApiProfile.Name);
             services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAuthorization(AddAuthorizationOptions);
             services.Configure<ApiBehaviorOptions>(AddApiBehaviorOptions);
             AddSwaggerWithApiVersioning(services);
-
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator));
-            });
 
             AddCustomServicesAtTheEnd(services);
 
@@ -84,6 +81,13 @@ namespace Furiza.AspNetCore.WebApiConfiguration
         protected virtual void AddMvcOptions(MvcOptions options)
         {
             options.Filters.Add(typeof(ModelValidationAttribute));
+        }
+
+        protected virtual void AddAuthorizationOptions(AuthorizationOptions options)
+        {
+            options.AddPolicy(FurizaPolicies.RequireAdministratorRights, policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator));
+            options.AddPolicy(FurizaPolicies.RequireEditorRights, policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator, FurizaMasterRoles.Editor));
+            options.AddPolicy(FurizaPolicies.RequireApproverRights, policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator, FurizaMasterRoles.Editor, FurizaMasterRoles.Approver));
         }
 
         protected virtual void AddApiBehaviorOptions(ApiBehaviorOptions options)

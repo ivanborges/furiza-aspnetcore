@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace Furiza.Audit.Abstractions
 {
@@ -20,7 +21,7 @@ namespace Furiza.Audit.Abstractions
         {
         }
 
-        public AuditTrail(Guid transactionId, DateTime timestamp, string applicationId, AuditOperation operation, string user, string origin, string objectId, object @object)
+        public AuditTrail(Guid transactionId, DateTime timestamp, string applicationId, AuditOperation operation, string user, string origin, string objectId, object @object, IEnumerable<string> namesOfPropertiesToIgnore = null)
         {
             Id = Guid.NewGuid();
             TransactionId = transactionId;
@@ -39,7 +40,7 @@ namespace Furiza.Audit.Abstractions
                 ? objectId
                 : throw new ArgumentNullException(nameof(objectId));
             ObjectSerial = operation == AuditOperation.Create || operation == AuditOperation.Update
-                ? JsonConvert.SerializeObject(@object, new GeneralJsonSerializerSettings())
+                ? JsonConvert.SerializeObject(@object, @object.GetType(), new GeneralJsonSerializerSettings().IgnoreProperties(@object.GetType(), namesOfPropertiesToIgnore))
                 : string.Empty;
         }
     }

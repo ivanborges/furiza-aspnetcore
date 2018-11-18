@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Furiza.AspNetCore.ExceptionHandling;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
+using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
@@ -12,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
@@ -88,28 +91,33 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [HttpGet("{username}")]
         [ProducesResponseType(typeof(UsersGetResult), 200)]
         [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> GetAsync(string username)
         {
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
             var user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(username, userPrincipalBuilder.GetCurrentClientId());
             if (user == null)
-                return NotFound();
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
 
             var result = mapper.Map<ApplicationUser, UsersGetResult>(user);
 
             return Ok(result);
         }
 
-        [Authorize(Roles = FurizaMasterRoles.Superuser + "," + FurizaMasterRoles.Administrator)] // TODO: criar policy... (não precisa mais pois se o cara passou pelo 401, é pq ele tem token, se tem token, é pq tem algum role assingment => criar tb a policy "usuario" .. basta ter uma claim do tipo role... qq role ja eh valida (menor nivel = viewer, isso ja faz com o q o usuario seja um usuario do client)
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(typeof(UsersPostResult), 200)]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> PostAsync(UsersPost model)
+        public async Task<IActionResult> PostAsync([FromBody]UsersPost model)
         {
             if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName, userPrincipalBuilder.GetCurrentClientId()) != null)
                 throw new UserAlreadyExistsException();
@@ -139,40 +147,68 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 }
             }
             else
-            {
-                var errors = creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description));
-                throw new IdentityOperationException(errors);
-            }
+                throw new IdentityOperationException(creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-            return Ok(new UsersPostResult() { Succeeded = true });
+            return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
         [AllowAnonymous]
         [HttpGet("ConfirmEmail", Name = "ConfirmEmail")]
-        [ProducesResponseType(typeof(ConfirmEmailGetResult), 200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> ConfirmEmailAsync([FromQuery]ConfirmEmailGet values)
+        public async Task<IActionResult> ConfirmEmailGetAsync([FromQuery]ConfirmEmailGet model)
         {
-            var user = await userManager.FindByNameAsync(values.UserName);
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.FindByNameAsync(model.UserName);
             if (user == null)
-                return NotFound();
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
 
-            var confirmationResult = await userManager.ConfirmEmailAsync(user, values.Token);
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            var confirmationResult = await userManager.ConfirmEmailAsync(user, model.Token);
             if (!confirmationResult.Succeeded)
-            {
-                var errors = new List<IdentityOperationExceptionItem>();
-                foreach (var error in confirmationResult.Errors)
-                    errors.Add(new IdentityOperationExceptionItem(error.Code, error.Description));
-
-                throw new IdentityOperationException(errors);
-            }
+                throw new IdentityOperationException(confirmationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
             // TODO: substituir retornos Json por Views... já que o usuário final acessa esse endereço diretamente pelo browser.
-            return Ok(new ConfirmEmailGetResult() { Succeeded = true });
+            return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
-        // TODO: criar métodos de adicionar e remover claims.
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpPatch("{username}")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> ModifyClaimPatchAsync(string username, [FromBody]ModifyClaimPatch model)
+        {
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null)
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            var claim = new Claim(model.ClaimType, model.ClaimValue);
+
+            var operationResult = model.Operation == ModifyClaimOperation.Add
+                ? await userManager.AddClaimAsync(user, claim)
+                : await userManager.RemoveClaimAsync(user, claim);
+
+            if (operationResult.Succeeded)
+                await cachedUserManager.RemoveUserByUserNameAsync(username);
+            else
+                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+
+            return Ok(new IdentityOperationResult() { Succeeded = true });
+        }
     }
 }

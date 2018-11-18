@@ -22,20 +22,24 @@ namespace Furiza.Audit.SqlServer.Dapper
             this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
-        public async Task AddTrailsAsync<T>(AuditOperation auditOperation, string user, AuditableObjects<T> auditableObjects) where T : class
+        public async Task AddTrailsAsync<T>(AuditOperation auditOperation, string user, AuditableObjects<T> auditableObjects) where T : class =>
+            await AddTrailsAsync(auditOperation, user, auditableObjects, null);
+
+        public async Task AddTrailsAsync<T>(AuditOperation auditOperation, string user, AuditableObjects<T> auditableObjects, IEnumerable<string> namesOfPropertiesToIgnore) where T : class
         {
             if (!auditConfigurationSqlServer.Enable.Value)
                 return;
 
             var trails = auditableObjects.Select(o => new AuditTrail(
-                auditableObjects.TransactionId, 
-                auditableObjects.Timestamp, 
-                auditConfigurationSqlServer.ApplicationId, 
-                auditOperation, 
+                auditableObjects.TransactionId,
+                auditableObjects.Timestamp,
+                auditConfigurationSqlServer.ApplicationId,
+                auditOperation,
                 user,
                 httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString(),
-                o.Key, 
-                o.Value));
+                o.Key,
+                o.Value,
+                namesOfPropertiesToIgnore));
 
             var transaction = string.Empty;
             foreach (var trail in trails)

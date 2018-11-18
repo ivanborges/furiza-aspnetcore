@@ -9,10 +9,14 @@ namespace Furiza.Audit.Abstractions
         public Guid TransactionId { get; }
         public DateTime Timestamp { get; }
 
-        public AuditableObjects(string objectId, T @object)
+        public AuditableObjects()
         {
             TransactionId = Guid.NewGuid();
             Timestamp = DateTime.UtcNow;
+        }
+
+        public AuditableObjects(string objectId, T @object) : this()
+        {
             Add(objectId, @object);
         }
 

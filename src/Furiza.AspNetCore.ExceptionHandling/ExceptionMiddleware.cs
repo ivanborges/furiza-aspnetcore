@@ -29,16 +29,13 @@ namespace Furiza.AspNetCore.ExceptionHandling
             }
             catch (Exception ex)
             {
-                HttpStatusCode statusCode;
+                var statusCode = GetHttpStatusCodeFromExceptionType(ex);
                 object result;
 
                 if (ex is CoreException)
                 {
                     logger.LogInformation(ex, ex.Message);
 
-                    statusCode = ex is ModelValidationException
-                        ? HttpStatusCode.NotAcceptable
-                        : HttpStatusCode.BadRequest;
                     result = new BadRequestError(ex as CoreException);
                 }
                 else
@@ -51,7 +48,6 @@ namespace Furiza.AspNetCore.ExceptionHandling
                     else
                         logger.LogError(ex, $"An internal error occurred [LogId:{internalServerError.LogId}].", internalServerError.LogId);
 
-                    statusCode = HttpStatusCode.InternalServerError;
                     result = internalServerError;
                 }
 
@@ -60,6 +56,22 @@ namespace Furiza.AspNetCore.ExceptionHandling
 
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(result, new GeneralJsonSerializerSettings()));
             }
+        }
+
+        private static HttpStatusCode GetHttpStatusCodeFromExceptionType(Exception ex)
+        {
+            HttpStatusCode statusCode;
+
+            if (ex is ModelValidationException)
+                statusCode = HttpStatusCode.NotAcceptable;
+            else if (ex is ResourceNotFoundException)
+                statusCode = HttpStatusCode.NotFound;
+            else if (ex is CoreException)
+                statusCode = HttpStatusCode.BadRequest;
+            else
+                statusCode = HttpStatusCode.InternalServerError;
+
+            return statusCode;
         }
     }
 }
