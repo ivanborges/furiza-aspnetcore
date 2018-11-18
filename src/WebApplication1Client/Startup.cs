@@ -1,4 +1,5 @@
 ﻿using Furiza.AspNetCore.WebApiConfiguration;
+using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,8 +20,8 @@ namespace WebApplication1
         }
         
         protected override void AddCustomServicesAtTheEnd(IServiceCollection services)
-        {           
-            //services.AddAutoMapper(typeof(SecurityRootStartup).Assembly);
+        {
+            services.AddTransient<IScopedRoleAssignmentProvider, ScopedRoleAssignmentProviderTeste>();
         }
 
         protected override void AddCustomServicesAtTheBeginning(IServiceCollection services)
