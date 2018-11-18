@@ -38,8 +38,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
         public async override Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken))
         {
             var result = await base.UpdateAsync(user, cancellationToken);
-            if (result == IdentityResult.Success && !user.IsSystemUser)
-                await auditTrailProvider.AddTrailsAsync(AuditOperation.Update, userPrincipalBuilder.UserPrincipal.UserName, new AuditableObjects<ApplicationUser>(user.Id.ToString(), user));
+            //if (result == IdentityResult.Success && !user.IsSystemUser)
+            //    await auditTrailProvider.AddTrailsAsync(AuditOperation.Update, userPrincipalBuilder.UserPrincipal.UserName, new AuditableObjects<ApplicationUser>(user.Id.ToString(), user));
 
             return result;
         }
@@ -101,7 +101,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
                 await auditTrailProvider.AddTrailsAsync(AuditOperation.Create, 
                     userPrincipalBuilder.UserPrincipal.UserName, 
                     new AuditableObjects<ApplicationUserRole>($"{roleAssigment.UserId}.{roleAssigment.RoleId}.{roleAssigment.ClientId}", roleAssigment),
-                    new string[] { nameof(ApplicationUserRole.IdentityUser), nameof(ApplicationUserRole.IdentityRole) });
+                    new string[] { nameof(ApplicationUserRole.IdentityUser), nameof(ApplicationUserRole.IdentityRole), nameof(ApplicationUserRole.UserName), nameof(ApplicationUserRole.Role) });
         }
 
         public async override Task RemoveFromRoleAsync(ApplicationUser user, string normalizedRoleName, CancellationToken cancellationToken = default(CancellationToken))
