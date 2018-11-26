@@ -140,6 +140,21 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.ToTable("AspNetUserRoles");
                 });
 
+            modelBuilder.Entity("Furiza.AspNetCore.Identity.EntityFrameworkCore.ApplicationUserScopedRole", b =>
+                {
+                    b.Property<string>("UserName");
+
+                    b.Property<string>("Role");
+
+                    b.Property<string>("Scope");
+
+                    b.Property<Guid>("ClientId");
+
+                    b.HasKey("UserName", "Role", "Scope", "ClientId");
+
+                    b.ToTable("FurizaScopedRoleAssignments");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")

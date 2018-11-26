@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebAppli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1Client", "WebApplication1Client\WebApplication1Client.csproj", "{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furiza.AspNetCore.ScopedRoleAssignmentProvider", "Furiza.AspNetCore.ScopedRoleAssignmentProvider\Furiza.AspNetCore.ScopedRoleAssignmentProvider.csproj", "{DCFD207B-A2B3-4587-8A03-1C06D726153D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -52,6 +52,20 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FurizaScopedRoleAssignments",
+                columns: table => new
+                {
+                    ClientId = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(nullable: false),
+                    Role = table.Column<string>(nullable: false),
+                    Scope = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FurizaScopedRoleAssignments", x => new { x.UserName, x.Role, x.Scope, x.ClientId });
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -219,6 +233,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "FurizaScopedRoleAssignments");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

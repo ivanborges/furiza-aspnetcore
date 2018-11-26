@@ -23,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddDefaultTokenProviders();
 
             services.AddTransient<IUserStore<ApplicationUser>, FurizaUserStore>();
+            services.AddTransient<FurizaUserScopedRoleStore>();
 
             services.AddScoped<IdentityInitializer>();
 

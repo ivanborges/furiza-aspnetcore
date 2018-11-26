@@ -67,8 +67,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken);
             if (roleEntity != null)
             {
-                var roleAssigment = await FindUserRoleAsync(user.Id, roleEntity.Id, userPrincipalBuilder.GetCurrentClientId(), cancellationToken);
-                return roleAssigment != null;
+                var roleAssignment = await FindUserRoleAsync(user.Id, roleEntity.Id, userPrincipalBuilder.GetCurrentClientId(), cancellationToken);
+                return roleAssignment != null;
             }
 
             return false;
@@ -88,19 +88,19 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken) ?? 
                 throw new InvalidOperationException($"Invalid role name [{normalizedRoleName}] to assign to user.");
 
-            var roleAssigment = new ApplicationUserRole()
+            var roleAssignment = new ApplicationUserRole()
             {
                 UserId = user.Id,
                 RoleId = roleEntity.Id,
                 ClientId = userPrincipalBuilder.GetCurrentClientId()
             };
 
-            Context.Set<ApplicationUserRole>().Add(roleAssigment);
+            Context.Set<ApplicationUserRole>().Add(roleAssignment);
 
             if (!user.IsSystemUser)
                 await auditTrailProvider.AddTrailsAsync(AuditOperation.Create, 
                     userPrincipalBuilder.UserPrincipal.UserName, 
-                    new AuditableObjects<ApplicationUserRole>($"{roleAssigment.UserId}.{roleAssigment.RoleId}.{roleAssigment.ClientId}", roleAssigment),
+                    new AuditableObjects<ApplicationUserRole>($"{roleAssignment.UserId}.{roleAssignment.RoleId}.{roleAssignment.ClientId}", roleAssignment),
                     new string[] { nameof(ApplicationUserRole.IdentityUser), nameof(ApplicationUserRole.IdentityRole), nameof(ApplicationUserRole.UserName), nameof(ApplicationUserRole.Role) });
         }
 
@@ -118,13 +118,13 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken);
             if (roleEntity != null)
             {
-                var roleAssigment = await FindUserRoleAsync(user.Id, roleEntity.Id, userPrincipalBuilder.GetCurrentClientId(), cancellationToken);
-                if (roleAssigment != null)
+                var roleAssignment = await FindUserRoleAsync(user.Id, roleEntity.Id, userPrincipalBuilder.GetCurrentClientId(), cancellationToken);
+                if (roleAssignment != null)
                 {
-                    Context.Set<ApplicationUserRole>().Remove(roleAssigment);
+                    Context.Set<ApplicationUserRole>().Remove(roleAssignment);
 
                     if (!user.IsSystemUser)
-                        await auditTrailProvider.AddTrailsAsync(AuditOperation.Delete, userPrincipalBuilder.UserPrincipal.UserName, new AuditableObjects<ApplicationUserRole>($"{roleAssigment.UserId}.{roleAssigment.RoleId}.{roleAssigment.ClientId}", roleAssigment));
+                        await auditTrailProvider.AddTrailsAsync(AuditOperation.Delete, userPrincipalBuilder.UserPrincipal.UserName, new AuditableObjects<ApplicationUserRole>($"{roleAssignment.UserId}.{roleAssignment.RoleId}.{roleAssignment.ClientId}", roleAssignment));
                 }
             }
         }

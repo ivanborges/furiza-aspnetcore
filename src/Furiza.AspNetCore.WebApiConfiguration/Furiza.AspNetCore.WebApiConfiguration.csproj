@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="furiza.audit" Version="1.0.0" />
     <PackageReference Include="furiza.caching" Version="1.1.1" />
     <PackageReference Include="furiza.extensions.configuration" Version="1.0.9" />
@@ -38,6 +38,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Furiza.AspNetCore.Authentication.JwtBearer\Furiza.AspNetCore.Authentication.JwtBearer.csproj" />
     <ProjectReference Include="..\Furiza.AspNetCore.ExceptionHandling\Furiza.AspNetCore.ExceptionHandling.csproj" />
+    <ProjectReference Include="..\Furiza.AspNetCore.ScopedRoleAssignmentProvider\Furiza.AspNetCore.ScopedRoleAssignmentProvider.csproj" />
   </ItemGroup>
 
 </Project>

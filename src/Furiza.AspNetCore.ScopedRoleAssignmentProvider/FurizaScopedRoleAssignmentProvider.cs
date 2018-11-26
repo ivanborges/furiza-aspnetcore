@@ -1,12 +1,11 @@
 ﻿using Furiza.Base.Core.Identity.Abstractions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApplication1
+namespace Furiza.AspNetCore.ScopedRoleAssignmentProvider
 {
-    public class ScopedRoleAssignmentProviderTeste : IScopedRoleAssignmentProvider
+    internal class FurizaScopedRoleAssignmentProvider : IScopedRoleAssignmentProvider
     {
         public Task<IEnumerable<TScopedRoleAssignment>> GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(string username, Guid clientId) where TScopedRoleAssignment : IScopedRoleAssignment
         {

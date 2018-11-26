@@ -7,6 +7,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, ApplicationUserClaim, ApplicationUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
+        public DbSet<ApplicationUserScopedRole> ScopedRoleAssignments { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -15,9 +17,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            // TODO: renomear tabelas aspnet => furiza ? 
-            // por que nao criar a entidade ScopedRoleAssign aqui e usar este proprio DbContext ??? 
 
             builder.Entity<ApplicationUser>(user =>
             {
@@ -48,6 +47,12 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
                     .WithMany(u => u.IdentityClaims)
                     .HasForeignKey(uc => uc.UserId)
                     .IsRequired();
+            });
+            builder.Entity<ApplicationUserScopedRole>(userScopedRole =>
+            {
+                userScopedRole.HasKey(usr => new { usr.UserName, usr.Role, usr.Scope, usr.ClientId });
+
+                userScopedRole.ToTable("FurizaScopedRoleAssignments");
             });
         }
     }

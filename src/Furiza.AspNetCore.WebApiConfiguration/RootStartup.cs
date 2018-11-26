@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Furiza.AspNetCore.Authentication.JwtBearer;
 using Furiza.AspNetCore.ExceptionHandling;
+using Furiza.AspNetCore.ScopedRoleAssignmentProvider;
+using Furiza.Base.Core.Identity.Abstractions;
 using Furiza.Caching;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -12,8 +15,6 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Furiza.Base.Core.Identity.Abstractions;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Furiza.AspNetCore.WebApiConfiguration
 {
@@ -44,6 +45,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
             services.AddFurizaAudit(Configuration, ApiProfile.Name);
+            services.AddFurizaScopedRoleAssignmentProvider(Configuration.TryGet<ScopedRoleAssignmentProviderConfiguration>());
             services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAuthorization(AddAuthorizationOptions);
             services.AddHttpContextAccessor();
