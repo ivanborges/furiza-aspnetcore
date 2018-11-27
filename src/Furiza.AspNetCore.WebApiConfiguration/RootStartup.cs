@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Furiza.AspNetCore.Authentication.JwtBearer;
 using Furiza.AspNetCore.ExceptionHandling;
+using Furiza.AspNetCore.ScopedRoleAssignmentProvider;
+using Furiza.Base.Core.Identity.Abstractions;
 using Furiza.Caching;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -35,13 +38,17 @@ namespace Furiza.AspNetCore.WebApiConfiguration
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddFurizaLogging(Configuration, ApiProfile.Name);
+            services.AddFurizaLogging(Configuration);
 
             AddCustomServicesAtTheBeginning(services);
 
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
+            services.AddFurizaAudit(Configuration, ApiProfile.Name);
+            services.AddFurizaScopedRoleAssignmentProvider(Configuration.TryGet<ScopedRoleAssignmentProviderConfiguration>());
             services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAuthorization(AddAuthorizationOptions);
+            services.AddHttpContextAccessor();
             services.Configure<ApiBehaviorOptions>(AddApiBehaviorOptions);
             AddSwaggerWithApiVersioning(services);
 
@@ -53,6 +60,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
         public void Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
             app.UseFurizaExceptionHandling();
+            app.UseFurizaAuditIpAddressRetriever();
 
             AddCustomMiddlewaresToTheBeginningOfThePipeline(app);
 
@@ -65,13 +73,22 @@ namespace Furiza.AspNetCore.WebApiConfiguration
                     options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"{ApiProfile.Name} {description.GroupName}{(!description.GroupName.Contains(".") ? ".0" : "")}");
             });
 
-            AddCustomMiddlewaresToTheEndOfThePipeline(app);            
+            app.RunFurizaAuditInitializer();
+
+            AddCustomMiddlewaresToTheEndOfThePipeline(app);
         }
 
         #region [+] Virtual
         protected virtual void AddMvcOptions(MvcOptions options)
         {
             options.Filters.Add(typeof(ModelValidationAttribute));
+        }
+
+        protected virtual void AddAuthorizationOptions(AuthorizationOptions options)
+        {
+            options.AddPolicy(FurizaPolicies.RequireAdministratorRights, policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator));
+            options.AddPolicy(FurizaPolicies.RequireEditorRights, policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator, FurizaMasterRoles.Editor));
+            options.AddPolicy(FurizaPolicies.RequireApproverRights, policy => policy.RequireRole(FurizaMasterRoles.Superuser, FurizaMasterRoles.Administrator, FurizaMasterRoles.Editor, FurizaMasterRoles.Approver));
         }
 
         protected virtual void AddApiBehaviorOptions(ApiBehaviorOptions options)

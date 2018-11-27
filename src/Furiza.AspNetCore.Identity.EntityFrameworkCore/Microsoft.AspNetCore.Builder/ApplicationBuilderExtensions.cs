@@ -8,7 +8,7 @@ namespace Microsoft.AspNetCore.Builder
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseFurizaIdentityMigration(this IApplicationBuilder applicationBuilder)
+        public static IApplicationBuilder RunFurizaIdentityMigrations(this IApplicationBuilder applicationBuilder)
         {
             if (applicationBuilder == null)
                 throw new ArgumentNullException(nameof(applicationBuilder));
@@ -17,32 +17,30 @@ namespace Microsoft.AspNetCore.Builder
             {
                 var logger = serviceScope.ServiceProvider.GetService<ILoggerFactory>().CreateLogger<ApplicationDbContext>();
 
-                logger.LogInformation("Applying migrations for Identity...");
+                var identityConfiguration = serviceScope.ServiceProvider.GetService<IdentityConfiguration>();
+                if (identityConfiguration.EnableMigrations)
+                {
+                    logger.LogInformation("Applying migrations for Identity...");
 
-                using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
-                    context.Database.Migrate();
+                    using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
+                        context.Database.Migrate();
 
-                logger.LogInformation("Migrations applied.");
+                    logger.LogInformation("Identity migrations applied.");
+                }
+                else
+                    logger.LogInformation("Identity migrations disabled.");
             }
 
             return applicationBuilder;
         }
 
-        public static IApplicationBuilder UseFurizaIdentityInitializer(this IApplicationBuilder applicationBuilder)
+        public static IApplicationBuilder RunFurizaIdentityInitializer(this IApplicationBuilder applicationBuilder)
         {
             if (applicationBuilder == null)
                 throw new ArgumentNullException(nameof(applicationBuilder));
 
             using (var serviceScope = applicationBuilder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var logger = serviceScope.ServiceProvider.GetService<ILoggerFactory>().CreateLogger<IdentityInitializer>();
-
-                logger.LogInformation("Filling database with system users and roles...");
-
-                serviceScope.ServiceProvider.GetService<IdentityInitializer>().Initialize();
-
-                logger.LogInformation("Database filled.");
-            }
+                serviceScope.ServiceProvider.GetService<IdentityInitializer>().InitializeRoles();
 
             return applicationBuilder;
         }

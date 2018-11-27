@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services
 {
-    public interface ISignInManager<TUserData> where TUserData : IUserData
+    public interface ISignInManager
     {
-        Task<bool> CheckPasswordSignInAsync(TUserData user, string password);
+        Task<bool> CheckPasswordSignInAsync<TUserPrincipal>(TUserPrincipal userPrincipal, string password)
+            where TUserPrincipal : IUserPrincipal;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Furiza.AspNetCore.Identity.EntityFrameworkCore;
+using Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,6 +21,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddIdentity<ApplicationUser, ApplicationRole>(identityOptions)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddTransient<IUserStore<ApplicationUser>, FurizaUserStore>();
+            services.AddTransient<FurizaUserScopedRoleStore>();
 
             services.AddScoped<IdentityInitializer>();
 

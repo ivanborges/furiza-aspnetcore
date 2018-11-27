@@ -7,6 +7,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, ApplicationUserClaim, ApplicationUserRole, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
+        public DbSet<ApplicationUserScopedRole> ScopedRoleAssignments { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -18,12 +20,16 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
 
             builder.Entity<ApplicationUser>(user =>
             {
-                user.Ignore(u => u.Roles);
                 user.Ignore(u => u.Claims);
+                user.Ignore(u => u.RoleAssignments);
+                user.Ignore(u => u.IsSystemUser);
             });
             builder.Entity<ApplicationUserRole>(userRole =>
             {
-                userRole.HasKey(ur => new { ur.UserId, ur.RoleId });
+                userRole.Ignore(ur => ur.UserName);
+                userRole.Ignore(ur => ur.Role);
+
+                userRole.HasKey(ur => new { ur.UserId, ur.RoleId, ur.ClientId });
 
                 userRole.HasOne(ur => ur.IdentityRole)
                     .WithMany(r => r.IdentityUserRoles)
@@ -37,13 +43,16 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore
             });
             builder.Entity<ApplicationUserClaim>(userClaim =>
             {
-                userClaim.Ignore(uc => uc.Type);
-                userClaim.Ignore(uc => uc.Value);
-
                 userClaim.HasOne(uc => uc.IdentityUser)
                     .WithMany(u => u.IdentityClaims)
                     .HasForeignKey(uc => uc.UserId)
                     .IsRequired();
+            });
+            builder.Entity<ApplicationUserScopedRole>(userScopedRole =>
+            {
+                userScopedRole.HasKey(usr => new { usr.UserName, usr.Role, usr.Scope, usr.ClientId });
+
+                userScopedRole.ToTable("FurizaScopedRoleAssignments");
             });
         }
     }

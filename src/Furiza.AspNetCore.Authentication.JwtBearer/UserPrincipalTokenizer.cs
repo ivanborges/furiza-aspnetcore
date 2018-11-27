@@ -9,46 +9,59 @@ using System.Text;
 
 namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
-    internal class UserTokenizer<TUserData> : IUserTokenizer<TUserData> where TUserData : IUserData
+    internal class UserPrincipalTokenizer : IUserPrincipalTokenizer
     {
         private readonly SecurityTokenHandler tokenHandler;
         private readonly JwtConfiguration jwtConfiguration;
 
-        public UserTokenizer(SecurityTokenHandler tokenHandler,
+        public UserPrincipalTokenizer(SecurityTokenHandler tokenHandler,
             JwtConfiguration jwtConfiguration)
         {
             this.tokenHandler = tokenHandler ?? throw new ArgumentNullException(nameof(tokenHandler));
             this.jwtConfiguration = jwtConfiguration ?? throw new ArgumentNullException(nameof(jwtConfiguration));
         }
 
-        public GenerateTokenResult GenerateToken(TUserData userData)
+        public GenerateTokenResult GenerateToken<TUserPrincipal>(TUserPrincipal userPrincipal)
+            where TUserPrincipal : IUserPrincipal
         {
+            var clientIdClaim = userPrincipal.Claims?.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId) ?? 
+                throw new InvalidOperationException("User principal does not contain a valid claim for ClientId.");
+
             var identity = new ClaimsIdentity(
                 new Claim[] 
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, userData.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-                    new Claim(JwtRegisteredClaimNames.GivenName, userData.FullName),
-                    new Claim(JwtRegisteredClaimNames.Email, userData.Email),
-                    new Claim(JwtRegisteredClaimNamesCustom.Company, userData.Company),
-                    new Claim(JwtRegisteredClaimNamesCustom.Department, userData.Department),
-                    new Claim(JwtRegisteredClaimNamesCustom.CreationDate, userData.CreationDate?.ToString("yyyy/MM/dd-HH:mm:ss:fff")),
-                    new Claim(JwtRegisteredClaimNamesCustom.CreationUser, userData.CreationUser)
+                    new Claim(JwtRegisteredClaimNames.Sub, userPrincipal.UserName)
                 }
             );
 
-            if (userData.Roles != null && userData.Roles.Any())
-                foreach (var role in userData.Roles)
-                    identity.AddClaim(new Claim(ClaimTypes.Role, role.Name));
+            if (!string.IsNullOrWhiteSpace(userPrincipal.FullName))
+                identity.AddClaim(new Claim(JwtRegisteredClaimNames.GivenName, userPrincipal.FullName));
 
-            if (userData.Claims != null && userData.Claims.Any())
-                foreach (var claim in userData.Claims)
+            if (!string.IsNullOrWhiteSpace(userPrincipal.Email))
+                identity.AddClaim(new Claim(JwtRegisteredClaimNames.Email, userPrincipal.Email));
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.HiringType))
+                identity.AddClaim(new Claim(FurizaClaimNames.HiringType, userPrincipal.HiringType));
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.Company))
+                identity.AddClaim(new Claim(FurizaClaimNames.Company, userPrincipal.Company));
+
+            if (!string.IsNullOrWhiteSpace(userPrincipal.Department))
+                identity.AddClaim(new Claim(FurizaClaimNames.Department, userPrincipal.Department));
+
+            if (userPrincipal.Claims != null && userPrincipal.Claims.Any())
+                foreach (var claim in userPrincipal.Claims.Where(c => c.Type != FurizaClaimNames.ClientId))
                     identity.AddClaim(new Claim(claim.Type, claim.Value));
+
+            if (userPrincipal.RoleAssignments != null && userPrincipal.RoleAssignments.Any())
+                foreach (var ra in userPrincipal.RoleAssignments)
+                    identity.AddClaim(new Claim(ClaimTypes.Role, ra.Role));
 
             var securityToken = tokenHandler.CreateToken(new SecurityTokenDescriptor()
             {
                 Issuer = jwtConfiguration.Issuer,
-                Audience = jwtConfiguration.Audience,
+                Audience = clientIdClaim.Value,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)), SecurityAlgorithms.HmacSha256),
                 Subject = identity,
                 NotBefore = DateTime.UtcNow,

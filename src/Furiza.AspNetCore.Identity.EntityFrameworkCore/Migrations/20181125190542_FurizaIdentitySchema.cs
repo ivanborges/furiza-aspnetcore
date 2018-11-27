@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 {
-    public partial class FirstVersionIdentitySchema : Migration
+    public partial class FurizaIdentitySchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,9 +15,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    CreationDate = table.Column<DateTime>(nullable: true),
-                    CreationUser = table.Column<string>(nullable: true)
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,14 +42,27 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     FullName = table.Column<string>(nullable: true),
+                    HiringType = table.Column<string>(nullable: true),
                     Company = table.Column<string>(nullable: true),
-                    Department = table.Column<string>(nullable: true),
-                    CreationDate = table.Column<DateTime>(nullable: true),
-                    CreationUser = table.Column<string>(nullable: true)
+                    Department = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FurizaScopedRoleAssignments",
+                columns: table => new
+                {
+                    ClientId = table.Column<Guid>(nullable: false),
+                    UserName = table.Column<string>(nullable: false),
+                    Role = table.Column<string>(nullable: false),
+                    Scope = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FurizaScopedRoleAssignments", x => new { x.UserName, x.Role, x.Scope, x.ClientId });
                 });
 
             migrationBuilder.CreateTable(
@@ -83,9 +94,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
-                    CreationDate = table.Column<DateTime>(nullable: true),
-                    CreationUser = table.Column<string>(nullable: true)
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -124,12 +133,16 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                 {
                     UserId = table.Column<Guid>(nullable: false),
                     RoleId = table.Column<Guid>(nullable: false),
-                    CreationDate = table.Column<DateTime>(nullable: true),
-                    CreationUser = table.Column<string>(nullable: true)
+                    ClientId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId, x.ClientId });
+
+                    //############################################################################################
+                    //table.UniqueConstraint("AK_AspNetUserRoles_UserId_RoleId", x => new { x.UserId, x.RoleId });
+                    //############################################################################################
+
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
@@ -220,6 +233,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "FurizaScopedRoleAssignments");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

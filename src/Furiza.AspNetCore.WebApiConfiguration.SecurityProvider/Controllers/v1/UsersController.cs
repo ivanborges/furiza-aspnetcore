@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Furiza.AspNetCore.ExceptionHandling;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
+using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
@@ -12,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
@@ -19,24 +22,26 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
     [ApiVersion("1.0")]
     public class UsersController : RootController
     {
+        private readonly string[] hiringTypes = new string[] { FurizaHiringTypes.InHouse, FurizaHiringTypes.Outsourced };
+
+        private readonly IUserPrincipalBuilder userPrincipalBuilder;
         private readonly IMapper mapper;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly ICachedUserManager cachedUserManager;
-        private readonly IUserContext userContext;
         private readonly IPasswordGenerator passwordGenerator;
         private readonly IUserNotifier emailSender;
 
-        public UsersController(IMapper mapper,
+        public UsersController(IUserPrincipalBuilder userPrincipalBuilder,
+            IMapper mapper,
             UserManager<ApplicationUser> userManager,
             ICachedUserManager cachedUserManager,
-            IUserContext userContext,
             IPasswordGenerator passwordGenerator,
             IUserNotifier emailSender)
         {
+            this.userPrincipalBuilder = userPrincipalBuilder ?? throw new ArgumentNullException(nameof(userPrincipalBuilder));
             this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
-            this.userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
             this.passwordGenerator = passwordGenerator ?? throw new ArgumentNullException(nameof(passwordGenerator));
             this.emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
         }
@@ -48,16 +53,20 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         public IActionResult Get([FromQuery]UsersGetMany filters)
         {
             Func<ApplicationUser, bool> p1 = u => true;
-            if (filters.Role != null)
-                p1 = u => u.IdentityUserRoles.Any(ur => ur.IdentityRole.Name == filters.Role.ToString());
+            if (!string.IsNullOrWhiteSpace(filters.Role))
+                p1 = u => u.IdentityUserRoles.Any(ur => ur.IdentityRole.Name.Trim().ToLower() == filters.Role.Trim().ToLower());
 
             Func<ApplicationUser, bool> p2 = u => true;
-            if (!string.IsNullOrWhiteSpace(filters.Company))
-                p2 = u => u.Company == filters.Company;
+            if (!string.IsNullOrWhiteSpace(filters.HiringType))
+                p2 = u => u.HiringType?.Trim().ToLower() == filters.HiringType.Trim().ToLower();
 
             Func<ApplicationUser, bool> p3 = u => true;
+            if (!string.IsNullOrWhiteSpace(filters.Company))
+                p3 = u => u.Company?.Trim().ToLower() == filters.Company.Trim().ToLower();
+
+            Func<ApplicationUser, bool> p4 = u => true;
             if (!string.IsNullOrWhiteSpace(filters.Department))
-                p3 = u => u.Department == filters.Department;
+                p4 = u => u.Department?.Trim().ToLower() == filters.Department.Trim().ToLower();
 
             var allUsers = userManager.Users
                 .Include(u => u.IdentityUserRoles)
@@ -66,6 +75,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 .Where(p1)
                 .Where(p2)
                 .Where(p3)
+                .Where(p4)
                 .OrderBy(u => u.UserName)
                 .ToList();
 
@@ -81,35 +91,41 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [HttpGet("{username}")]
         [ProducesResponseType(typeof(UsersGetResult), 200)]
         [ProducesResponseType(401)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> GetAsync(string username)
         {
-            var user = await cachedUserManager.GetUserByUserNameAsync(username);
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(username, userPrincipalBuilder.GetCurrentClientId());
             if (user == null)
-                return NotFound();
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
 
             var result = mapper.Map<ApplicationUser, UsersGetResult>(user);
 
             return Ok(result);
         }
 
-        [Authorize(Roles = "Superuser,Administrator")]
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(typeof(UsersPostResult), 200)]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> PostAsync(UsersPost model)
+        public async Task<IActionResult> PostAsync([FromBody]UsersPost model)
         {
-            if (await cachedUserManager.GetUserByUserNameAsync(model.UserName) != null)
+            if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName, userPrincipalBuilder.GetCurrentClientId()) != null)
                 throw new UserAlreadyExistsException();
 
+            if (!hiringTypes.Contains(model.HiringType))
+                throw new InvalidHiringTypeException();
+
             var user = mapper.Map<UsersPost, ApplicationUser>(model);
-            user.CreationDate = DateTime.UtcNow;
-            user.CreationUser = userContext.UserData.UserName;
             user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);            
 
             var password = model.GeneratePassword
@@ -131,44 +147,68 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 }
             }
             else
-            {
-                var errors = new List<IdentityOperationExceptionItem>();
-                foreach (var error in creationResult.Errors)
-                    errors.Add(new IdentityOperationExceptionItem(error.Code, error.Description));
+                throw new IdentityOperationException(creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-                throw new IdentityOperationException(errors);
-            }
-
-            return Ok(new UsersPostResult() { Succeeded = true });
+            return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
         [AllowAnonymous]
         [HttpGet("ConfirmEmail", Name = "ConfirmEmail")]
-        [ProducesResponseType(typeof(ConfirmEmailGetResult), 200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> ConfirmEmailAsync([FromQuery]ConfirmEmailGet values)
+        public async Task<IActionResult> ConfirmEmailGetAsync([FromQuery]ConfirmEmailGet model)
         {
-            var user = await userManager.FindByNameAsync(values.UserName);
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.FindByNameAsync(model.UserName);
             if (user == null)
-                return NotFound();
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
 
-            var confirmationResult = await userManager.ConfirmEmailAsync(user, values.Token);
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            var confirmationResult = await userManager.ConfirmEmailAsync(user, model.Token);
             if (!confirmationResult.Succeeded)
-            {
-                var errors = new List<IdentityOperationExceptionItem>();
-                foreach (var error in confirmationResult.Errors)
-                    errors.Add(new IdentityOperationExceptionItem(error.Code, error.Description));
-
-                throw new IdentityOperationException(errors);
-            }
+                throw new IdentityOperationException(confirmationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
             // TODO: substituir retornos Json por Views... já que o usuário final acessa esse endereço diretamente pelo browser.
-            return Ok(new ConfirmEmailGetResult() { Succeeded = true });
+            return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
-        // TODO: criar métodos de adicionar e remover roles e claims.
-        // TODO: customizar o Identity para os métodos AddClaimAsync e AddToRoleAsync do UserManager gravarem o creationdate e creationuser.
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpPatch("{username}")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> ModifyClaimPatchAsync(string username, [FromBody]ModifyClaimPatch model)
+        {
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null)
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            var claim = new Claim(model.ClaimType, model.ClaimValue);
+
+            var operationResult = model.Operation == ModifyClaimOperation.Add
+                ? await userManager.AddClaimAsync(user, claim)
+                : await userManager.RemoveClaimAsync(user, claim);
+
+            if (operationResult.Succeeded)
+                await cachedUserManager.RemoveUserByUserNameAsync(username);
+            else
+                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+
+            return Ok(new IdentityOperationResult() { Succeeded = true });
+        }
     }
 }

@@ -18,6 +18,7 @@ variables:
   #JwtBearer
   #ExceptionHandling
   #Identity
+  #ScopedRoleAssignmentProvider
   #WebApiConfiguration
   #WebApiConfiguration.SecurityProvider
   Pack1Version: '1.0.3'
@@ -136,6 +137,25 @@ steps:
     nuGetFeedType: external
     packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.Identity.EntityFrameworkCore.*.nupkg'
     publishFeedCredentials: 'apikey-nuget-aspnetcore-identity.entityframeworkcore'
+
+# Publish Furiza.AspNetCore.ScopedRoleAssignmentProvider to NuGet.org
+- task: DotNetCoreCLI@2
+  displayName: Pack Furiza.AspNetCore.ScopedRoleAssignmentProvider
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  inputs:
+    command: pack
+    packagesToPack: '**/**/Furiza.AspNetCore.ScopedRoleAssignmentProvider.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: Pack1Version
+- task: NuGetCommand@2
+  displayName: Push Furiza.AspNetCore.ScopedRoleAssignmentProvider to NuGet.org
+  condition: eq(variables['Pack1PushToNuget'], 'True')
+  continueOnError: True
+  inputs:
+    command: push
+    nuGetFeedType: external
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.ScopedRoleAssignmentProvider.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-scopedroleassignmentprovider'
 
 # Publish Furiza.AspNetCore.WebApiConfiguration to NuGet.org
 - task: DotNetCoreCLI@2

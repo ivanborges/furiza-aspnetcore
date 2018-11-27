@@ -27,10 +27,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<DateTime?>("CreationDate");
-
-                    b.Property<string>("CreationUser");
-
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
@@ -59,10 +55,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<DateTime?>("CreationDate");
-
-                    b.Property<string>("CreationUser");
-
                     b.Property<string>("Department");
 
                     b.Property<string>("Email")
@@ -71,6 +63,8 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
                     b.Property<bool>("EmailConfirmed");
 
                     b.Property<string>("FullName");
+
+                    b.Property<string>("HiringType");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -118,10 +112,6 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<DateTime?>("CreationDate");
-
-                    b.Property<string>("CreationUser");
-
                     b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
@@ -137,15 +127,32 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Migrations
 
                     b.Property<Guid>("RoleId");
 
-                    b.Property<DateTime?>("CreationDate");
+                    b.Property<Guid>("ClientId");
 
-                    b.Property<string>("CreationUser");
+                    b.HasKey("UserId", "RoleId", "ClientId");
 
-                    b.HasKey("UserId", "RoleId");
+                    //######################################
+                    //b.HasAlternateKey("UserId", "RoleId");
+                    //######################################
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
+                });
+
+            modelBuilder.Entity("Furiza.AspNetCore.Identity.EntityFrameworkCore.ApplicationUserScopedRole", b =>
+                {
+                    b.Property<string>("UserName");
+
+                    b.Property<string>("Role");
+
+                    b.Property<string>("Scope");
+
+                    b.Property<Guid>("ClientId");
+
+                    b.HasKey("UserName", "Role", "Scope", "ClientId");
+
+                    b.ToTable("FurizaScopedRoleAssignments");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
