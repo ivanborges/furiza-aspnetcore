@@ -19,7 +19,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
         public abstract TUserPrincipal UserPrincipal { get; }
 
-        public UserPrincipalBuilderBase(IHttpContextAccessor httpContextAccessor,
+        protected UserPrincipalBuilderBase(IHttpContextAccessor httpContextAccessor,
             IScopedRoleAssignmentProvider scopedRoleAssignmentProvider)
         {
             this.httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));

@@ -58,11 +58,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            if (string.IsNullOrWhiteSpace(normalizedRoleName))
-                throw new ArgumentNullException(nameof(normalizedRoleName));
+            ValidateParameters(user, normalizedRoleName);
 
             var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken);
             if (roleEntity != null)
@@ -79,11 +75,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            if (string.IsNullOrWhiteSpace(normalizedRoleName))
-                throw new ArgumentNullException(nameof(normalizedRoleName));
+            ValidateParameters(user, normalizedRoleName);
 
             var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken) ?? 
                 throw new InvalidOperationException($"Invalid role name [{normalizedRoleName}] to assign to user.");
@@ -109,11 +101,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            if (string.IsNullOrWhiteSpace(normalizedRoleName))
-                throw new ArgumentNullException(nameof(normalizedRoleName));
+            ValidateParameters(user, normalizedRoleName);
 
             var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken);
             if (roleEntity != null)
@@ -134,11 +122,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            if (claims == null)
-                throw new ArgumentNullException(nameof(claims));
+            ValidateParameters(user, claims);
 
             var auditableObjs = new AuditableObjects<ApplicationUserClaim>();
             foreach (var claim in claims)
@@ -155,9 +139,9 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             }
 
             if (auditableObjs.Any() && !user.IsSystemUser)
-                await auditTrailProvider.AddTrailsAsync(AuditOperation.Create, 
-                    userPrincipalBuilder.UserPrincipal.UserName, 
-                    auditableObjs, 
+                await auditTrailProvider.AddTrailsAsync(AuditOperation.Create,
+                    userPrincipalBuilder.UserPrincipal.UserName,
+                    auditableObjs,
                     new string[] { nameof(ApplicationUserClaim.IdentityUser) });
         }
 
@@ -166,11 +150,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
 
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            if (claims == null)
-                throw new ArgumentNullException(nameof(claims));
+            ValidateParameters(user, claims);
 
             var auditableObjs = new AuditableObjects<ApplicationUserClaim>();
             foreach (var claim in claims)
@@ -190,5 +170,23 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
 
         protected async virtual Task<ApplicationUserRole> FindUserRoleAsync(Guid userId, Guid roleId, Guid clientId, CancellationToken cancellationToken) => 
             await Context.Set<ApplicationUserRole>().FindAsync(new object[] { userId, roleId, clientId }, cancellationToken);
+
+        private static void ValidateParameters(ApplicationUser user, string normalizedRoleName)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            if (string.IsNullOrWhiteSpace(normalizedRoleName))
+                throw new ArgumentNullException(nameof(normalizedRoleName));
+        }
+
+        private static void ValidateParameters(ApplicationUser user, IEnumerable<Claim> claims)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            if (claims == null)
+                throw new ArgumentNullException(nameof(claims));
+        }
     }
 }

@@ -28,18 +28,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrWhiteSpace(userName))
-                throw new ArgumentNullException(nameof(userName));
-
-            if (string.IsNullOrWhiteSpace(roleName))
-                throw new ArgumentNullException(nameof(roleName));
-
-            if (string.IsNullOrWhiteSpace(scopeName))
-                throw new ArgumentNullException(nameof(scopeName));
-
-            var normalizedUserName = userName.ToLower().Trim();
-            var normalizedRoleName = roleName.ToLower().Trim();
-            var normalizedScopeName = scopeName.ToLower().Trim();
+            ValidateAndNormalizeParameters(userName, roleName, scopeName, out var normalizedUserName, out var normalizedRoleName, out var normalizedScopeName);
 
             var scopedRoleAssignment = await FindUserScopedRoleAsync(normalizedUserName, normalizedRoleName, normalizedScopeName, userPrincipalBuilder.GetCurrentClientId(), cancellationToken);
             return scopedRoleAssignment != null;
@@ -49,18 +38,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrWhiteSpace(userName))
-                throw new ArgumentNullException(nameof(userName));
-
-            if (string.IsNullOrWhiteSpace(roleName))
-                throw new ArgumentNullException(nameof(roleName));
-
-            if (string.IsNullOrWhiteSpace(scopeName))
-                throw new ArgumentNullException(nameof(scopeName));
-
-            var normalizedUserName = userName.ToLower().Trim();
-            var normalizedRoleName = roleName.ToLower().Trim();
-            var normalizedScopeName = scopeName.ToLower().Trim();
+            ValidateAndNormalizeParameters(userName, roleName, scopeName, out var normalizedUserName, out var normalizedRoleName, out var normalizedScopeName);
 
             var scopedRoleAssignment = new ApplicationUserScopedRole()
             {
@@ -82,18 +60,7 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (string.IsNullOrWhiteSpace(userName))
-                throw new ArgumentNullException(nameof(userName));
-
-            if (string.IsNullOrWhiteSpace(roleName))
-                throw new ArgumentNullException(nameof(roleName));
-
-            if (string.IsNullOrWhiteSpace(scopeName))
-                throw new ArgumentNullException(nameof(scopeName));
-
-            var normalizedUserName = userName.ToLower().Trim();
-            var normalizedRoleName = roleName.ToLower().Trim();
-            var normalizedScopeName = scopeName.ToLower().Trim();
+            ValidateAndNormalizeParameters(userName, roleName, scopeName, out var normalizedUserName, out var normalizedRoleName, out var normalizedScopeName);
 
             var scopedRoleAssignment = await FindUserScopedRoleAsync(normalizedUserName, normalizedRoleName, normalizedScopeName, userPrincipalBuilder.GetCurrentClientId(), cancellationToken);
             if (scopedRoleAssignment != null)
@@ -107,5 +74,21 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
 
         protected async virtual Task<ApplicationUserScopedRole> FindUserScopedRoleAsync(string userName, string role, string scope, Guid clientId, CancellationToken cancellationToken) =>
             await applicationDbContext.Set<ApplicationUserScopedRole>().FindAsync(new object[] { userName, role, scope, clientId }, cancellationToken);
+
+        private static void ValidateAndNormalizeParameters(string userName, string roleName, string scopeName, out string normalizedUserName, out string normalizedRoleName, out string normalizedScopeName)
+        {
+            if (string.IsNullOrWhiteSpace(userName))
+                throw new ArgumentNullException(nameof(userName));
+
+            if (string.IsNullOrWhiteSpace(roleName))
+                throw new ArgumentNullException(nameof(roleName));
+
+            if (string.IsNullOrWhiteSpace(scopeName))
+                throw new ArgumentNullException(nameof(scopeName));
+
+            normalizedUserName = userName.ToLower().Trim();
+            normalizedRoleName = roleName.ToLower().Trim();
+            normalizedScopeName = scopeName.ToLower().Trim();
+        }
     }
 }
