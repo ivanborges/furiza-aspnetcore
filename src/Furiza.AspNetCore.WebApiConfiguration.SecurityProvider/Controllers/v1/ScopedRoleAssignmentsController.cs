@@ -65,8 +65,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                         .ThenBy(usr => usr.Role)
                 .ToList();
 
-            // TODO: adicionar cache 
-
             var resultItems = mapper.Map<IEnumerable<ApplicationUserScopedRole>, IEnumerable<ScopedRoleAssignmentsGetResult>>(allScopedRoleAssignments);
             var result = new ScopedRoleAssignmentsGetManyResult()
             {
@@ -107,8 +105,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             await furizaUserScopedRoleStore.AddToScopedRoleAsync(model.UserName, model.Role, model.Scope);
 
-            // TODO: atualizar cache
-
             return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
@@ -142,8 +138,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             }
 
             await furizaUserScopedRoleStore.RemoveFromScopedRoleAsync(model.UserName, model.Role, model.Scope);
-
-            // TODO: atualizar cache
 
             return Ok(new IdentityOperationResult() { Succeeded = true });
         }

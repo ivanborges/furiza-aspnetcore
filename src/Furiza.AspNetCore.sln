@@ -13,11 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApiCon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider", "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.csproj", "{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{CEF79281-7D77-496D-A73A-9659833D215E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1Client", "WebApplication1Client\WebApplication1Client.csproj", "{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furiza.AspNetCore.ScopedRoleAssignmentProvider", "Furiza.AspNetCore.ScopedRoleAssignmentProvider\Furiza.AspNetCore.ScopedRoleAssignmentProvider.csproj", "{DCFD207B-A2B3-4587-8A03-1C06D726153D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.ScopedRoleAssignmentProvider", "Furiza.AspNetCore.ScopedRoleAssignmentProvider\Furiza.AspNetCore.ScopedRoleAssignmentProvider.csproj", "{DCFD207B-A2B3-4587-8A03-1C06D726153D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,14 +41,6 @@ Global
 		{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CEF79281-7D77-496D-A73A-9659833D215E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CEF79281-7D77-496D-A73A-9659833D215E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CEF79281-7D77-496D-A73A-9659833D215E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CEF79281-7D77-496D-A73A-9659833D215E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B4D29E2-B35F-465A-BA17-8128E4A62FEB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Release|Any CPU.ActiveCfg = Release|Any CPU
