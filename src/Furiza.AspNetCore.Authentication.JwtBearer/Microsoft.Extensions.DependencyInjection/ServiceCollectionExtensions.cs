@@ -10,15 +10,22 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddFurizaJwtAuthentication(this IServiceCollection services, JwtConfiguration jwtConfiguration)
+        public static IServiceCollection AddFurizaUserPrincipalBuilder(this IServiceCollection services)
         {
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
-            services.AddSingleton(jwtConfiguration ?? throw new ArgumentNullException(nameof(jwtConfiguration)));
-
             services.AddScoped(typeof(IUserPrincipalBuilder), typeof(UserPrincipalBuilderTypeless));
             services.AddScoped(typeof(IUserPrincipalBuilder<,>), typeof(UserPrincipalBuilderTyped<,>));
+
+            return services;
+        }
+
+        public static IServiceCollection AddFurizaJwtAuthentication(this IServiceCollection services, JwtConfiguration jwtConfiguration)
+        {
+            services.AddFurizaUserPrincipalBuilder();
+
+            services.AddSingleton(jwtConfiguration ?? throw new ArgumentNullException(nameof(jwtConfiguration)));
 
             services.AddAuthentication(authOptions =>
             {

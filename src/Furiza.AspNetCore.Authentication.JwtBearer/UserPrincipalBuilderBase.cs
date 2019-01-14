@@ -1,5 +1,6 @@
 ﻿using Furiza.AspNetCore.Authentication.JwtBearer.Identity;
 using Furiza.Base.Core.Identity.Abstractions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,11 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             this.scopedRoleAssignmentProvider = scopedRoleAssignmentProvider ?? throw new ArgumentNullException(nameof(scopedRoleAssignmentProvider));
         }
 
-        public virtual Guid GetCurrentClientId() => new Guid(UserPrincipal.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
+        public virtual Guid GetCurrentClientId() => new Guid(UserPrincipal?.Claims.Single(c => c.Type == FurizaClaimNames.ClientId).Value);
 
-        public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync() => await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal.UserName, GetCurrentClientId());
+        public virtual string GetAccessToken() => UserPrincipal?.Claims.FirstOrDefault(c => c.Type == FurizaClaimNames.AccessToken && !string.IsNullOrWhiteSpace(c.Value))?.Value;
+
+        public virtual async Task<IEnumerable<TScopedRoleAssignment>> GetScopedRoleAssignmentsAsync() => await scopedRoleAssignmentProvider.GetUserScopedRoleAssignmentsAsync<TScopedRoleAssignment>(UserPrincipal?.UserName, GetCurrentClientId());
 
         protected TUserPrincipal ValidateClaimsAndBuildUserPrincipal()
         {
@@ -82,6 +85,13 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                         userPrincipal.Claims.Add(new Claim(claim.Type, claim.Value));
                         break;
                 }
+            }
+
+            if (!userPrincipal.Claims.Any(c => c.Type == FurizaClaimNames.AccessToken && !string.IsNullOrWhiteSpace(c.Value)))
+            {
+                var accessToken = httpContextAccessor.HttpContext.GetTokenAsync("access_token").GetAwaiter().GetResult();
+                if (!string.IsNullOrWhiteSpace(accessToken))
+                    userPrincipal.Claims.Add(new Claim(FurizaClaimNames.AccessToken, accessToken));
             }
 
             return userPrincipal;
