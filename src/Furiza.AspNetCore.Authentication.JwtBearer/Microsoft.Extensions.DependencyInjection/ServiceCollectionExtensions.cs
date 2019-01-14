@@ -27,6 +27,20 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton(jwtConfiguration ?? throw new ArgumentNullException(nameof(jwtConfiguration)));
 
+            //######################################################################################################################
+            // Treatment needed when Issuer or Audience are guids as string. This will prevent different inputs prompt invalid data.
+            // Example: {F56B5B81-C116-4196-A07C-F1819AB5A8A7} will become f56b5b81-c116-4196-a07c-f1819ab5a8a7.
+
+            var validIssuer = Guid.TryParse(jwtConfiguration.Issuer, out var guidIssuer)
+                ? guidIssuer.ToString()
+                : jwtConfiguration.Issuer;
+
+            var validAudience = Guid.TryParse(jwtConfiguration.Audience, out var guidAudience)
+                ? guidAudience.ToString()
+                : jwtConfiguration.Audience;
+
+            //######################################################################################################################
+
             services.AddAuthentication(authOptions =>
             {
                 authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -38,12 +52,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 bearerOptions.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidateAudience = !string.IsNullOrWhiteSpace(jwtConfiguration.Audience),
+                    ValidateAudience = !string.IsNullOrWhiteSpace(validAudience),
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
 
-                    ValidIssuer = jwtConfiguration.Issuer,
-                    ValidAudience = jwtConfiguration.Audience,
+                    ValidIssuer = validIssuer,
+                    ValidAudience = validAudience,
 
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)),
 

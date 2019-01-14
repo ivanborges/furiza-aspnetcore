@@ -58,10 +58,24 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                 foreach (var ra in userPrincipal.RoleAssignments)
                     identity.AddClaim(new Claim(ClaimTypes.Role, ra.Role));
 
+            //######################################################################################################################
+            // Treatment needed when Issuer or Audience are guids as string. This will prevent different inputs prompt invalid data.
+            // Example: {F56B5B81-C116-4196-A07C-F1819AB5A8A7} will become f56b5b81-c116-4196-a07c-f1819ab5a8a7.
+
+            var validIssuer = Guid.TryParse(jwtConfiguration.Issuer, out var guidIssuer)
+                ? guidIssuer.ToString()
+                : jwtConfiguration.Issuer;
+
+            var validAudience = Guid.TryParse(clientIdClaim.Value, out var guidAudience)
+                ? guidAudience.ToString()
+                : clientIdClaim.Value;
+
+            //######################################################################################################################
+
             var securityToken = tokenHandler.CreateToken(new SecurityTokenDescriptor()
             {
-                Issuer = jwtConfiguration.Issuer,
-                Audience = clientIdClaim.Value,
+                Issuer = validIssuer,
+                Audience = validAudience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)), SecurityAlgorithms.HmacSha256),
                 Subject = identity,
                 NotBefore = DateTime.UtcNow,
