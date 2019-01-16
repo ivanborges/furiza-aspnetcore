@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApiCon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.ScopedRoleAssignmentProvider", "Furiza.AspNetCore.ScopedRoleAssignmentProvider\Furiza.AspNetCore.ScopedRoleAssignmentProvider.csproj", "{DCFD207B-A2B3-4587-8A03-1C06D726153D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furiza.AspNetCore.Authentication.JwtBearer.Cookies", "Furiza.AspNetCore.Authentication.JwtBearer.Cookies\Furiza.AspNetCore.Authentication.JwtBearer.Cookies.csproj", "{485F943B-7EFC-4AB1-AEA9-FABC585413AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furiza.AspNetCore.WebApplicationConfiguration", "Furiza.AspNetCore.WebApplicationConfiguration\Furiza.AspNetCore.WebApplicationConfiguration.csproj", "{8D6F682B-33FB-4BC0-8907-C0D8766FBFA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCFD207B-A2B3-4587-8A03-1C06D726153D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{485F943B-7EFC-4AB1-AEA9-FABC585413AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{485F943B-7EFC-4AB1-AEA9-FABC585413AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{485F943B-7EFC-4AB1-AEA9-FABC585413AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{485F943B-7EFC-4AB1-AEA9-FABC585413AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D6F682B-33FB-4BC0-8907-C0D8766FBFA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D6F682B-33FB-4BC0-8907-C0D8766FBFA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D6F682B-33FB-4BC0-8907-C0D8766FBFA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D6F682B-33FB-4BC0-8907-C0D8766FBFA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
