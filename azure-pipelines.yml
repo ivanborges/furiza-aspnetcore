@@ -215,7 +215,7 @@ steps:
     nuGetFeedType: external
     packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.*.nupkg'
     publishFeedCredentials: 'apikey-nuget-aspnetcore-webapiconfiguration.securityprovider'
-    
+
 # Publish Furiza.AspNetCore.WebApplicationConfiguration to NuGet.org
 - task: DotNetCoreCLI@2
   displayName: Pack Furiza.AspNetCore.WebApplicationConfiguration
