@@ -2,9 +2,11 @@
 using Furiza.AspNetCore.Authentication.JwtBearer.Cookies;
 using Furiza.AspNetCore.Authentication.JwtBearer.Cookies.Services;
 using Furiza.AspNetCore.ScopedRoleAssignmentProvider;
+using Furiza.AspNetCore.WebApplicationConfiguration.ExceptionHandling;
 using Furiza.AspNetCore.WebApplicationConfiguration.RestClients;
 using Furiza.AspNetCore.WebApplicationConfiguration.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +38,7 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
 
             var authenticationConfiguration = Configuration.TryGet<AuthenticationConfiguration>();
 
+            services.AddSingleton(ApplicationProfile);
             services.AddScoped<WebApplicationLoginManager>();
             services.AddScoped<IAccessTokenRefresher, AccessTokenRefresher>();
             services.AddScoped(serviceProvider =>
@@ -58,12 +61,22 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
             services.AddAutoMapper();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler(ApplicationProfile.ErrorPage);
+                app.UseHsts();
+            }
+            
+            app.UseMiddleware<RefitExceptionMiddleware>();
+
             AddCustomMiddlewaresToTheBeginningOfThePipeline(app);
 
-            app.UseExceptionHandler(ApplicationProfile.ErrorPage);
-            app.UseHsts();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

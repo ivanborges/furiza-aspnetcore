@@ -48,7 +48,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
             var audClaim = claimsIdentity.Claims.SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Aud) ??
                 throw new InvalidOperationException("ClaimsIdentity does not contain a valid claim for Audience which represents the ClientId.");
 
-            var audSub = claimsIdentity.Claims.SingleOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub) ??
+            var subClaim = claimsIdentity.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub || c.Type == ClaimTypes.NameIdentifier) ??
                 throw new InvalidOperationException("ClaimsIdentity does not contain a valid claim for Subject which represents the Username.");
 
             foreach (var claim in claimsIdentity.Claims)
@@ -85,7 +85,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
                         userPrincipal.RoleAssignments.Add(new GenericRoleAssignment()
                         {
                             ClientId = new Guid(audClaim.Value),
-                            UserName = audSub.Value,
+                            UserName = subClaim.Value,
                             Role = claim.Value
                         });
                         break;

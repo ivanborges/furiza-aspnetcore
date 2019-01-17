@@ -1,7 +1,9 @@
 ﻿using Furiza.AspNetCore.Authentication.JwtBearer.Cookies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -34,6 +36,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
 
             services.AddScoped<CookiesManager>();
+            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
 
             return services;
         }

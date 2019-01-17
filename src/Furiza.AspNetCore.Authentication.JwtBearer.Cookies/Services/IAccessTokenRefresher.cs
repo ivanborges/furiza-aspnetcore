@@ -10,7 +10,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer.Cookies.Services
 
     public class RefreshTokenResult
     {
-        public string AccessToken { get; }
-        public string RefreshToken { get; }
+        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

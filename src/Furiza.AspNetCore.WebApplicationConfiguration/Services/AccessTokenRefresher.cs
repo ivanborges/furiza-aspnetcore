@@ -9,10 +9,13 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration.Services
     internal class AccessTokenRefresher : IAccessTokenRefresher
     {
         private readonly ISecurityProviderClient securityProviderClient;
+        private readonly IMapper mapper;
 
-        public AccessTokenRefresher(ISecurityProviderClient securityProviderClient)
+        public AccessTokenRefresher(ISecurityProviderClient securityProviderClient,
+            IMapper mapper)
         {
             this.securityProviderClient = securityProviderClient ?? throw new ArgumentNullException(nameof(securityProviderClient));
+            this.mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<RefreshTokenResult> RefreshAsync(Guid clientId, string refreshToken)
@@ -25,7 +28,7 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration.Services
             };
 
             var authPostResult = await securityProviderClient.AuthAsync(authPost);
-            var refreshTokenResult = Mapper.Map<AuthPostResult, RefreshTokenResult>(authPostResult);
+            var refreshTokenResult = mapper.Map<AuthPostResult, RefreshTokenResult>(authPostResult);
 
             return refreshTokenResult;
         }
