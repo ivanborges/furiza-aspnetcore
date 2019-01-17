@@ -7,17 +7,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
         where TUserPrincipal : IUserPrincipal, new()
         where TScopedRoleAssignment : IScopedRoleAssignment
     {
-        public override TUserPrincipal UserPrincipal
-        {
-            get
-            {
-                if (userPrincipal == null)
-                    userPrincipal = ValidateClaimsAndBuildUserPrincipal();
-
-                return userPrincipal;
-            }
-        }
-        private TUserPrincipal userPrincipal;
+        public override TUserPrincipal UserPrincipal => ValidateClaimsAndBuildUserPrincipal();
 
         public UserPrincipalBuilderTyped(IHttpContextAccessor httpContextAccessor,
             IScopedRoleAssignmentProvider scopedRoleAssignmentProvider)

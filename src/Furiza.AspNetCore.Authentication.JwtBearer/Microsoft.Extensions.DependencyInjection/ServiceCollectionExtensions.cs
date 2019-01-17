@@ -41,29 +41,31 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //######################################################################################################################
 
-            services.AddAuthentication(authOptions =>
-            {
-                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(bearerOptions =>
-            {
-                bearerOptions.RequireHttpsMetadata = false;
-                bearerOptions.SaveToken = true;
-                bearerOptions.TokenValidationParameters = new TokenValidationParameters
+            services
+                .AddAuthentication(authOptions =>
                 {
-                    ValidateIssuer = true,
-                    ValidateAudience = !string.IsNullOrWhiteSpace(validAudience),
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
+                    authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(bearerOptions =>
+                {
+                    bearerOptions.RequireHttpsMetadata = false;
+                    bearerOptions.SaveToken = true;
+                    bearerOptions.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = !string.IsNullOrWhiteSpace(validAudience),
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
 
-                    ValidIssuer = validIssuer,
-                    ValidAudience = validAudience,
+                        ValidIssuer = validIssuer,
+                        ValidAudience = validAudience,
 
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.Secret)),
 
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
             return services;
         }

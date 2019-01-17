@@ -8,17 +8,7 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 {
     internal class UserPrincipalBuilderTypeless : UserPrincipalBuilderBase<GenericUserPrincipal, GenericScopedRoleAssignment>, IUserPrincipalBuilder
     {
-        public override GenericUserPrincipal UserPrincipal
-        {
-            get
-            {
-                if (userPrincipal == null)
-                    userPrincipal = ValidateClaimsAndBuildUserPrincipal();
-
-                return userPrincipal;
-            }
-        }
-        private GenericUserPrincipal userPrincipal;
+        public override GenericUserPrincipal UserPrincipal => ValidateClaimsAndBuildUserPrincipal();
 
         public UserPrincipalBuilderTypeless(IHttpContextAccessor httpContextAccessor,
             IScopedRoleAssignmentProvider scopedRoleAssignmentProvider)
