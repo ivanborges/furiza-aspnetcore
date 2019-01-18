@@ -24,7 +24,7 @@ variables:
   #WebApiConfiguration.SecurityProvider
   #WebApplicationConfiguration
   Pack1Version: '1.4.0'
-  Pack1PushToNuget: False
+  Pack1PushToNuget: True
 
 steps:
 # Install NuGet Tool
