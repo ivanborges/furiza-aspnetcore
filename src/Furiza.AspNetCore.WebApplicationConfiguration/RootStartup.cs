@@ -5,6 +5,7 @@ using Furiza.AspNetCore.ScopedRoleAssignmentProvider;
 using Furiza.AspNetCore.WebApplicationConfiguration.ExceptionHandling;
 using Furiza.AspNetCore.WebApplicationConfiguration.RestClients;
 using Furiza.AspNetCore.WebApplicationConfiguration.Services;
+using Furiza.Networking.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,8 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
-using System;
-using System.Net.Http;
 
 namespace Furiza.AspNetCore.WebApplicationConfiguration
 {
@@ -38,13 +37,14 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
 
             var authenticationConfiguration = Configuration.TryGet<AuthenticationConfiguration>();
 
+            services.AddFurizaNetworking();
             services.AddSingleton(ApplicationProfile);
             services.AddScoped<WebApplicationLoginManager>();
             services.AddScoped<IAccessTokenRefresher, AccessTokenRefresher>();
             services.AddScoped(serviceProvider =>
             {
-                var httpClient = new HttpClient();
-                httpClient.BaseAddress = new Uri(authenticationConfiguration.SecurityProviderApiUrl);
+                var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+                var httpClient = httpClientFactory.Create(authenticationConfiguration.SecurityProviderApiUrl);
 
                 return RestService.For<ISecurityProviderClient>(httpClient);
             });

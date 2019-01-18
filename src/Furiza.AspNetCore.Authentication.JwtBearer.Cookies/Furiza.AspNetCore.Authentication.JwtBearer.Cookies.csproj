@@ -9,7 +9,7 @@
     <PackageIconUrl>https://www.imagemhost.com.br/images/2018/10/17/furiza_logo_transp_6.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/ivanborges/furiza-aspnetcore</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Description>This package implements logic for cookie authentication with refresh token mechanism through a JWT genereated by any Furiza Security Provider WebApi, making possible to work with the JWT generated for microservices webapis in web applications browser based.</Description>
+    <Description>This package implements logic for cookie authentication with refresh token mechanism through a JWT genereated by any Furiza Security Provider WebApi, making possible to work with the JWT generated for microservices webapis in browser based web applications.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

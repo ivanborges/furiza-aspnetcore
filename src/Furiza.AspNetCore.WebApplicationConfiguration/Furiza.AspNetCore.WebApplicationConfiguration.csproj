@@ -9,7 +9,7 @@
     <PackageIconUrl>https://www.imagemhost.com.br/images/2018/10/17/furiza_logo_transp_6.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/ivanborges/furiza-aspnetcore</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Description>This package implements base logic for web application browser based startup configuration, including cookie authentication, automapping, exception handling and rest client through Refit.</Description>
+    <Description>This package implements base logic for browser based web application startup configuration, including cookie authentication, automapping, exception handling and rest client through Refit.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,6 +26,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Furiza.Base.Core.Exceptions.Serialization" Version="1.0.5" />
     <PackageReference Include="Furiza.Extensions.Configuration" Version="1.0.9" />
+    <PackageReference Include="Furiza.Networking" Version="1.0.1" />
     <PackageReference Include="Furiza.Newtonsoft.Json" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.6" />
     <PackageReference Include="refit" Version="4.6.58" />
