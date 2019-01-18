@@ -41,7 +41,7 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
             services.AddSingleton(ApplicationProfile);
             services.AddScoped<WebApplicationLoginManager>();
             services.AddScoped<IAccessTokenRefresher, AccessTokenRefresher>();
-            services.AddScoped(serviceProvider =>
+            services.AddTransient(serviceProvider =>
             {
                 var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
                 var httpClient = httpClientFactory.Create(authenticationConfiguration.SecurityProviderApiUrl);
