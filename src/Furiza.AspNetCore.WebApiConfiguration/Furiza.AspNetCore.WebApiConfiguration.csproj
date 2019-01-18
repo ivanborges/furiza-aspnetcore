@@ -28,7 +28,7 @@
     <PackageReference Include="furiza.caching" Version="1.1.1" />
     <PackageReference Include="furiza.extensions.configuration" Version="1.0.9" />
     <PackageReference Include="furiza.logging" Version="1.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="3.1.0" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
