@@ -23,7 +23,7 @@ variables:
   #WebApiConfiguration
   #WebApiConfiguration.SecurityProvider
   #WebApplicationConfiguration
-  Pack1Version: '1.3.2'
+  Pack1Version: '1.4.0'
   Pack1PushToNuget: False
 
 steps:
