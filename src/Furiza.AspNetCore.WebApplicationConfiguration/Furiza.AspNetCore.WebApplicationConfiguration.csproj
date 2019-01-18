@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <Authors>Furīza</Authors>
     <Copyright>Furīza (C) 2018</Copyright>
     <PackageProjectUrl>https://github.com/ivanborges/furiza-aspnetcore</PackageProjectUrl>
@@ -28,7 +28,7 @@
     <PackageReference Include="Furiza.Extensions.Configuration" Version="1.0.9" />
     <PackageReference Include="Furiza.Networking" Version="1.0.1" />
     <PackageReference Include="Furiza.Newtonsoft.Json" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="refit" Version="4.6.58" />
   </ItemGroup>
 

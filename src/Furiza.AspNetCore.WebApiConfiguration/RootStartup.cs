@@ -109,7 +109,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
         #region [+] Privates
         private void AddSwaggerWithApiVersioning(IServiceCollection services)
         {
-            services.AddMvcCore().AddVersionedApiExplorer(options =>
+            services.AddVersionedApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'VVV";
                 options.SubstituteApiVersionInUrl = true;
