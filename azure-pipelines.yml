@@ -18,7 +18,7 @@ variables:
   #JwtBearer
   #Jwtbearer.Cookies
   #ExceptionHandling
-  #Identity 
+  #Identity
   #ScopedRoleAssignmentProvider
   #WebApiConfiguration
   #WebApiConfiguration.SecurityProvider
