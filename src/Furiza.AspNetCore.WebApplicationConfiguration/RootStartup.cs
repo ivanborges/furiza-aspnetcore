@@ -72,7 +72,8 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
                 app.UseExceptionHandler(ApplicationProfile.ErrorPage);
                 app.UseHsts();
             }
-            
+
+            app.UseMiddleware<AjaxExceptionMiddleware>();
             app.UseMiddleware<RefitExceptionMiddleware>();
 
             AddCustomMiddlewaresToTheBeginningOfThePipeline(app);
