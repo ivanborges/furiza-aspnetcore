@@ -21,7 +21,6 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
         }
         private GenericUserPrincipal userPrincipal;
 
-
         public UserPrincipalBuilderTypeless(IHttpContextAccessor httpContextAccessor,
             IScopedRoleAssignmentProvider scopedRoleAssignmentProvider)
             : base(httpContextAccessor, scopedRoleAssignmentProvider)
