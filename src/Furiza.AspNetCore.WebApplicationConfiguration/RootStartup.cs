@@ -54,7 +54,16 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
             services.AddHttpContextAccessor();
             services.AddFurizaScopedRoleAssignmentProvider(new ScopedRoleAssignmentProviderConfiguration() { SecurityProviderApiUrl = authenticationConfiguration.SecurityProviderApiUrl });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton(Configuration.TryGet<reCaptchaConfiguration>());
+            services.AddTransient(serviceProvider =>
+            {
+                var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+                var httpClient = httpClientFactory.Create("https://www.google.com/");
+
+                return RestService.For<IReCaptchaClient>(httpClient);
+            });
 
             AddCustomServicesAtTheEnd(services);
 
