@@ -1,7 +1,7 @@
 ﻿using Refit;
 using System.Threading.Tasks;
 
-namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients
+namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients.ReCaptcha
 {
     public interface IReCaptchaClient
     {

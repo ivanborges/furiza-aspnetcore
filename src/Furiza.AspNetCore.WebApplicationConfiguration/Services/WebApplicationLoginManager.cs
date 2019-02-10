@@ -1,5 +1,6 @@
 ﻿using Furiza.AspNetCore.Authentication.JwtBearer.Cookies;
-using Furiza.AspNetCore.WebApplicationConfiguration.RestClients;
+using Furiza.AspNetCore.WebApplicationConfiguration.RestClients.Auth;
+using Furiza.AspNetCore.WebApplicationConfiguration.RestClients.ReCaptcha;
 using System;
 using System.Threading.Tasks;
 

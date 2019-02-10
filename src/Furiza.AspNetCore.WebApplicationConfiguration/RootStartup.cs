@@ -3,7 +3,9 @@ using Furiza.AspNetCore.Authentication.JwtBearer.Cookies;
 using Furiza.AspNetCore.Authentication.JwtBearer.Cookies.Services;
 using Furiza.AspNetCore.ScopedRoleAssignmentProvider;
 using Furiza.AspNetCore.WebApplicationConfiguration.ExceptionHandling;
-using Furiza.AspNetCore.WebApplicationConfiguration.RestClients;
+using Furiza.AspNetCore.WebApplicationConfiguration.RestClients.Auth;
+using Furiza.AspNetCore.WebApplicationConfiguration.RestClients.ReCaptcha;
+using Furiza.AspNetCore.WebApplicationConfiguration.RestClients.Users;
 using Furiza.AspNetCore.WebApplicationConfiguration.Services;
 using Furiza.Networking.Abstractions;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +36,10 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.Configure<CookieTempDataProviderOptions>(options =>
+            {
+                options.Cookie.IsEssential = true;
+            });
 
             var authenticationConfiguration = Configuration.TryGet<AuthenticationConfiguration>();
 
@@ -47,6 +53,13 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration
                 var httpClient = httpClientFactory.Create(authenticationConfiguration.SecurityProviderApiUrl);
 
                 return RestService.For<ISecurityProviderClient>(httpClient);
+            });
+            services.AddTransient(serviceProvider =>
+            {
+                var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+                var httpClient = httpClientFactory.Create(authenticationConfiguration.SecurityProviderApiUrl);
+
+                return RestService.For<IUsersClient>(httpClient);
             });
 
             services.AddFurizaCookieAuthentication(authenticationConfiguration);
