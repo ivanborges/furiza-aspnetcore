@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Furiza.AspNetCore.Authentication.JwtBearer.Cookies.Services;
-using Furiza.AspNetCore.WebApplicationConfiguration.RestClients;
+using Furiza.AspNetCore.WebApplicationConfiguration.RestClients.Auth;
 
 namespace Furiza.AspNetCore.WebApplicationConfiguration
 {

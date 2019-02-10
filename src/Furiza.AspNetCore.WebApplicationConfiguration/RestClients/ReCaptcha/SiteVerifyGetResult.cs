@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients
+namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients.ReCaptcha
 {
     public class SiteVerifyGetResult
     {

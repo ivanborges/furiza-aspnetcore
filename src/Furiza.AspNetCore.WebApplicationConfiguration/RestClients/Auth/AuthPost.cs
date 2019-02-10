@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients
+namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients.Auth
 {
     public class AuthPost
     {
