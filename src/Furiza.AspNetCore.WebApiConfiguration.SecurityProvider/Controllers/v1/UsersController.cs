@@ -172,7 +172,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
-        [HttpPost("{userName}/ResetPassword")]
+        [HttpPost("{username}/ResetPassword")]
         [ProducesResponseType(typeof(IdentityOperationResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
