@@ -152,6 +152,58 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
+        [HttpPost("ChangePassword")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> ChangePasswordPostAsync([FromBody]ChangePasswordUsersPost model)
+        {
+            var user = await userManager.FindByNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
+            var operationResult = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            if (operationResult.Succeeded)
+                await cachedUserManager.RemoveUserByUserNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
+            else
+                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+
+            return Ok(new IdentityOperationResult() { Succeeded = true });
+        }
+
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpPost("{userName}/ResetPassword")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> ResetPasswordPostAsync(string username)
+        {
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null)
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+            var newPassword = passwordGenerator.GenerateRandomPassword();
+            var operationResult = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+            if (operationResult.Succeeded)
+            {
+                await cachedUserManager.RemoveUserByUserNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
+                await emailSender.NotifyUserPasswordResetAsync(user.Email, user.UserName, newPassword);
+            }
+            else
+                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+
+            return Ok(new IdentityOperationResult() { Succeeded = true });
+        }
+
         [AllowAnonymous]
         [HttpGet("ConfirmEmail", Name = "ConfirmEmail")]
         [ProducesResponseType(typeof(IdentityOperationResult), 200)]
