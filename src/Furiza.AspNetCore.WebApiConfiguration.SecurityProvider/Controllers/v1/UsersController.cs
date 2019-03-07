@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -178,30 +179,37 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> ResetPasswordPostAsync(string username)
+        public async Task<IActionResult> ResetPasswordPostAsync(string username,
+            [FromServices]IServiceProvider serviceProvider)
         {
-            var errors = new List<SecurityResourceNotFoundExceptionItem>();
-
-            var user = await userManager.FindByNameAsync(username);
-            if (user == null)
-                errors.Add(SecurityResourceNotFoundExceptionItem.User);
-
-            if (errors.Any())
-                throw new ResourceNotFoundException(errors);
-
-            var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
-            var newPassword = passwordGenerator.GenerateRandomPassword();
-            var operationResult = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
-
-            if (operationResult.Succeeded)
+            using (var serviceScope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                await cachedUserManager.RemoveUserByUserNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
-                await emailSender.NotifyUserPasswordResetAsync(user.Email, user.UserName, newPassword);
-            }
-            else
-                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+                var manuallyScopedUserManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+                var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+                var user = await manuallyScopedUserManager.FindByNameAsync(username.Trim().ToLower());
+                if (user == null)
+                    errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+                if (errors.Any())
+                    throw new ResourceNotFoundException(errors);
+
+                var resetToken = await manuallyScopedUserManager.GeneratePasswordResetTokenAsync(user);
+                var newPassword = passwordGenerator.GenerateRandomPassword();
+                var operationResult = await manuallyScopedUserManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+                if (operationResult.Succeeded)
+                {
+                    await cachedUserManager.RemoveUserByUserNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
+                    await emailSender.NotifyUserPasswordResetAsync(user.Email, user.UserName, newPassword);
+                }
+                else
+                    throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+
+                return Ok(new IdentityOperationResult() { Succeeded = true });
+            }
+
         }
 
         [AllowAnonymous]
@@ -242,7 +250,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         {
             var errors = new List<SecurityResourceNotFoundExceptionItem>();
 
-            var user = await userManager.FindByNameAsync(username);
+            var user = await userManager.FindByNameAsync(username.Trim().ToLower());
             if (user == null)
                 errors.Add(SecurityResourceNotFoundExceptionItem.User);
 

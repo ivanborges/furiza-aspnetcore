@@ -24,6 +24,16 @@ namespace Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores
             this.applicationDbContext = applicationDbContext ?? throw new ArgumentNullException(nameof(applicationDbContext));
         }
 
+        public async Task<bool> IsRoleInUse(string roleName, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (string.IsNullOrWhiteSpace(roleName))
+                return false;
+
+            return await applicationDbContext.Set<ApplicationUserScopedRole>().FirstOrDefaultAsync(u => u.Role == roleName.Trim().ToLower()) != null;
+        }
+
         public async Task<bool> IsInScopedRoleAsync(string userName, string roleName, string scopeName, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
