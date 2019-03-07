@@ -42,32 +42,10 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 .OrderBy(u => u.Name)
                 .ToListAsync();
 
-            var resultItems = mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RolesGetResult>>(allRoles);
             var result = new RolesGetManyResult()
             {
-                Roles = resultItems
+                Roles = mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RolesGetManyResult.RolesGetManyResultInnerRole>>(allRoles)
             };
-
-            return Ok(result);
-        }
-
-        [HttpGet("{rolename}")]
-        [ProducesResponseType(typeof(RolesGetResult), 200)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(typeof(BadRequestError), 404)]
-        [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> GetAsync(string rolename)
-        {
-            var errors = new List<SecurityResourceNotFoundExceptionItem>();
-
-            var role = await roleManager.FindByNameAsync(rolename.Trim().ToLower());
-            if (role == null)
-                errors.Add(SecurityResourceNotFoundExceptionItem.Role);
-
-            if (errors.Any())
-                throw new ResourceNotFoundException(errors);
-
-            var result = mapper.Map<ApplicationRole, RolesGetResult>(role);
 
             return Ok(result);
         }
@@ -83,7 +61,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         public async Task<IActionResult> PostAsync([FromBody]RolesPost model)
         {
             if (await roleManager.FindByNameAsync(model.RoleName.Trim().ToLower()) != null)
-                throw new UserAlreadyExistsException();
+                throw new RoleAlreadyExistsException();
 
             var role = mapper.Map<RolesPost, ApplicationRole>(model);
             var creationResult = await roleManager.CreateAsync(role);

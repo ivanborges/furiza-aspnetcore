@@ -4,6 +4,11 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Roles
 {
     public class RolesGetManyResult
     {
-        public IEnumerable<RolesGetResult> Roles { get; set; }
+        public IEnumerable<RolesGetManyResultInnerRole> Roles { get; set; }
+
+        public class RolesGetManyResultInnerRole
+        {
+            public string RoleName { get; set; }
+        }
     }
 }
