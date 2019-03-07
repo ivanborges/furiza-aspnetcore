@@ -109,6 +109,32 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(result);
         }
 
+        [HttpGet("byemail")]
+        [ProducesResponseType(typeof(UsersGetResult), 200)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> ByEmailGetAsync([FromQuery]UsersGetByEmail model)
+        {
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.Users
+                .Include(u => u.IdentityUserRoles)
+                    .ThenInclude(ur => ur.IdentityRole)
+                .Include(u => u.IdentityClaims)
+                .FirstOrDefaultAsync(u => u.NormalizedEmail == model.Email.Trim().ToUpper());
+
+            if (user == null)
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            var result = mapper.Map<ApplicationUser, UsersGetResult>(user);
+
+            return Ok(result);
+        }
+
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
         [ProducesResponseType(typeof(IdentityOperationResult), 200)]
@@ -121,6 +147,9 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         {
             if (await cachedUserManager.GetUserByUserNameAndFilterRoleAssignmentsByClientIdAsync(model.UserName, userPrincipalBuilder.GetCurrentClientId()) != null)
                 throw new UserAlreadyExistsException();
+
+            if (await userManager.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == model.Email.Trim().ToUpper()) != null)
+                throw new EmailAlreadyExistsException();
 
             if (!hiringTypes.Contains(model.HiringType))
                 throw new InvalidHiringTypeException();
@@ -182,7 +211,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         {
             var errors = new List<SecurityResourceNotFoundExceptionItem>();
 
-            var user = await userManager.FindByNameAsync(username);
+            var user = await userManager.FindByNameAsync(username.Trim().ToLower());
             if (user == null)
                 errors.Add(SecurityResourceNotFoundExceptionItem.User);
 
@@ -195,7 +224,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             if (operationResult.Succeeded)
             {
-                await cachedUserManager.RemoveUserByUserNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
+                await cachedUserManager.RemoveUserByUserNameAsync(username);
                 await emailSender.NotifyUserPasswordResetAsync(user.Email, user.UserName, newPassword);
             }
             else
@@ -242,7 +271,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         {
             var errors = new List<SecurityResourceNotFoundExceptionItem>();
 
-            var user = await userManager.FindByNameAsync(username);
+            var user = await userManager.FindByNameAsync(username.Trim().ToLower());
             if (user == null)
                 errors.Add(SecurityResourceNotFoundExceptionItem.User);
 
