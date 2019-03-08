@@ -46,7 +46,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
             services.AddFurizaAudit(Configuration, ApiProfile.Name);
             services.AddFurizaScopedRoleAssignmentProvider(Configuration.TryGet<ScopedRoleAssignmentProviderConfiguration>());
-            services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(AddMvcOptions).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAuthorization(AddAuthorizationOptions);
             services.AddHttpContextAccessor();
             services.Configure<ApiBehaviorOptions>(AddApiBehaviorOptions);

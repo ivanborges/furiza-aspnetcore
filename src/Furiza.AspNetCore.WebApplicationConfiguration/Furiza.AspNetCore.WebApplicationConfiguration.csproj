@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.1</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
     <Authors>Furīza</Authors>
     <Copyright>Furīza (C) 2018</Copyright>
     <PackageProjectUrl>https://github.com/ivanborges/furiza-aspnetcore</PackageProjectUrl>
@@ -14,12 +14,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.1\Furiza.AspNetCore.WebApplicationConfiguration.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.2\Furiza.AspNetCore.WebApplicationConfiguration.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.1\Furiza.AspNetCore.WebApplicationConfiguration.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.2\Furiza.AspNetCore.WebApplicationConfiguration.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
@@ -29,8 +29,8 @@
     <PackageReference Include="Furiza.Extensions.Configuration" Version="1.0.9" />
     <PackageReference Include="Furiza.Networking" Version="1.0.1" />
     <PackageReference Include="Furiza.Newtonsoft.Json" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.1" />
-    <PackageReference Include="refit" Version="4.6.58" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.2" />
+    <PackageReference Include="refit" Version="4.6.90" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
 {
-    public class ModifyClaimPatch
+    public class ModifyClaimPost
     {
         [Required]
         public ModifyClaimOperation? Operation { get; set; }

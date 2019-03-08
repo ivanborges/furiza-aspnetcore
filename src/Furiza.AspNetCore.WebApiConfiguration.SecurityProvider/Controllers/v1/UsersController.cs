@@ -79,6 +79,16 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 .OrderBy(u => u.UserName)
                 .ToList();
 
+            Parallel.ForEach(allUsers, user =>
+            {
+                user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == userPrincipalBuilder.GetCurrentClientId()).ToList();
+                user.IdentityClaims.Add(new ApplicationUserClaim()
+                {
+                    ClaimType = FurizaClaimNames.ClientId,
+                    ClaimValue = userPrincipalBuilder.GetCurrentClientId().ToString()
+                });
+            });
+
             var resultItems = mapper.Map<IEnumerable<ApplicationUser>, IEnumerable<UsersGetResult>>(allUsers);
             var result = new UsersGetManyResult()
             {
@@ -129,6 +139,13 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             if (errors.Any())
                 throw new ResourceNotFoundException(errors);
+
+            user.IdentityUserRoles = user.IdentityUserRoles.Where(ur => ur.ClientId == userPrincipalBuilder.GetCurrentClientId()).ToList();
+            user.IdentityClaims.Add(new ApplicationUserClaim()
+            {
+                ClaimType = FurizaClaimNames.ClientId,
+                ClaimValue = userPrincipalBuilder.GetCurrentClientId().ToString()
+            });
 
             var result = mapper.Map<ApplicationUser, UsersGetResult>(user);
 
@@ -259,7 +276,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
-        [HttpPatch("{username}")]
+        [HttpPost("{username}/Claims")]
         [ProducesResponseType(typeof(IdentityOperationResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
@@ -267,7 +284,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> ModifyClaimPatchAsync(string username, [FromBody]ModifyClaimPatch model)
+        public async Task<IActionResult> ModifyClaimPostAsync(string username, [FromBody]ModifyClaimPost model)
         {
             var errors = new List<SecurityResourceNotFoundExceptionItem>();
 

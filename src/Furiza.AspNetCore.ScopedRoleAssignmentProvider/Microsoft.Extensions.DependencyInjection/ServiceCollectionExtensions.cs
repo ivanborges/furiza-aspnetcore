@@ -1,6 +1,9 @@
 ﻿using Furiza.AspNetCore.ScopedRoleAssignmentProvider;
+using Furiza.AspNetCore.ScopedRoleAssignmentProvider.RestClients;
 using Furiza.Base.Core.Identity.Abstractions;
+using Refit;
 using System;
+using System.Net.Http;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -12,6 +15,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services));
 
             services.AddSingleton(scopedRoleAssignmentProviderConfiguration ?? throw new ArgumentNullException(nameof(scopedRoleAssignmentProviderConfiguration)));
+
+            services.AddTransient(serviceProvider =>
+            {
+                var httpClient = new HttpClient()
+                {
+                    BaseAddress = new Uri(scopedRoleAssignmentProviderConfiguration.SecurityProviderApiUrl)
+                };
+
+                return RestService.For<ISecurityProviderClient>(httpClient);
+            });
 
             services.AddTransient<IScopedRoleAssignmentProvider, FurizaScopedRoleAssignmentProvider>();
 

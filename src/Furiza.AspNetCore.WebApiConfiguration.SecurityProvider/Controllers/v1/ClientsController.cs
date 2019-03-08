@@ -25,10 +25,10 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         }
 
         [AllowAnonymous]
-        [HttpPatch("{clientId}/Initialize")]
+        [HttpPost("{clientId}/Initialize")]
         [ProducesResponseType(typeof(IdentityOperationResult), 200)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> InitializePatchAsync(Guid clientId)
+        public async Task<IActionResult> InitializePostAsync(Guid clientId)
         {
             if (userPrincipalBuilder.UserPrincipal.Claims.SingleOrDefault(c => c.Type == FurizaClaimNames.ClientId) == null)
                 userPrincipalBuilder.UserPrincipal.Claims.Add(new Claim(FurizaClaimNames.ClientId, clientId.ToString()));

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.1</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
     <Authors>Furīza</Authors>
     <Copyright>Furīza (C) 2018</Copyright>
     <PackageProjectUrl>https://github.com/ivanborges/furiza-aspnetcore</PackageProjectUrl>
@@ -14,12 +14,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.1\Furiza.AspNetCore.Identity.EntityFrameworkCore.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.2\Furiza.AspNetCore.Identity.EntityFrameworkCore.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.1\Furiza.AspNetCore.Identity.EntityFrameworkCore.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netcoreapp2.2\Furiza.AspNetCore.Identity.EntityFrameworkCore.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
@@ -32,8 +32,8 @@
     <PackageReference Include="furiza.audit.abstractions" Version="1.0.0" />
     <PackageReference Include="Furiza.Base.Core.Identity.Abstractions" Version="2.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.1">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

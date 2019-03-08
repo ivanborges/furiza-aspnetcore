@@ -25,6 +25,7 @@
   <ItemGroup>
     <PackageReference Include="Furiza.Base.Core.Identity.Abstractions" Version="2.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="refit" Version="4.6.90" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0" />
   </ItemGroup>
 

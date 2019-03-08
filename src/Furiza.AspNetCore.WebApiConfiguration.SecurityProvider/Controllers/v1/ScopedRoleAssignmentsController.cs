@@ -38,9 +38,9 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             this.identityErrorDescriber = identityErrorDescriber ?? throw new ArgumentNullException(nameof(identityErrorDescriber));
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(typeof(ScopedRoleAssignmentsGetManyResult), 200)]
-        [ProducesResponseType(401)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public IActionResult Get([FromQuery]ScopedRoleAssignmentsGetMany filters)
         {
@@ -60,6 +60,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 .Where(p1)
                 .Where(p2)
                 .Where(p3)
+                .Where(sra => sra.ClientId == filters.ClientId.Value)
                 .OrderBy(usr => usr.UserName)
                     .ThenBy(usr => usr.Scope)
                         .ThenBy(usr => usr.Role)
