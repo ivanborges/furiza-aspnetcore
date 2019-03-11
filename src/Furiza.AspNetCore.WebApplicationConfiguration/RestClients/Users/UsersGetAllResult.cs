@@ -15,12 +15,18 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients.Users
             public string Company { get; set; }
             public string Department { get; set; }
             public IEnumerable<UsersGetAllResultInnerClaim> Claims { get; set; }
+            public IEnumerable<UsersGetAllResultInnerRole> Roles { get; set; }
         }
 
         public class UsersGetAllResultInnerClaim
         {
             public string Type { get; set; }
             public string Value { get; set; }
+        }
+
+        public class UsersGetAllResultInnerRole
+        {
+            public string RoleName { get; set; }
         }
     }
 }

@@ -10,5 +10,14 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration.RestClients.Users
 
         [Get("/api/v1/Users/{userName}")]
         Task<UsersGetResult> GetAsync(string userName);
+
+        [Get("/api/v1/Users/byemail")]
+        Task<UsersGetResult> GetByEmailAsync(UsersGetByEmail usersGetByEmail);
+
+        [Post("/api/v1/Users/ChangePassword")]
+        Task ChangePasswordPostAsync(ChangePasswordPost changePasswordPost);
+
+        [Post("/api/v1/Users/{userName}/ResetPassword")]
+        Task ResetPasswordPostAsync(string userName);
     }
 }
