@@ -1,4 +1,4 @@
-[![furiza_escrita_logo_2.png](https://www.imagemhost.com.br/images/2019/03/22/furiza_escrita_logo_2.png)](https://www.imagemhost.com.br/image/Ybo5I)
+[![furiza_escrita_logo_v2.png](https://www.imagemhost.com.br/images/2019/03/22/furiza_escrita_logo_v2.png)](https://www.imagemhost.com.br/image/Ybsqy)
 
 [![Build Status](https://dev.azure.com/ivanborges/Furiza/_apis/build/status/ivanborges.furiza-aspnetcore)](https://dev.azure.com/ivanborges/Furiza/_build/latest?definitionId=4)
 [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=ivanborges_furiza-aspnetcore&metric=alert_status)](https://sonarcloud.io/dashboard?id=ivanborges_furiza-aspnetcore)
