@@ -25,10 +25,10 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Furiza.Base.Core.Exceptions.Serialization" Version="1.0.5" />
-    <PackageReference Include="Furiza.Extensions.Configuration" Version="1.0.9" />
-    <PackageReference Include="Furiza.Networking" Version="1.0.1" />
-    <PackageReference Include="Furiza.Newtonsoft.Json" Version="1.1.1" />
+    <PackageReference Include="Furiza.Base.Core.Exceptions.Serialization" Version="1.0.6" />
+    <PackageReference Include="Furiza.Extensions.Configuration" Version="1.0.10" />
+    <PackageReference Include="Furiza.Networking" Version="1.0.2" />
+    <PackageReference Include="Furiza.Newtonsoft.Json" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.4" />
     <PackageReference Include="refit" Version="4.6.107" />
   </ItemGroup>
