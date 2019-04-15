@@ -7,7 +7,7 @@
     <Copyright>Furīza (C) 2018</Copyright>
     <PackageProjectUrl>https://github.com/ivanborges/furiza-aspnetcore</PackageProjectUrl>
     <PackageTags>furiza;aspnet core;identity</PackageTags>
-    <PackageIconUrl>https://www.imagemhost.com.br/images/2018/10/17/furiza_logo_transp_6.png</PackageIconUrl>
+    <PackageIconUrl>https://www.imagemhost.com.br/images/2019/03/22/furiza_escrita_logo_v2.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/ivanborges/furiza-aspnetcore</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>This package implements logic for Identity Abstractions making use of Identity Framework for user and permissions management. It also includes a database initializer with default users and roles.</Description>

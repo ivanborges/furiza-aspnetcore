@@ -119,7 +119,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("byemail")]
+        [HttpGet("byEmail")]
         [ProducesResponseType(typeof(UsersGetResult), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
@@ -172,7 +172,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 throw new InvalidHiringTypeException();
 
             var user = mapper.Map<UsersPost, ApplicationUser>(model);
-            user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);            
+            user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);
 
             var password = model.GeneratePassword
                 ? passwordGenerator.GenerateRandomPassword()
@@ -246,6 +246,35 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             }
             else
                 throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+
+            return Ok(new IdentityOperationResult() { Succeeded = true });
+        }
+
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpPost("{username}/ConfirmEmail")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> ConfirmEmailPostAsync(string username)
+        {
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.FindByNameAsync(username.Trim().ToLower());
+            if (user == null)
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var confirmationResult = await userManager.ConfirmEmailAsync(user, token);
+
+            if (confirmationResult.Succeeded)
+                await cachedUserManager.RemoveUserByUserNameAsync(username);
+            else
+                throw new IdentityOperationException(confirmationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
             return Ok(new IdentityOperationResult() { Succeeded = true });
         }
