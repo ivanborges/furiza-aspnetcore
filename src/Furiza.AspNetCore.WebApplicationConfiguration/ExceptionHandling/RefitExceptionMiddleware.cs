@@ -30,7 +30,7 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration.ExceptionHandling
                     case HttpStatusCode.BadRequest:
                     case HttpStatusCode.NotFound:
                     case HttpStatusCode.NotAcceptable:
-                        var e400 = e.GetContentAs<BadRequestError>();
+                        var e400 = await e.GetContentAsAsync<BadRequestError>();
 
                         if (context.Request.IsAjaxRequest())
                         {
@@ -52,7 +52,7 @@ namespace Furiza.AspNetCore.WebApplicationConfiguration.ExceptionHandling
 
                         break;
                     case HttpStatusCode.InternalServerError:
-                        var e500 = e.GetContentAs<InternalServerError>();
+                        var e500 = await e.GetContentAsAsync<InternalServerError>();
 
                         if (context.Request.IsAjaxRequest())
                         {

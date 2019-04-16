@@ -235,11 +235,11 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             {
                 await cachedUserManager.RemoveUserByUserNameAsync(username);
                 await emailSender.NotifyUserPasswordResetAsync(user.Email, user.UserName, newPassword);
+
+                return Ok(new IdentityOperationResult() { Succeeded = true });
             }
             else
                 throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
-
-            return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
@@ -253,14 +253,16 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         {
             var user = await GetApplicationUserAsync(username);
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-            var confirmationResult = await userManager.ConfirmEmailAsync(user, token);
+            var operationResult = await userManager.ConfirmEmailAsync(user, token);
 
-            if (confirmationResult.Succeeded)
+            if (operationResult.Succeeded)
+            {
                 await cachedUserManager.RemoveUserByUserNameAsync(username);
-            else
-                throw new IdentityOperationException(confirmationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+                return Ok(new IdentityOperationResult() { Succeeded = true });
+            }
+            else
+                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
         }
 
         [AllowAnonymous]
