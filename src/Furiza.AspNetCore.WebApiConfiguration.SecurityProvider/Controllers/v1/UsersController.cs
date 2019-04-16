@@ -119,7 +119,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("byemail")]
+        [HttpGet("byEmail")]
         [ProducesResponseType(typeof(UsersGetResult), 200)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
@@ -172,7 +172,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 throw new InvalidHiringTypeException();
 
             var user = mapper.Map<UsersPost, ApplicationUser>(model);
-            user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);            
+            user.EmailConfirmed = !model.GeneratePassword && string.IsNullOrWhiteSpace(model.Password);
 
             var password = model.GeneratePassword
                 ? passwordGenerator.GenerateRandomPassword()
@@ -226,15 +226,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> ResetPasswordPostAsync(string username)
         {
-            var errors = new List<SecurityResourceNotFoundExceptionItem>();
-
-            var user = await userManager.FindByNameAsync(username.Trim().ToLower());
-            if (user == null)
-                errors.Add(SecurityResourceNotFoundExceptionItem.User);
-
-            if (errors.Any())
-                throw new ResourceNotFoundException(errors);
-
+            var user = await GetApplicationUserAsync(username);
             var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
             var newPassword = passwordGenerator.GenerateRandomPassword();
             var operationResult = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
@@ -243,11 +235,34 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             {
                 await cachedUserManager.RemoveUserByUserNameAsync(username);
                 await emailSender.NotifyUserPasswordResetAsync(user.Email, user.UserName, newPassword);
+
+                return Ok(new IdentityOperationResult() { Succeeded = true });
             }
             else
                 throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+        }
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpPost("{username}/ConfirmEmail")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> ConfirmEmailPostAsync(string username)
+        {
+            var user = await GetApplicationUserAsync(username);
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+            var operationResult = await userManager.ConfirmEmailAsync(user, token);
+
+            if (operationResult.Succeeded)
+            {
+                await cachedUserManager.RemoveUserByUserNameAsync(username);
+
+                return Ok(new IdentityOperationResult() { Succeeded = true });
+            }
+            else
+                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
         }
 
         [AllowAnonymous]
@@ -286,15 +301,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> ModifyClaimPostAsync(string username, [FromBody]ModifyClaimPost model)
         {
-            var errors = new List<SecurityResourceNotFoundExceptionItem>();
-
-            var user = await userManager.FindByNameAsync(username.Trim().ToLower());
-            if (user == null)
-                errors.Add(SecurityResourceNotFoundExceptionItem.User);
-
-            if (errors.Any())
-                throw new ResourceNotFoundException(errors);
-
+            var user = await GetApplicationUserAsync(username);
             var claim = new Claim(model.ClaimType, model.ClaimValue);
 
             var operationResult = model.Operation == ModifyClaimOperation.Add
@@ -308,5 +315,21 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
             return Ok(new IdentityOperationResult() { Succeeded = true });
         }
+
+        #region [+] Pvts
+        private async Task<ApplicationUser> GetApplicationUserAsync(string username)
+        {
+            var errors = new List<SecurityResourceNotFoundExceptionItem>();
+
+            var user = await userManager.FindByNameAsync(username.Trim().ToLower());
+            if (user == null)
+                errors.Add(SecurityResourceNotFoundExceptionItem.User);
+
+            if (errors.Any())
+                throw new ResourceNotFoundException(errors);
+
+            return user;
+        }
+        #endregion
     }
 }

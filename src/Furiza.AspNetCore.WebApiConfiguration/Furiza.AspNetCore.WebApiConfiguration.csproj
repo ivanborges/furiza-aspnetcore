@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>2.2.2</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.2.4</RuntimeFrameworkVersion>
     <Authors>Furīza</Authors>
     <Copyright>Furīza (C) 2018</Copyright>
     <PackageProjectUrl>https://github.com/ivanborges/furiza-aspnetcore</PackageProjectUrl>
     <PackageTags>furiza;aspnet core;webapi startup configuration</PackageTags>
-    <PackageIconUrl>https://www.imagemhost.com.br/images/2018/10/17/furiza_logo_transp_6.png</PackageIconUrl>
+    <PackageIconUrl>https://www.imagemhost.com.br/images/2019/03/22/furiza_escrita_logo_v2.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/ivanborges/furiza-aspnetcore</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Description>This package implements base logic for web api startup configuration, including logging, caching, automapping, authentication, authorization, exception handling, api versioning and api documentation with Swagger.</Description>
@@ -25,11 +25,11 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="furiza.audit" Version="1.0.0" />
-    <PackageReference Include="furiza.caching" Version="1.1.1" />
-    <PackageReference Include="furiza.extensions.configuration" Version="1.0.9" />
-    <PackageReference Include="furiza.logging" Version="1.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.2" />
+    <PackageReference Include="furiza.audit" Version="1.0.1" />
+    <PackageReference Include="furiza.caching" Version="1.1.2" />
+    <PackageReference Include="furiza.extensions.configuration" Version="1.0.10" />
+    <PackageReference Include="furiza.logging" Version="1.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="3.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
