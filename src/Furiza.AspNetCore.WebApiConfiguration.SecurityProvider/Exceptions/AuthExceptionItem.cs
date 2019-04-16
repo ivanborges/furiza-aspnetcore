@@ -5,6 +5,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions
 {
     public class AuthExceptionItem : CoreExceptionItem
     {
+        public static AuthExceptionItem UserLockedOut => new AuthExceptionItem("UserLockedOut", "User is locked out.");
         public static AuthExceptionItem UserRequired => new AuthExceptionItem("UserRequired", $"The {nameof(AuthPost.User)} field is required.");
         public static AuthExceptionItem PasswordRequired => new AuthExceptionItem("PasswordRequired", $"The {nameof(AuthPost.Password)} field is required.");
         public static AuthExceptionItem RefreshTokenRequired => new AuthExceptionItem("RefreshTokenRequired", $"The {nameof(AuthPost.RefreshToken)} field is required.");

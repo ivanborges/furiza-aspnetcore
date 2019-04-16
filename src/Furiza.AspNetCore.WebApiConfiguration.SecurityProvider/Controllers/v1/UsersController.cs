@@ -209,19 +209,15 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             var user = await userManager.FindByNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
             var operationResult = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
 
-            if (operationResult.Succeeded)
-                await cachedUserManager.RemoveUserByUserNameAsync(userPrincipalBuilder.UserPrincipal.UserName);
-            else
-                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
-
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return await ParseIdentityResultAndReturnAsync(userPrincipalBuilder.UserPrincipal.UserName, operationResult);
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost("{username}/ResetPassword")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(ResetPasswordUsersPostResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> ResetPasswordPostAsync(string username)
@@ -236,7 +232,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 await cachedUserManager.RemoveUserByUserNameAsync(username);
                 await emailSender.NotifyUserPasswordResetAsync(user.Email, user.UserName, newPassword);
 
-                return Ok(new IdentityOperationResult() { Succeeded = true });
+                return Ok(new ResetPasswordUsersPostResult() { NewPassword = newPassword });
             }
             else
                 throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
@@ -247,6 +243,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(IdentityOperationResult), 200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> ConfirmEmailPostAsync(string username)
@@ -255,15 +252,40 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
             var operationResult = await userManager.ConfirmEmailAsync(user, token);
 
-            if (operationResult.Succeeded)
-            {
-                await cachedUserManager.RemoveUserByUserNameAsync(username);
-
-                return Ok(new IdentityOperationResult() { Succeeded = true });
-            }
-            else
-                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
+            return await ParseIdentityResultAndReturnAsync(username, operationResult);
         }
+
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpPost("{username}/Lock")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> LockPostAsync(string username)
+        {
+            var user = await GetApplicationUserAsync(username);
+            var operationResult = await userManager.SetLockoutEndDateAsync(user, DateTime.Now.AddYears(100));
+
+            return await ParseIdentityResultAndReturnAsync(username, operationResult);
+        }
+
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpPost("{username}/Unlock")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> UnlockPostAsync(string username)
+        {
+            var user = await GetApplicationUserAsync(username);
+            var operationResult = await userManager.SetLockoutEndDateAsync(user, null);
+
+            return await ParseIdentityResultAndReturnAsync(username, operationResult);
+        }        
 
         [AllowAnonymous]
         [HttpGet("ConfirmEmail", Name = "ConfirmEmail")]
@@ -316,6 +338,22 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             return Ok(new IdentityOperationResult() { Succeeded = true });
         }
 
+        [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
+        [HttpDelete("{username}")]
+        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(typeof(BadRequestError), 400)]
+        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(BadRequestError), 404)]
+        [ProducesResponseType(typeof(BadRequestError), 406)]
+        [ProducesResponseType(typeof(InternalServerError), 500)]
+        public async Task<IActionResult> DeleteAsync(string username)
+        {
+            var user = await GetApplicationUserAsync(username);
+            var operationResult = await userManager.DeleteAsync(user);
+
+            return await ParseIdentityResultAndReturnAsync(username, operationResult);
+        }
+
         #region [+] Pvts
         private async Task<ApplicationUser> GetApplicationUserAsync(string username)
         {
@@ -329,6 +367,18 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 throw new ResourceNotFoundException(errors);
 
             return user;
+        }
+
+        private async Task<IActionResult> ParseIdentityResultAndReturnAsync(string username, IdentityResult operationResult)
+        {
+            if (operationResult.Succeeded)
+            {
+                await cachedUserManager.RemoveUserByUserNameAsync(username);
+
+                return Ok(new IdentityOperationResult() { Succeeded = true });
+            }
+            else
+                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
         }
         #endregion
     }

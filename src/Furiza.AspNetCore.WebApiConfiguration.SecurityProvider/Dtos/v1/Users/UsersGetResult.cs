@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
 {
@@ -13,6 +14,8 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
         public IEnumerable<UsersGetResultInnerClaim> Claims { get; set; }
         public IEnumerable<UsersGetResultInnerRole> Roles { get; set; }
         public bool? EmailConfirmed { get; set; }
+        public bool? LockoutEnabled { get; set; }
+        public DateTime? LockoutEnd { get; set; }
 
         public class UsersGetResultInnerClaim
         {

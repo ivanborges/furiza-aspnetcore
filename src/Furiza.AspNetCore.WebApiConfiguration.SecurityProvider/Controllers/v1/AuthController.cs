@@ -124,6 +124,9 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
         {
             var errors = new List<AuthExceptionItem>();
 
+            if (await userManager.IsLockedOutAsync(user))
+                errors.Add(AuthExceptionItem.UserLockedOut);
+
             if (!await userManager.IsEmailConfirmedAsync(user))
                 errors.Add(AuthExceptionItem.EmailConfirmationRequired);
 
