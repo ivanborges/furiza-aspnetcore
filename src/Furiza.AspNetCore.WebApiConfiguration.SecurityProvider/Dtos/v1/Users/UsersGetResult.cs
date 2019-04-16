@@ -12,6 +12,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users
         public string Department { get; set; }
         public IEnumerable<UsersGetResultInnerClaim> Claims { get; set; }
         public IEnumerable<UsersGetResultInnerRole> Roles { get; set; }
+        public bool? EmailConfirmed { get; set; }
 
         public class UsersGetResultInnerClaim
         {
