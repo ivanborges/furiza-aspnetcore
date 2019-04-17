@@ -44,7 +44,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
             var operationResult = await userManager.AddToRoleAsync(user, model.RoleName);
 
-            return await ParseIdentityResultAsync(model.UserName, operationResult);
+            return await ParseIdentityResultAndReturnAsync(model.UserName, operationResult);
         }
 
         [HttpDelete]
@@ -60,7 +60,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
             var operationResult = await userManager.RemoveFromRoleAsync(user, model.RoleName);
 
-            return await ParseIdentityResultAsync(model.UserName, operationResult);            
+            return await ParseIdentityResultAndReturnAsync(model.UserName, operationResult);            
         }
 
         #region [+] Pvts
@@ -81,7 +81,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             return user;
         }
 
-        private async Task<IActionResult> ParseIdentityResultAsync(string username, IdentityResult operationResult)
+        private async Task<IActionResult> ParseIdentityResultAndReturnAsync(string username, IdentityResult operationResult)
         {
             if (operationResult.Succeeded)
             {
