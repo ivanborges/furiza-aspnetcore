@@ -32,7 +32,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         }
         
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -48,7 +48,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         }
 
         [HttpDelete]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -60,7 +60,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
             var operationResult = await userManager.RemoveFromRoleAsync(user, model.RoleName);
 
-            return await ParseIdentityResultAndReturnAsync(model.UserName, operationResult);
+            return await ParseIdentityResultAndReturnAsync(model.UserName, operationResult);            
         }
 
         #region [+] Pvts
@@ -87,7 +87,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             {
                 await cachedUserManager.RemoveUserByUserNameAsync(username);
 
-                return Ok();
+                return NoContent();
             }
             else
                 throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));

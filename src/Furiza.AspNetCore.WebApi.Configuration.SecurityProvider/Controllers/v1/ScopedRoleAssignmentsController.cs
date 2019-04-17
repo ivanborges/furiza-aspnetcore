@@ -2,7 +2,6 @@
 using Furiza.AspNetCore.ExceptionHandling;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores;
-using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Dtos.v1;
 using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Dtos.v1.ScopedRoleAssignments;
 using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Exceptions;
 using Furiza.Base.Core.Exceptions.Serialization;
@@ -77,7 +76,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -106,12 +105,12 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
 
             await furizaUserScopedRoleStore.AddToScopedRoleAsync(model.UserName, model.RoleName, model.Scope);
 
-            return Ok();
+            return NoContent();
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpDelete]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -140,7 +139,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
 
             await furizaUserScopedRoleStore.RemoveFromScopedRoleAsync(model.UserName, model.RoleName, model.Scope);
 
-            return Ok();
+            return NoContent();
         }
     }
 }
