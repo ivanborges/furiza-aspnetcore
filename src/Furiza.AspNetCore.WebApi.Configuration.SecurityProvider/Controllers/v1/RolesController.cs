@@ -37,13 +37,13 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> GetAsync()
         {
-            var allRoles = await roleManager.Roles
+            var allRoles2 = await roleManager.Roles
                 .OrderBy(u => u.Name)
                 .ToListAsync();
 
             var result = new RolesGetManyResult()
             {
-                Roles = mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RolesGetManyResult.RolesGetManyResultInnerRole>>(allRoles)
+                Roles = mapper.Map<IEnumerable<ApplicationRole>, IEnumerable<RolesGetManyResult.RolesGetManyResultInnerRole>>(allRoles2)
             };
 
             return Ok(result);
