@@ -17,8 +17,8 @@ Base packages for WebAPI startup configuration (includes logging, caching, autom
 |*Furiza.AspNetCore.ExceptionHandling*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.ExceptionHandling)](https://www.nuget.org/packages/Furiza.AspNetCore.ExceptionHandling)|
 |*Furiza.AspNetCore.Identity.EntityFrameworkCore*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.Identity.EntityFrameworkCore)](https://www.nuget.org/packages/Furiza.AspNetCore.Identity.EntityFrameworkCore)|
 |*Furiza.AspNetCore.ScopedRoleAssignmentProvider*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.ScopedRoleAssignmentProvider)](https://www.nuget.org/packages/Furiza.AspNetCore.ScopedRoleAssignmentProvider)|
-|*Furiza.AspNetCore.WebApiConfiguration*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.WebApiConfiguration)](https://www.nuget.org/packages/Furiza.AspNetCore.WebApiConfiguration)|
-|*Furiza.AspNetCore.WebApiConfiguration.SecurityProvider*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider)](https://www.nuget.org/packages/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider)|
+|*Furiza.AspNetCore.WebApi.Configuration*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.WebApi.Configuration)](https://www.nuget.org/packages/Furiza.AspNetCore.WebApi.Configuration)|
+|*Furiza.AspNetCore.WebApi.Configuration.SecurityProvider*|[![NuGet Version and Downloads count](https://buildstats.info/nuget/Furiza.AspNetCore.WebApi.Configuration.SecurityProvider)](https://www.nuget.org/packages/Furiza.AspNetCore.WebApi.Configuration.SecurityProvider)|
 
 ## ![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)
 

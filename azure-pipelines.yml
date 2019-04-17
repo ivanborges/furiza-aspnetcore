@@ -19,8 +19,8 @@ variables:
   #ExceptionHandling
   #Identity
   #ScopedRoleAssignmentProvider
-  #WebApiConfiguration
-  #WebApiConfiguration.SecurityProvider
+  #WebApi.Configuration
+  #WebApi.Configuration.SecurityProvider
   Pack1Version: '1.7.5'
   Pack1PushToNuget: False
 
@@ -157,40 +157,40 @@ steps:
     packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.ScopedRoleAssignmentProvider.*.nupkg'
     publishFeedCredentials: 'apikey-nuget-aspnetcore-scopedroleassignmentprovider'
 
-# Publish Furiza.AspNetCore.WebApiConfiguration to NuGet.org
+# Publish Furiza.AspNetCore.WebApi.Configuration to NuGet.org
 - task: DotNetCoreCLI@2
-  displayName: Pack Furiza.AspNetCore.WebApiConfiguration
+  displayName: Pack Furiza.AspNetCore.WebApi.Configuration
   condition: eq(variables['Pack1PushToNuget'], 'True')
   inputs:
     command: pack
-    packagesToPack: '**/**/Furiza.AspNetCore.WebApiConfiguration.csproj'
+    packagesToPack: '**/**/Furiza.AspNetCore.WebApi.Configuration.csproj'
     versioningScheme: byEnvVar
     versionEnvVar: Pack1Version
 - task: NuGetCommand@2
-  displayName: Push Furiza.AspNetCore.WebApiConfiguration to NuGet.org
+  displayName: Push Furiza.AspNetCore.WebApi.Configuration to NuGet.org
   condition: eq(variables['Pack1PushToNuget'], 'True')
   continueOnError: True
   inputs:
     command: push
     nuGetFeedType: external
-    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApiConfiguration.*.nupkg'
-    publishFeedCredentials: 'apikey-nuget-aspnetcore-webapiconfiguration'
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApi.Configuration.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-webapi.configuration'
 
-# Publish Furiza.AspNetCore.WebApiConfiguration.SecurityProvider to NuGet.org
+# Publish Furiza.AspNetCore.WebApi.Configuration.SecurityProvider to NuGet.org
 - task: DotNetCoreCLI@2
-  displayName: Pack Furiza.AspNetCore.WebApiConfiguration.SecurityProvider
+  displayName: Pack Furiza.AspNetCore.WebApi.Configuration.SecurityProvider
   condition: eq(variables['Pack1PushToNuget'], 'True')
   inputs:
     command: pack
-    packagesToPack: '**/**/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.csproj'
+    packagesToPack: '**/**/Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.csproj'
     versioningScheme: byEnvVar
     versionEnvVar: Pack1Version
 - task: NuGetCommand@2
-  displayName: Push Furiza.AspNetCore.WebApiConfiguration.SecurityProvider to NuGet.org
+  displayName: Push Furiza.AspNetCore.WebApi.Configuration.SecurityProvider to NuGet.org
   condition: eq(variables['Pack1PushToNuget'], 'True')
   continueOnError: True
   inputs:
     command: push
     nuGetFeedType: external
-    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.*.nupkg'
-    publishFeedCredentials: 'apikey-nuget-aspnetcore-webapiconfiguration.securityprovider'
+    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.*.nupkg'
+    publishFeedCredentials: 'apikey-nuget-aspnetcore-webapi.configuration.securityprovider'

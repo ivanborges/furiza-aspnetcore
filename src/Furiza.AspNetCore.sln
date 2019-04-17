@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.Identity.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.ExceptionHandling", "Furiza.AspNetCore.ExceptionHandling\Furiza.AspNetCore.ExceptionHandling.csproj", "{8AF91870-ED03-4310-A1C6-765C9D6B4E85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApiConfiguration", "Furiza.AspNetCore.WebApiConfiguration\Furiza.AspNetCore.WebApiConfiguration.csproj", "{DE69C852-81A9-476A-9214-A0C784BA7640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApi.Configuration", "Furiza.AspNetCore.WebApi.Configuration\Furiza.AspNetCore.WebApi.Configuration.csproj", "{DE69C852-81A9-476A-9214-A0C784BA7640}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider", "Furiza.AspNetCore.WebApiConfiguration.SecurityProvider\Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.csproj", "{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.WebApi.Configuration.SecurityProvider", "Furiza.AspNetCore.WebApi.Configuration.SecurityProvider\Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.csproj", "{8F3AAFE9-6A6A-454B-8CA0-4E0E916F46EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furiza.AspNetCore.ScopedRoleAssignmentProvider", "Furiza.AspNetCore.ScopedRoleAssignmentProvider\Furiza.AspNetCore.ScopedRoleAssignmentProvider.csproj", "{DCFD207B-A2B3-4587-8A03-1C06D726153D}"
 EndProject
