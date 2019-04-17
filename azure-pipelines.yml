@@ -16,13 +16,11 @@ variables:
 
   #Pack1 -------------------
   #JwtBearer
-  #Jwtbearer.Cookies
   #ExceptionHandling
   #Identity
   #ScopedRoleAssignmentProvider
   #WebApiConfiguration
   #WebApiConfiguration.SecurityProvider
-  #WebApplicationConfiguration
   Pack1Version: '1.7.5'
   Pack1PushToNuget: False
 
@@ -101,25 +99,6 @@ steps:
     nuGetFeedType: external
     packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.Authentication.JwtBearer.*.nupkg'
     publishFeedCredentials: 'apikey-nuget-aspnetcore-authentication.jwtbearer'
-
-# Publish Furiza.AspNetCore.Authentication.JwtBearer.Cookies to NuGet.org
-- task: DotNetCoreCLI@2
-  displayName: Pack Furiza.AspNetCore.Authentication.JwtBearer.Cookies
-  condition: eq(variables['Pack1PushToNuget'], 'True')
-  inputs:
-    command: pack
-    packagesToPack: '**/**/Furiza.AspNetCore.Authentication.JwtBearer.Cookies.csproj'
-    versioningScheme: byEnvVar
-    versionEnvVar: Pack1Version
-- task: NuGetCommand@2
-  displayName: Push Furiza.AspNetCore.Authentication.JwtBearer.Cookies to NuGet.org
-  condition: eq(variables['Pack1PushToNuget'], 'True')
-  continueOnError: True
-  inputs:
-    command: push
-    nuGetFeedType: external
-    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.Authentication.JwtBearer.Cookies.*.nupkg'
-    publishFeedCredentials: 'apikey-nuget-aspnetcore-authentication.jwtbearer.cookies'
 
 # Publish Furiza.AspNetCore.ExceptionHandling to NuGet.org
 - task: DotNetCoreCLI@2
@@ -215,22 +194,3 @@ steps:
     nuGetFeedType: external
     packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.*.nupkg'
     publishFeedCredentials: 'apikey-nuget-aspnetcore-webapiconfiguration.securityprovider'
-
-# Publish Furiza.AspNetCore.WebApplicationConfiguration to NuGet.org
-- task: DotNetCoreCLI@2
-  displayName: Pack Furiza.AspNetCore.WebApplicationConfiguration
-  condition: eq(variables['Pack1PushToNuget'], 'True')
-  inputs:
-    command: pack
-    packagesToPack: '**/**/Furiza.AspNetCore.WebApplicationConfiguration.csproj'
-    versioningScheme: byEnvVar
-    versionEnvVar: Pack1Version
-- task: NuGetCommand@2
-  displayName: Push Furiza.AspNetCore.WebApplicationConfiguration to NuGet.org
-  condition: eq(variables['Pack1PushToNuget'], 'True')
-  continueOnError: True
-  inputs:
-    command: push
-    nuGetFeedType: external
-    packagesToPush: '$(build.artifactStagingDirectory)/Furiza.AspNetCore.WebApplicationConfiguration.*.nupkg'
-    publishFeedCredentials: 'apikey-nuget-aspnetcore-webapplicationconfiguration'

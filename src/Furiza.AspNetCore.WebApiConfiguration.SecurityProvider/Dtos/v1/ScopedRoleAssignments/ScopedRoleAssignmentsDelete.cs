@@ -8,7 +8,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.ScopedR
         public string UserName { get; set; }
 
         [Required]
-        public string Role { get; set; }
+        public string RoleName { get; set; }
 
         [Required]
         public string Scope { get; set; }

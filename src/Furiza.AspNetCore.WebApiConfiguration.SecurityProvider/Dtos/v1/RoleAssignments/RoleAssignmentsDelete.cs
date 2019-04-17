@@ -8,6 +8,6 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.RoleAss
         public string UserName { get; set; }
 
         [Required]
-        public string Role { get; set; }
+        public string RoleName { get; set; }
     }
 }

@@ -77,7 +77,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -92,26 +92,26 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             if (user == null)
                 errors.Add(SecurityResourceNotFoundExceptionItem.User);
 
-            if (!(await roleManager.RoleExistsAsync(model.Role)))
+            if (!(await roleManager.RoleExistsAsync(model.RoleName)))
                 errors.Add(SecurityResourceNotFoundExceptionItem.Role);
 
             if (errors.Any())
                 throw new ResourceNotFoundException(errors);
 
-            if (await furizaUserScopedRoleStore.IsInScopedRoleAsync(model.UserName, model.Role, model.Scope))
+            if (await furizaUserScopedRoleStore.IsInScopedRoleAsync(model.UserName, model.RoleName, model.Scope))
             {
-                var errorDescription = identityErrorDescriber.UserAlreadyInRole($"{model.Role}.{model.Scope}");
+                var errorDescription = identityErrorDescriber.UserAlreadyInRole($"{model.RoleName}.{model.Scope}");
                 throw new IdentityOperationException(new IdentityOperationExceptionItem[] { new IdentityOperationExceptionItem(errorDescription.Code, errorDescription.Description) });
             }
 
-            await furizaUserScopedRoleStore.AddToScopedRoleAsync(model.UserName, model.Role, model.Scope);
+            await furizaUserScopedRoleStore.AddToScopedRoleAsync(model.UserName, model.RoleName, model.Scope);
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return Ok();
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpDelete]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -126,21 +126,21 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             if (user == null)
                 errors.Add(SecurityResourceNotFoundExceptionItem.User);
 
-            if (!(await roleManager.RoleExistsAsync(model.Role)))
+            if (!(await roleManager.RoleExistsAsync(model.RoleName)))
                 errors.Add(SecurityResourceNotFoundExceptionItem.Role);
 
             if (errors.Any())
                 throw new ResourceNotFoundException(errors);
 
-            if (!(await furizaUserScopedRoleStore.IsInScopedRoleAsync(model.UserName, model.Role, model.Scope)))
+            if (!(await furizaUserScopedRoleStore.IsInScopedRoleAsync(model.UserName, model.RoleName, model.Scope)))
             {
-                var errorDescription = identityErrorDescriber.UserNotInRole($"{model.Role}.{model.Scope}");
+                var errorDescription = identityErrorDescriber.UserNotInRole($"{model.RoleName}.{model.Scope}");
                 throw new IdentityOperationException(new IdentityOperationExceptionItem[] { new IdentityOperationExceptionItem(errorDescription.Code, errorDescription.Description) });
             }
 
-            await furizaUserScopedRoleStore.RemoveFromScopedRoleAsync(model.UserName, model.Role, model.Scope);
+            await furizaUserScopedRoleStore.RemoveFromScopedRoleAsync(model.UserName, model.RoleName, model.Scope);
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return Ok();
         }
     }
 }
