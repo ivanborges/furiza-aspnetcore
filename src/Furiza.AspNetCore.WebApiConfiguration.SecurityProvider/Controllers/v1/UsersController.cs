@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Furiza.AspNetCore.ExceptionHandling;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
-using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Users;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Services;
@@ -154,7 +153,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -195,11 +194,11 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             else
                 throw new IdentityOperationException(creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return Ok();
         }
 
         [HttpPost("ChangePassword")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
@@ -240,7 +239,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost("{username}/ConfirmEmail")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
@@ -257,7 +256,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost("{username}/Lock")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
@@ -273,7 +272,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost("{username}/Unlock")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
@@ -289,7 +288,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet("ConfirmEmail", Name = "ConfirmEmail")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
@@ -309,12 +308,12 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 throw new IdentityOperationException(confirmationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
             // TODO: substituir retornos Json por Views... já que o usuário final acessa esse endereço diretamente pelo browser.
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return Ok();
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost("{username}/Claims")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -330,17 +329,12 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
                 ? await userManager.AddClaimAsync(user, claim)
                 : await userManager.RemoveClaimAsync(user, claim);
 
-            if (operationResult.Succeeded)
-                await cachedUserManager.RemoveUserByUserNameAsync(username);
-            else
-                throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
-
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return await ParseIdentityResultAndReturnAsync(username, operationResult);
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpDelete("{username}")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
@@ -375,7 +369,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             {
                 await cachedUserManager.RemoveUserByUserNameAsync(username);
 
-                return Ok(new IdentityOperationResult() { Succeeded = true });
+                return Ok();
             }
             else
                 throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));

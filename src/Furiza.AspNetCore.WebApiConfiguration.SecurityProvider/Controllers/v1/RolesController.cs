@@ -2,7 +2,6 @@
 using Furiza.AspNetCore.ExceptionHandling;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore.Stores;
-using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Dtos.v1.Roles;
 using Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Exceptions;
 using Furiza.Base.Core.Exceptions.Serialization;
@@ -52,7 +51,7 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -68,28 +67,28 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             if (!creationResult.Succeeded)
                 throw new IdentityOperationException(creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return Ok();
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
-        [HttpDelete("{rolename}")]
-        [ProducesResponseType(typeof(IdentityOperationResult), 200)]
+        [HttpDelete("{roleName}")]
+        [ProducesResponseType(200)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(BadRequestError), 406)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> DeleteAsync(string rolename,
+        public async Task<IActionResult> DeleteAsync(string roleName,
             [FromServices]FurizaUserScopedRoleStore furizaUserScopedRoleStore)
         {
             foreach (FieldInfo fieldInfo in typeof(FurizaMasterRoles).GetFields().Where(x => x.IsStatic && x.IsLiteral))
-                if (fieldInfo.GetValue(typeof(FurizaMasterRoles)).ToString() == rolename.Trim().ToLower())
+                if (fieldInfo.GetValue(typeof(FurizaMasterRoles)).ToString() == roleName.Trim().ToLower())
                     throw new DefaultRoleViolatedException();
 
             var role = await roleManager.Roles
                 .Include(u => u.IdentityUserRoles)
-                .SingleOrDefaultAsync(u => u.NormalizedName == rolename.Trim().ToUpper());
+                .SingleOrDefaultAsync(u => u.NormalizedName == roleName.Trim().ToUpper());
 
             if (role == null)
                 throw new ResourceNotFoundException(new[] { SecurityResourceNotFoundExceptionItem.Role });
@@ -97,14 +96,14 @@ namespace Furiza.AspNetCore.WebApiConfiguration.SecurityProvider.Controllers.v1
             if (role.IdentityUserRoles != null && role.IdentityUserRoles.Any())
                 throw new RoleInUseException();
 
-            if (await furizaUserScopedRoleStore.IsRoleInUse(rolename))
+            if (await furizaUserScopedRoleStore.IsRoleInUse(roleName))
                 throw new RoleInUseException();
 
             var deleteResult = await roleManager.DeleteAsync(role);
             if (!deleteResult.Succeeded)
                 throw new IdentityOperationException(deleteResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-            return Ok(new IdentityOperationResult() { Succeeded = true });
+            return Ok();
         }
     }
 }
