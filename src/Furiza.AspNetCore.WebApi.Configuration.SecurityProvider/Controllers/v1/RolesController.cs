@@ -51,7 +51,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -67,12 +67,12 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             if (!creationResult.Succeeded)
                 throw new IdentityOperationException(creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-            return Ok();
+            return NoContent();
         }
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpDelete("{roleName}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -103,7 +103,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             if (!deleteResult.Succeeded)
                 throw new IdentityOperationException(deleteResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
 
-            return Ok();
+            return NoContent();
         }
     }
 }

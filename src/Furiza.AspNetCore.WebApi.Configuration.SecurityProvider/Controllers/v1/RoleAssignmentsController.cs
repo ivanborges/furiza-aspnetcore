@@ -32,7 +32,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         }
         
         [HttpPost]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -44,11 +44,11 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
             var operationResult = await userManager.AddToRoleAsync(user, model.RoleName);
 
-            return await ParseIdentityResultAndReturnAsync(model.UserName, operationResult);
+            return await ParseIdentityResultAsync(model.UserName, operationResult);
         }
 
         [HttpDelete]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -60,7 +60,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
             var operationResult = await userManager.RemoveFromRoleAsync(user, model.RoleName);
 
-            return await ParseIdentityResultAndReturnAsync(model.UserName, operationResult);
+            return await ParseIdentityResultAsync(model.UserName, operationResult);            
         }
 
         #region [+] Pvts
@@ -81,13 +81,13 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
             return user;
         }
 
-        private async Task<IActionResult> ParseIdentityResultAndReturnAsync(string username, IdentityResult operationResult)
+        private async Task<IActionResult> ParseIdentityResultAsync(string username, IdentityResult operationResult)
         {
             if (operationResult.Succeeded)
             {
                 await cachedUserManager.RemoveUserByUserNameAsync(username);
 
-                return Ok();
+                return NoContent();
             }
             else
                 throw new IdentityOperationException(operationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));

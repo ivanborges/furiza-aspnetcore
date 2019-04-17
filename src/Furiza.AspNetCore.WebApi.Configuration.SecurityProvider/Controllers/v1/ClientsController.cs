@@ -25,7 +25,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
 
         [AllowAnonymous]
         [HttpPost("{clientId}/Initialize")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> InitializePostAsync(Guid clientId)
         {
@@ -34,7 +34,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
 
             await identityInitializer.InitializeUsersAsync();
 
-            return Ok();
+            return NoContent();
         }
     }
 }
