@@ -102,7 +102,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         [ProducesResponseType(401)]
         [ProducesResponseType(typeof(BadRequestError), 404)]
         [ProducesResponseType(typeof(InternalServerError), 500)]
-        public async Task<IActionResult> GetAsync(string username)
+        public async Task<IActionResult> GetAsync([FromRoute]string username)
         {
             var errors = new List<SecurityResourceNotFoundExceptionItem>();
 
