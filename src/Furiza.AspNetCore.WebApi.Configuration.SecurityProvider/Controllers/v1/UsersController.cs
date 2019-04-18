@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Furiza.AspNetCore.ExceptionHandling;
 using Furiza.AspNetCore.Identity.EntityFrameworkCore;
+using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Dtos.v1;
 using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Dtos.v1.Users;
 using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Exceptions;
 using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Services;
@@ -153,7 +154,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
 
         [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
         [HttpPost]
-        [ProducesResponseType(201)]
+        [ProducesResponseType(typeof(PostResult), 201)]
         [ProducesResponseType(typeof(BadRequestError), 400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(403)]
@@ -191,7 +192,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
                     await emailSender.NotifyNewUserAsync(model.Email, model.UserName, callbackUrl, model.GeneratePassword ? password : null);
                 }
 
-                return CreatedAtRoute("UsersGet", new { username = user.UserName });
+                return CreatedAtRoute("UsersGet", new { username = user.UserName }, new PostResult(user.Id, user.UserName));
             }
             else
                 throw new IdentityOperationException(creationResult.Errors.Select(e => new IdentityOperationExceptionItem(e.Code, e.Description)));
