@@ -4,6 +4,7 @@ using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Dtos.v1.RoleAssign
 using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Exceptions;
 using Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Services;
 using Furiza.Base.Core.Exceptions.Serialization;
+using Furiza.Base.Core.Identity.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +19,17 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
     [Authorize(Policy = FurizaPolicies.RequireAdministratorRights)]
     public class RoleAssignmentsController : RootController
     {
+        private readonly IUserPrincipalBuilder userPrincipalBuilder;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
         private readonly ICachedUserManager cachedUserManager;
 
-        public RoleAssignmentsController(UserManager<ApplicationUser> userManager,
+        public RoleAssignmentsController(IUserPrincipalBuilder userPrincipalBuilder, 
+            UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             ICachedUserManager cachedUserManager)
         {
+            this.userPrincipalBuilder = userPrincipalBuilder ?? throw new ArgumentNullException(nameof(userPrincipalBuilder));
             this.userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             this.roleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
             this.cachedUserManager = cachedUserManager ?? throw new ArgumentNullException(nameof(cachedUserManager));
@@ -41,6 +45,9 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> PostAsync([FromBody]RoleAssignmentsPost model)
         {
+            if ((model.RoleName.Trim().ToLower() == FurizaMasterRoles.Administrator || model.RoleName.Trim().ToLower() == FurizaMasterRoles.Superuser) && !userPrincipalBuilder.UserPrincipal.RoleAssignments.Any(ra => ra.Role == FurizaMasterRoles.Superuser))
+                throw new AdminCanOnlyBeAssignedBySuperuserException();
+
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
             var operationResult = await userManager.AddToRoleAsync(user, model.RoleName);
 
@@ -57,6 +64,9 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> DeleteAsync([FromBody]RoleAssignmentsDelete model)
         {
+            if ((model.RoleName.Trim().ToLower() == FurizaMasterRoles.Administrator || model.RoleName.Trim().ToLower() == FurizaMasterRoles.Superuser) && !userPrincipalBuilder.UserPrincipal.RoleAssignments.Any(ra => ra.Role == FurizaMasterRoles.Superuser))
+                throw new AdminCanOnlyBeAssignedBySuperuserException();
+
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
             var operationResult = await userManager.RemoveFromRoleAsync(user, model.RoleName);
 
