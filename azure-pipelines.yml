@@ -22,7 +22,7 @@ variables:
   #WebApi.Configuration
   #WebApi.Configuration.SecurityProvider
   Pack1Version: '1.8.0'
-  Pack1PushToNuget: True
+  Pack1PushToNuget: False
 
 steps:
 # Install NuGet Tool
