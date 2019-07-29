@@ -45,7 +45,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> PostAsync([FromBody]RoleAssignmentsPost model)
         {
-            if ((model.RoleName.Trim().ToLower() == FurizaMasterRoles.Administrator || model.RoleName.Trim().ToLower() == FurizaMasterRoles.Superuser) && !userPrincipalBuilder.UserPrincipal.RoleAssignments.Any(ra => ra.Role == FurizaMasterRoles.Superuser))
+            if ((model.RoleName.Trim().ToLower() == FurizaMasterRoles.Administrator || model.RoleName.Trim().ToLower() == FurizaMasterRoles.Superuser) && !userPrincipalBuilder.HasSuperuserRights())
                 throw new AdminCanOnlyBeAssignedBySuperuserException();
 
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);
@@ -64,7 +64,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider.Controllers.v1
         [ProducesResponseType(typeof(InternalServerError), 500)]
         public async Task<IActionResult> DeleteAsync([FromBody]RoleAssignmentsDelete model)
         {
-            if ((model.RoleName.Trim().ToLower() == FurizaMasterRoles.Administrator || model.RoleName.Trim().ToLower() == FurizaMasterRoles.Superuser) && !userPrincipalBuilder.UserPrincipal.RoleAssignments.Any(ra => ra.Role == FurizaMasterRoles.Superuser))
+            if ((model.RoleName.Trim().ToLower() == FurizaMasterRoles.Administrator || model.RoleName.Trim().ToLower() == FurizaMasterRoles.Superuser) && !userPrincipalBuilder.HasSuperuserRights())
                 throw new AdminCanOnlyBeAssignedBySuperuserException();
 
             var user = await GetApplicationUserAsync(model.UserName, model.RoleName);

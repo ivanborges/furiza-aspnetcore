@@ -104,5 +104,11 @@ namespace Furiza.AspNetCore.Authentication.JwtBearer
 
             return userPrincipal;
         }
+
+        public bool HasSuperuserRights() => UserPrincipal.RoleAssignments.Any(ra => ra.Role == FurizaMasterRoles.Superuser);
+
+        public bool HasAdministratorRights() => UserPrincipal.RoleAssignments.Any(ra => ra.Role == FurizaMasterRoles.Administrator) || HasSuperuserRights();
+
+        public bool HasEditorRights() => UserPrincipal.RoleAssignments.Any(ra => ra.Role == FurizaMasterRoles.Editor) || HasAdministratorRights() || HasSuperuserRights();
     }
 }
