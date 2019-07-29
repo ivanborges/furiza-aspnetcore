@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -42,6 +43,13 @@ namespace Furiza.AspNetCore.WebApi.Configuration
 
             AddCustomServicesAtTheBeginning(services);
 
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(ApiProfile.DefaultCultureInfo);
+                options.SupportedCultures = new List<CultureInfo> { new CultureInfo(ApiProfile.DefaultCultureInfo) };
+                options.RequestCultureProviders.Clear();
+            });
+
             services.AddFurizaJwtAuthentication(Configuration.TryGet<JwtConfiguration>());
             services.AddFurizaCaching(Configuration.TryGet<CacheConfiguration>());
             services.AddFurizaAudit(Configuration, ApiProfile.Name);
@@ -59,6 +67,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration
         
         public void Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
+            app.UseRequestLocalization();
             app.UseFurizaExceptionHandling();
             app.UseFurizaAuditIpAddressRetriever();
 

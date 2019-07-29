@@ -8,5 +8,6 @@ namespace Furiza.AspNetCore.WebApi.Configuration
         public string Description { get; set; }
         public string DefaultVersion { get; set; }
         public IDictionary<string, string> VersioningDescriptions { get; set; }
+        public string DefaultCultureInfo { get; set; }
     }
 }
