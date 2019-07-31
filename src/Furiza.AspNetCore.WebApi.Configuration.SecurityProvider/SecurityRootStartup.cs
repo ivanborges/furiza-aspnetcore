@@ -11,6 +11,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider
     {
         protected SecurityRootStartup(IConfiguration configuration) : base(configuration)
         {
+            ApiProfile.AutomapperAssemblies.Add(typeof(SecurityRootStartup).Assembly);
         }
 
         protected override void AddCustomServicesAtTheBeginning(IServiceCollection services)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace Furiza.AspNetCore.WebApi.Configuration
 {
@@ -9,5 +10,6 @@ namespace Furiza.AspNetCore.WebApi.Configuration
         public string DefaultVersion { get; set; }
         public IDictionary<string, string> VersioningDescriptions { get; set; }
         public string DefaultCultureInfo { get; set; }
+        public ICollection<Assembly> AutomapperAssemblies { get; } = new List<Assembly>();
     }
 }

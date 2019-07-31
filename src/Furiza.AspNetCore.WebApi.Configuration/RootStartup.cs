@@ -62,7 +62,8 @@ namespace Furiza.AspNetCore.WebApi.Configuration
 
             AddCustomServicesAtTheEnd(services);
 
-            services.AddAutoMapper();
+            if (ApiProfile.AutomapperAssemblies.Any())
+                services.AddAutoMapper(ApiProfile.AutomapperAssemblies);
         }
         
         public void Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
