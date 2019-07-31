@@ -21,7 +21,7 @@ variables:
   #ScopedRoleAssignmentProvider
   #WebApi.Configuration
   #WebApi.Configuration.SecurityProvider
-  Pack1Version: '1.8.1'
+  Pack1Version: '1.8.2'
   Pack1PushToNuget: False
 
 steps:
