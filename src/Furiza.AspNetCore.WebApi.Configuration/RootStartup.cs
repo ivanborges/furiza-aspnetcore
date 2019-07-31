@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Furiza.AspNetCore.WebApi.Configuration
 {
@@ -31,6 +32,7 @@ namespace Furiza.AspNetCore.WebApi.Configuration
             }
         }
 
+        protected ICollection<Assembly> AutomapperAssemblies { get; } = new List<Assembly>();
         protected abstract ApiProfile ApiProfile { get; }
         protected IConfiguration Configuration { get; }
 
@@ -62,8 +64,8 @@ namespace Furiza.AspNetCore.WebApi.Configuration
 
             AddCustomServicesAtTheEnd(services);
 
-            if (ApiProfile.AutomapperAssemblies.Any())
-                services.AddAutoMapper(ApiProfile.AutomapperAssemblies);
+            if (AutomapperAssemblies.Any())
+                services.AddAutoMapper(AutomapperAssemblies);
         }
         
         public void Configure(IApplicationBuilder app, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
