@@ -12,11 +12,6 @@ namespace Furiza.AspNetCore.WebApi.Configuration.SecurityProvider
         protected SecurityRootStartup(IConfiguration configuration) : base(configuration)
         {
             AutomapperAssemblies.Add(typeof(SecurityRootStartup).Assembly);
-
-            //TODO: remover
-            var atoa = "";
-            if (!string.IsNullOrWhiteSpace(atoa))
-                throw new System.InvalidOperationException(atoa);
         }
 
         protected override void AddCustomServicesAtTheBeginning(IServiceCollection services)
